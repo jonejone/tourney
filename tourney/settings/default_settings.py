@@ -1,3 +1,4 @@
+# flake8: noqa
 # Django settings for tourney project.
 
 DEBUG = True
@@ -79,7 +80,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'ubmruiq0aohm8z+*@s$8x@mlabe(0*s6)t48mm-8wwx$h(&p20'
+SECRET_KEY = '34qyo0u5q9#!wlla4$fn$$c5-2-nc$))9_8s&7k(7jq7f)8b&j'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -127,6 +128,8 @@ INSTALLED_APPS = (
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+import sys
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -140,7 +143,12 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'console':{
+            'level':'INFO',
+            'class':'logging.StreamHandler',
+            'stream': sys.stdout
+        },
     },
     'loggers': {
         'django.request': {
