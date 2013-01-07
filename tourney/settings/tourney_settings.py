@@ -28,6 +28,7 @@ INSTALLED_APPS = (
     'django.contrib.markup',
 
     'django_extensions',
+    'django_nose',
     'registration',
     'boto',
     'storages',
@@ -70,3 +71,6 @@ if os.environ.get('SENDGRID_USERNAME'):
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
     EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+
+
+TOURNAMENT_ID = 1
