@@ -1,0 +1,9 @@
+{% extends "tournament/tournament_base.html" %}
+
+{% block content %}
+<h1>Registration</h1>
+
+<form method="post" action="{% url "tournament-registration" %}">{% csrf_token %}
+    {% include "tournament/bootstrap_form.html" %}
+</form>
+{% endblock %}
