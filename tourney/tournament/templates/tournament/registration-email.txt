@@ -1,0 +1,18 @@
+Hello {{ player.name }},
+
+Thanks for registering to {{ tournament.name }}! This email confirms your registration,
+and your entered details are below for your reference.
+
+Name: {{ player.name }}
+PDGA number: {{ player.pdga_number }}
+Class: {{ player_class.name }}
+Country: {{ player.country }}
+Email: {{ player.email }}
+Registration date: {{ tournament_player.registered }}
+
+{% if tournament.payment_information %}Please perform payment to:
+{{ tournament.payment_information }}{% endif %}
+
+----
+Thanks and regards,
+{{ tournament.name }}

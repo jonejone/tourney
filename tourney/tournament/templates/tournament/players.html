@@ -1,0 +1,33 @@
+{% extends "tournament/tournament_base.html" %}
+
+{% block content %}
+<h1>Players</h1>
+
+<table class="table table-dotted table-striped player-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Country</th>
+            <th>Division</th>
+            <th>PDGA</th>
+            <th>Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tp in tournament.tournamentplayer_set.all %}
+        <tr>
+            <td>{{ tp.player.name }}</td>
+            <td>{{ tp.player.country }}</td>
+            <td>{{ tp.player_class.name }}</td>
+            <td>{{ tp.player.pdga_number }}</td>
+            <td>{{ tp.player.pdga_rating }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if tournament.is_registration_open %}
+<p><a href="{% url "tournament-registration" %}" class="btn btn-info">Register for {{ tournament.name }}</a></p>
+{% endif %}
+
+{% endblock %}

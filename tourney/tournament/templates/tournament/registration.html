@@ -1,9 +1,74 @@
 {% extends "tournament/tournament_base.html" %}
 
+{% block endbody %}
+<script src="{{ STATIC_URL }}tournament/js/registration.js"></script>
+<script src="{{ STATIC_URL }}tournament/js/status_bar.js"></script>
+<script>
+$(function() {
+    var config = {
+        'delay': 750,
+        'ajax_url': '{% url "tournament-ajax-check-pdga-number" %}',
+        'stages': $.parseJSON('{{ tournament.get_stages_json|safe }}'),
+    };
+
+    var registration_module = TOURNEY.module('registration');
+    window.pdga = new registration_module.RegistrationPdga(config);
+
+}); 
+</script>
+{% endblock %}
+
 {% block content %}
 <h1>Registration</h1>
 
+{% if tournament.registration_stages %}
+<table class="table table-dotted registration-stages-table">
+    <thead>
+        <tr>
+            <th>Stage</th>
+            {% for class in tournament.classes.all %}
+            <th>{{ class.name }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for stage in tournament.registrationstage_set.all %}
+        <tr{% ifequal stage current_stage %} class="info"{% endifequal %}>
+            <td>Stage {{ forloop.counter }}, opens {{ stage.opens }}</td>
+            {% for stage_class in stage.registrationstageclass_set.all %}
+            <td>
+                {% ifequal 0 stage_class.rating_required %}
+                    <i>All</i>
+                {% else %}
+                    {{ stage_class.rating_required }}
+                {% endifequal %}
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if tournament.is_registration_open %}
 <form method="post" action="{% url "tournament-registration" %}">{% csrf_token %}
     {% include "tournament/bootstrap_form.html" %}
 </form>
+{% else %}
+    {% if tournament.registration_stages %}
+        <p>No stage is open curently.</p>
+    {% else %}
+        {% if tournament.is_registration_finished %}
+        <div class="alert alert-error">
+            Registration for this tournament closed {{ tournament.registration_ends }}
+        </div>
+        {% else %}
+        <div class="alert">
+            Registration for this tournament has not opened yet.<br/>
+            Registration opens on <strong>{{ tournament.registration_opens }}</strong>
+        </div>
+        {% endif %}
+    {% endif %}
+{% endif %}
+
 {% endblock %}

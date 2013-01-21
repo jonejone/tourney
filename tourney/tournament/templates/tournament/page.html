@@ -1,0 +1,15 @@
+{% extends "tournament/tournament_base.html" %}
+
+{% block title %}{{ page.title }} - {{ tournament.name }}{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<p><a class="btn" href="{% url "tournament-page-edit" page.slug %}">Edit page</a></p>
+{% endif %}
+
+<div class="page-container">
+    {{ page.body|safe }}
+</div>
+
+{% endblock %}
