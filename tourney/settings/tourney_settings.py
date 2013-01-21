@@ -14,8 +14,19 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.tz",
     "django.contrib.auth.context_processors.auth",
-    "django.contrib.messages.context_processors.messages"
+    "django.contrib.messages.context_processors.messages",
+    'tourney.tournament.context_processors.tournament',
 )
+
+MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'tourney.tournament.middleware.TournamentMiddleware',
+)
+
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -29,16 +40,19 @@ INSTALLED_APPS = (
 
     'django_extensions',
     'django_nose',
+    'django_countries',
     'registration',
     'boto',
     'storages',
+    'crispy_forms',
+    'ckeditor',
 
     'tourney.tournament',
 )
 
 TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
 ROOT_URLCONF = 'tourney.tournament.urls'
-LANGUAGE_CODE = 'nb_NO'
+#LANGUAGE_CODE = 'nb_NO'
 MEDIA_URL = '/media/'
 ACCOUNT_ACTIVATION_DAYS = 30
 
@@ -74,3 +88,6 @@ if os.environ.get('SENDGRID_USERNAME'):
 
 
 TOURNAMENT_ID = 1
+CRISPY_TEMPLATE_PACK = 'bootstrap'
+
+CKEDITOR_UPLOAD_PATH = os.path.join(PROJECT_ROOT, 'media/editor_uploads')
