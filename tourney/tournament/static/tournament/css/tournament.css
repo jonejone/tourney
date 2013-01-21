@@ -3,3 +3,15 @@
     body {padding-top: 60px;}
 }
 
+.edit-page-form #id_title,
+.edit-page-form #id_body {
+    width: 500px;
+}
+
+.player-table {
+    max-width: 700px;
+}
+
+.registration-stages-table {
+    max-width: 700px;
+}
