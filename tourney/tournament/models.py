@@ -1,5 +1,15 @@
+from datetime import datetime, date
+
+from django.template.loader import get_template
+from django.template import Context
+from django.core.mail import send_mail
+from django_countries import CountryField
+from django.utils.timezone import utc
+from django.utils import simplejson
 from django.db import models
 from django.contrib.auth.models import User
+
+from ckeditor.fields import RichTextField
 
 
 class PlayerClass(models.Model):
@@ -9,6 +19,21 @@ class PlayerClass(models.Model):
         return self.name
 
 
+class RegistrationStage(models.Model):
+    tournament = models.ForeignKey('Tournament')
+    opens = models.DateTimeField()
+
+    def __unicode__(self):
+        return u'Stage opens %s for tournament %s' % (
+            self.opens, self.tournament.name)
+
+
+class RegistrationStageClass(models.Model):
+    registration_stage = models.ForeignKey(RegistrationStage)
+    player_class = models.ForeignKey(PlayerClass)
+    rating_required = models.PositiveSmallIntegerField()
+
+
 class Tournament(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField()
@@ -16,6 +41,86 @@ class Tournament(models.Model):
     classes = models.ManyToManyField(PlayerClass)
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True)
+
+    registration_stages = models.BooleanField(
+        default=False)
+
+    registration_opens = models.DateTimeField(
+        blank=True, null=True)
+
+    registration_ends = models.DateTimeField(
+        blank=True, null=True)
+
+    payment_information = models.TextField(
+        blank=True, null=True)
+
+    tournament_admin_email = models.EmailField(
+        blank=True, null=True)
+
+    def get_stages_json(self):
+        current = self.get_registration_stage()
+        stages = []
+
+        for stage in self.registrationstage_set.all():
+            stage_dict = {
+                'id': stage.id,
+                'is_current': False,
+                'classes': [{
+                    'rating_required': c.rating_required,
+                    'class_id': c.player_class.id
+                } for c in stage.registrationstageclass_set.all()]
+            }
+
+            if stage == current:
+                stage_dict.update({
+                    'is_current': True})
+
+            stages.append(stage_dict)
+
+        return simplejson.dumps(stages)
+
+    def is_registration_open(self):
+        if self.registration_stages:
+            current = self.get_registration_stage()
+            if not current:
+                return False
+
+            return True
+        else:
+            now = datetime.utcnow().replace(tzinfo=utc)
+
+            if now > self.registration_opens and \
+                now < self.registration_ends:
+
+                return True
+
+            return False
+
+    def get_registration_stage(self):
+        now = datetime.utcnow().replace(tzinfo=utc)
+        today = date.today()
+
+        if not self.registration_stages:
+            return None
+
+        current_stage = None
+
+        for stage in self.registrationstage_set.all():
+            if stage.opens <= now and today <= self.start_date:
+                current_stage = stage
+
+        return current_stage
+
+    def is_registration_finished(self):
+        now = datetime.utcnow().replace(tzinfo=utc)
+
+        if self.registration_stages:
+            pass
+        else:
+            if now >= self.registration_ends:
+                return True
+
+            return False
 
     def __unicode__(self):
         return self.name
@@ -36,6 +141,14 @@ class Player(models.Model):
     phonenumber = models.CharField(max_length=20,
         blank=True, null=True)
 
+    pdga_rating = models.PositiveSmallIntegerField(
+        blank=True, null=True)
+
+    country = CountryField()
+
+    def __unicode__(self):
+        return self.name
+
 
 class TournamentPlayer(models.Model):
     player = models.ForeignKey(Player)
@@ -45,4 +158,42 @@ class TournamentPlayer(models.Model):
     is_paid = models.BooleanField()
 
 
+    def send_registration_email(self):
+        subject = 'Registration for %s' % self.tournament.name
+        email_template = get_template(
+            'tournament/registration-email.txt')
 
+        context = Context({
+            'tournament': self.tournament,
+            'player': self.player,
+            'player_class': self.player_class,
+            'tournament_player': self,
+        })
+
+        email_body = email_template.render(context)
+
+        send_mail(
+            subject,
+            email_body,
+            self.tournament.tournament_admin_email,
+            [self.player.email, self.tournament.tournament_admin_email])
+
+
+class TournamentPage(models.Model):
+    tournament = models.ForeignKey(Tournament)
+    title = models.CharField(max_length=255)
+    slug = models.SlugField()
+    body = RichTextField()
+
+    show_in_navigation = models.BooleanField(
+        default=True)
+
+    navigation_position = models.PositiveSmallIntegerField(
+        blank=True, null=True)
+
+
+    class Meta:
+        ordering = ['navigation_position',]
+
+    def __unicode__(self):
+        return self.title
