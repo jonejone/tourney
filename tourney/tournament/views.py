@@ -85,8 +85,20 @@ def registration(request):
 
 
 def index(request):
-    return render(request,
-        'tournament/index.html')
+    try:
+        page = request.tournament.tournamentpage_set.get(
+            slug='frontpage')
+    except TournamentPage.DoesNotExist:
+        page = None
+
+    tmpl_dict = {
+        'page': page,
+    }
+
+    return render(
+        request,
+        'tournament/index.html',
+        tmpl_dict)
 
 
 def page_edit(request, slug):

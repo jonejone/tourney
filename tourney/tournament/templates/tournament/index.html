@@ -1,7 +1,16 @@
 {% extends "tournament/tournament_base.html" %}
 
 {% block content %}
-<h1>Welcome to {{ tournament.name }}</h1>
 
-<p>This tournament lasts from {{ tournament.start_date }} to {{ tournament.end_date }}.</p>
+{% if page %}
+    {% if user.is_authenticated %}
+    <p><a class="btn" href="{% url "tournament-page-edit" page.slug %}">Edit page</a></p>
+    {% endif %}
+
+    {{ page.body|safe }}
+{% else %}
+    <h1>Welcome to {{ tournament.name }}</h1>
+    <p>No frontpage is configured for this tournament.</p>
+{% endif %}
+
 {% endblock %}
