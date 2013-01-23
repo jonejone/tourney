@@ -33,6 +33,16 @@ class RegistrationStageClass(models.Model):
     player_class = models.ForeignKey(PlayerClass)
     rating_required = models.PositiveSmallIntegerField()
 
+    def get_class_price(self):
+        tournament = self.registration_stage.tournament
+        try:
+            p = tournament.tournamentclassprice_set.get(
+                player_class=self.player_class)
+        except TournamentClassPrice.DoesNotExist:
+            return None
+
+        return '%d %s' % (p.price, tournament.currency)
+
 
 class Tournament(models.Model):
     name = models.CharField(max_length=100)
@@ -55,6 +65,9 @@ class Tournament(models.Model):
         blank=True, null=True)
 
     tournament_admin_email = models.EmailField(
+        blank=True, null=True)
+
+    currency = models.CharField(max_length=3,
         blank=True, null=True)
 
     def get_stages_json(self):
@@ -126,6 +139,7 @@ class Tournament(models.Model):
         return self.name
 
 
+
 class Player(models.Model):
     name = models.CharField(max_length=50)
     email = models.EmailField(blank=True, null=True)
@@ -150,12 +164,37 @@ class Player(models.Model):
         return self.name
 
 
+class TournamentOption(models.Model):
+    tournament = models.ForeignKey(Tournament)
+    name = models.CharField(max_length=50)
+    price = models.DecimalField(
+        decimal_places=2,
+        max_digits=8)
+
+    def __unicode__(self):
+        return self.name
+
+    def get_price(self):
+        return '%d %s' % (self.price, self.tournament.currency)
+
+
+class TournamentClassPrice(models.Model):
+    tournament = models.ForeignKey(Tournament)
+    price = models.DecimalField(
+        decimal_places=2,
+        max_digits=8)
+
+    player_class = models.ForeignKey(PlayerClass)
+
+
+
 class TournamentPlayer(models.Model):
     player = models.ForeignKey(Player)
     player_class = models.ForeignKey(PlayerClass)
     tournament = models.ForeignKey(Tournament)
     registered = models.DateTimeField()
     is_paid = models.BooleanField()
+    options = models.ManyToManyField(TournamentOption)
 
 
     def send_registration_email(self):
@@ -163,11 +202,31 @@ class TournamentPlayer(models.Model):
         email_template = get_template(
             'tournament/registration-email.txt')
 
+        try:
+            p = self.tournament.tournamentclassprice_set.get(
+                player_class=self.player_class)
+        except TournamentClassPrice.DoesNotExist:
+            price = None
+        else:
+            price = p.price
+
+        total_amount = 0
+
+        if price:
+            total_amount += price
+
+        for option in self.options.all():
+            total_amount += option.price
+
+
         context = Context({
             'tournament': self.tournament,
             'player': self.player,
             'player_class': self.player_class,
             'tournament_player': self,
+            'price': '%d %s' % (price, self.tournament.currency),
+            'total_amount': '%d %s' % (total_amount,
+                self.tournament.currency)
         })
 
         email_body = email_template.render(context)

@@ -43,6 +43,8 @@ class PlayerForm(forms.ModelForm):
 
 class RegistrationForm(PlayerForm):
     player_class = forms.ChoiceField()
+    options = forms.MultipleChoiceField(
+        widget=forms.widgets.CheckboxSelectMultiple)
 
     class Meta:
         model = Player
@@ -57,6 +59,18 @@ class RegistrationForm(PlayerForm):
 
         super(RegistrationForm, self).__init__(*kargs, **kwargs)
 
+
+        # Take care of choices for "options" field
+        option_choices = []
+        for o in self.tournament.tournamentoption_set.all():
+            label = '%s - %d %s' % (o.name, o.price,
+                self.tournament.currency)
+
+            option_choices.append((o.id, label))
+
+        self.fields['options'].choices = option_choices
+
+        # Take care of choices for player class
         self.fields['player_class'].choices = (('','--'),)
 
         if self.tournament.registration_stages:
@@ -64,8 +78,8 @@ class RegistrationForm(PlayerForm):
 
             if stage:
                 self.fields['player_class'].choices += [
-                    (c.player_class.id, '%s - requires %s rating' % (
-                        c.player_class.name, c.rating_required)
+                    (c.player_class.id, '%s - requires %s rating - %s' % (
+                        c.player_class.name, c.rating_required, c.get_class_price())
                     ) for c in stage.registrationstageclass_set.all()]
         else:
             self.fields['player_class'].choices += [
@@ -82,3 +96,16 @@ class RegistrationForm(PlayerForm):
             player=player,
             player_class=player_class,
             registered=datetime.now())
+
+        # TournamentPlayer saved, lets save options
+        options = []
+        for option_id in self.cleaned_data['options']:
+            try:
+                option = self.tournament.tournamentoption_set.get(
+                    id=option_id)
+            except TournamentOption.DoesNotExist:
+                pass
+            else:
+                options.append(option)
+
+        tp.options = options
