@@ -91,3 +91,4 @@ TOURNAMENT_ID = 1
 CRISPY_TEMPLATE_PACK = 'bootstrap'
 
 CKEDITOR_UPLOAD_PATH = os.path.join(PROJECT_ROOT, 'media/editor_uploads')
+CKEDITOR_UPLOAD_PREFIX = '%seditor_uploads/' % MEDIA_URL
