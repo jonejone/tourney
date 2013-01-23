@@ -1,5 +1,6 @@
 from django import forms
 from django.core.urlresolvers import reverse
+from django.core import management
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
@@ -50,6 +51,7 @@ class RegistrationForm(PlayerForm):
     pdga_terms = forms.BooleanField(
         label='Approve PDGA terms',
         help_text='You must approve the PDGA terms to register for this tournament.')
+
 
     class Meta:
         model = Player
@@ -117,3 +119,6 @@ class RegistrationForm(PlayerForm):
 
         # And finally, send user an email
         tp.send_registration_email()
+
+        # Run management command to update rank
+        management.call_command('pdgarank', tp.player.id)
