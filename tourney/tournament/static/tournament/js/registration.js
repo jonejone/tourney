@@ -25,47 +25,52 @@
                 this.validateRating();
             }.bind(this));
 
-            /* Bind event handler for pdga number field */
-            $('#id_pdga_number').bind('keyup', function(e) {
+            var pdga_number = $('#id_pdga_number');
+
+            var changeFunction = function(e) {
 
                 if(this.timeout) {
                     clearTimeout(this.timeout);
                 }
 
-                this.timeout = setTimeout(function() {
-                    if($(e.target).val()) {
+                if(pdga_number.val()) {
+                    this.timeout = setTimeout(function() {
 
-                        var pdga_number = $(e.target).val();
-                        var pdga_url = this.config.ajax_url +
-                            '?pdga_number=' + pdga_number;
+                            var pdga_url = this.config.ajax_url +
+                                '?pdga_number=' + pdga_number.val();
 
-                        this.status_bar.setWarning('Loading rating...');
+                            this.status_bar.setWarning('Loading rating...');
 
-                        $.get(pdga_url, {}, function(data, textStatus, jqXHR) {
-                            if (data.success) {
+                            $.get(pdga_url, {}, function(data, textStatus, jqXHR) {
+                                if (data.success) {
 
-                                this.status_bar.setSuccess('Current PDGA rating: ' +
-                                    data.rating)
+                                    this.status_bar.setSuccess('Current PDGA rating: ' +
+                                        data.rating)
 
-                                this.rating = data.rating;
-                                this.validateRating();
+                                    this.rating = data.rating;
+                                    this.validateRating();
 
-                                if (data.name) {
-                                    $('#id_name').val(data.name);
+                                    if (data.name) {
+                                        $('#id_name').val(data.name);
+                                    }
+
+                                    if (data.country_code) {
+                                        $('#id_country').val(data.country_code);
+                                    }
+
+                                } else {
+                                    this.status_bar.setError('Unable to retrieve rating.');
                                 }
+                            }.bind(this));
 
-                                if (data.country_code) {
-                                    $('#id_country').val(data.country_code);
-                                }
+                    }.bind(this), this.config.delay);
+                }
+            }.bind(this);
 
-                            } else {
-                                this.status_bar.setError('Unable to retrieve rating.');
-                            }
-                        }.bind(this));
+            $('#id_pdga_number').bind('keyup', changeFunction);
+            $('#id_pdga_number').bind('click', changeFunction);
+            changeFunction();
 
-                    }
-                }.bind(this), this.config.delay);
-            }.bind(this));
 
         },
 

@@ -44,11 +44,16 @@ class PlayerForm(forms.ModelForm):
 class RegistrationForm(PlayerForm):
     player_class = forms.ChoiceField()
     options = forms.MultipleChoiceField(
-        widget=forms.widgets.CheckboxSelectMultiple)
+        widget=forms.widgets.CheckboxSelectMultiple,
+        required=False)
+
+    pdga_terms = forms.BooleanField(
+        label='Approve PDGA terms',
+        help_text='You must approve the PDGA terms to register for this tournament.')
 
     class Meta:
         model = Player
-        fields = ('player_class', 'pdga_number',
+        fields = ('player_class', 'pdga_number', 'pdga_terms',
             'name', 'country', 'email', 'phonenumber')
 
     def __init__(self, *kargs, **kwargs):
@@ -109,3 +114,6 @@ class RegistrationForm(PlayerForm):
                 options.append(option)
 
         tp.options = options
+
+        # And finally, send user an email
+        tp.send_registration_email()
