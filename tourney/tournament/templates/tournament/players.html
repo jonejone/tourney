@@ -11,16 +11,27 @@
             <th>Division</th>
             <th>PDGA</th>
             <th>Rating</th>
+            <th>Paid</th>
         </tr>
     </thead>
     <tbody>
         {% for tp in tournament.tournamentplayer_set.all %}
         <tr>
-            <td>{{ tp.player.name }}</td>
-            <td>{{ tp.player.country }}</td>
+            <td>
+                {{ tp.player.name }}
+            </td>
+            <td>
+                <img src="{{ tp.player.country.flag }}" />
+            </td>
             <td>{{ tp.player_class.name }}</td>
             <td>{{ tp.player.pdga_number }}</td>
             <td>{{ tp.player.pdga_rating }}</td>
+            <td>
+                {% if tp.is_paid %}
+                    Yes
+                {% else %}
+                    No
+                {% endif %}
         </tr>
         {% endfor %}
     </tbody>
