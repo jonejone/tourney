@@ -24,7 +24,15 @@
                 <img src="{{ tp.player.country.flag }}" />
             </td>
             <td>{{ tp.player_class.name }}</td>
-            <td>{{ tp.player.pdga_number }}</td>
+            <td>
+                {% if tp.player.pdga_number %}
+                <a href="http://www.pdga.com/player-stats?PDGANum={{ tp.player.pdga_number }}">
+                    {{ tp.player.pdga_number }}
+                </a>
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
             <td>{{ tp.player.pdga_rating }}</td>
             <td>
                 {% if tp.is_paid %}
