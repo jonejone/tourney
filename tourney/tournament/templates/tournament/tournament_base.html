@@ -67,7 +67,22 @@
         {% endblock %}
 
         <div class="container">
-            {% block content %}{% endblock %}
+            <div class="row">
+                <div class="{% if sidebar %}span8{% else %}span12{% endif %}">
+                    {% block content %}{% endblock %}
+                </div>
+
+                {% if sidebar %}
+                <div class="span3">
+                    {{ sidebar.body|safe }}
+
+                    {% if user.is_authenticated %}
+                    <p style="margin-top: 2em;"><a class="btn" href="{% url "tournament-page-edit" sidebar.slug %}">Edit sidebar</a></p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
         </div>
 
         {% block endbody %}{% endblock %}

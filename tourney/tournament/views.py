@@ -118,6 +118,7 @@ def page_edit(request, slug):
     tmpl_dict = {
         'page': page,
         'form': form,
+        'sidebar': False,
     }
 
     return render(request,
