@@ -9,7 +9,30 @@ from datetime import datetime
 from .models import (   Player,
                         PlayerClass,
                         TournamentPlayer,
+                        TournamentNewsItem,
                         TournamentPage,)
+
+
+class TournamentNewsItemForm(forms.ModelForm):
+    def __init__(self, *kargs, **kwargs):
+        self.helper = FormHelper()
+        self.helper.add_input(Submit('submit', 'Submit'))
+        self.helper.form_class = 'edit-page-form'
+
+        if kwargs.get('instance'):
+            self.helper.form_action = reverse(
+                'tournament-news-edit', args=[
+                kwargs.get('instance').slug])
+        else:
+            self.helper.form_action = reverse(
+                'tournament-news-create')
+
+        super(TournamentNewsItemForm, self).__init__(*kargs, **kwargs)
+
+
+    class Meta:
+        model = TournamentNewsItem
+        fields = ('title', 'introduction', 'body', 'is_published',)
 
 
 class TournamentPageForm(forms.ModelForm):
