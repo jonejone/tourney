@@ -15,3 +15,31 @@
 .registration-stages-table {
     max-width: 700px;
 }
+
+.news-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.news-container-small {
+    margin-bottom: 20px;
+}
+
+.news-container-small h2 {
+    font-size: 23px;
+    line-height: 23px;
+    margin-bottom: 3px;
+}
+
+.news-container-small footer p {
+    font-size: 13px;
+}
+
+.news-container-small p.published {
+    font-style: italic;
+    font-size: 11px;
+}
+
+.create-news-button {
+    margin-top: 30px;
+}
