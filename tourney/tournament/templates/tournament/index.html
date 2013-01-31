@@ -13,4 +13,25 @@
     <p>No frontpage is configured for this tournament.</p>
 {% endif %}
 
+<div class="news-container">
+{% for news_item in news_items %}
+    <article class="news-container-small">
+        <header>
+            <h2><a href="{% url "tournament-news-item" news_item.slug %}">{{ news_item.title }}</a></h2>
+            <p class="published">Published on {{ news_item.published }}</p>
+        </header>
+        {{ news_item.introduction|safe }}
+        <footer>
+            <p><a href="{% url "tournament-news-item" news_item.slug %}">Read more</a></p>
+        </footer>
+    </article>
+{% endfor %}
+</div>
+
+
+
+{% if user.is_authenticated %}
+    <p><a class="btn create-news-button" href="{% url "tournament-news-create" %}">Create news item</a></p>
+{% endif %}
+
 {% endblock %}

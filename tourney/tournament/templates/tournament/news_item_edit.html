@@ -1,0 +1,21 @@
+{% extends "tournament/tournament_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block endhead %}
+{{ form.media }}
+{% endblock %}
+
+{% block content %}
+
+{% if news_item %}
+<h1>Edit news "{{ news_item.title }}"</h1>
+<p><a href="{% url "tournament-news-item" news_item.slug %}">Back to news item</a></p>
+{% else %}
+<h1>Create news item</h1>
+{% endif %}
+
+{% crispy form form.helper %}
+
+
+{% endblock %}
+
