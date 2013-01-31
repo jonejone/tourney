@@ -2,6 +2,7 @@ from django.contrib import admin
 from tourney.tournament.models import ( Tournament,
                                         TournamentPlayer,
                                         TournamentPage,
+                                        TournamentNewsItem,
                                         TournamentClassPrice,
                                         TournamentOption,
                                         Player,
@@ -41,7 +42,12 @@ class TournamentClassPriceAdmin(admin.ModelAdmin):
     list_display = ('tournament', 'player_class', 'price')
 
 
+class TournamentNewsItemAdmin(admin.ModelAdmin):
+    list_display = ('tournament', 'title', 'created', 'is_published')
+
+
 admin.site.register(TournamentPage, TournamentPageAdmin)
+admin.site.register(TournamentNewsItem, TournamentNewsItemAdmin)
 admin.site.register(Tournament, TournamentAdmin)
 admin.site.register(TournamentOption, TournamentOptionAdmin)
 admin.site.register(TournamentClassPrice, TournamentClassPriceAdmin)

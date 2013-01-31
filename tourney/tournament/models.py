@@ -187,7 +187,6 @@ class TournamentClassPrice(models.Model):
     player_class = models.ForeignKey(PlayerClass)
 
 
-
 class TournamentPlayer(models.Model):
     player = models.ForeignKey(Player)
     player_class = models.ForeignKey(PlayerClass)
@@ -253,6 +252,24 @@ class TournamentPage(models.Model):
 
     class Meta:
         ordering = ['navigation_position',]
+
+    def __unicode__(self):
+        return self.title
+
+
+class TournamentNewsItem(models.Model):
+    tournament = models.ForeignKey(Tournament)
+    user = models.ForeignKey(User)
+    title = models.CharField(max_length=200)
+    slug = models.SlugField()
+    introduction = RichTextField()
+    body = RichTextField()
+    created = models.DateTimeField()
+    published = models.DateTimeField(blank=True, null=True)
+    is_published = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-created',]
 
     def __unicode__(self):
         return self.title
