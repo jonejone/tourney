@@ -1,13 +1,18 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse
+from django.utils.text import slugify
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils import simplejson
 
 from django_countries.countries import OFFICIAL_COUNTRIES
+from datetime import datetime
 
-from .forms import RegistrationForm, TournamentPageForm
-from .models import TournamentPlayer, Tournament, TournamentPage
+from .forms import RegistrationForm, TournamentPageForm, TournamentNewsItemForm
+from .models import (   TournamentPlayer,
+                        Tournament,
+                        TournamentPage,
+                        TournamentNewsItem,)
 from .utils.pdga import PDGARanking
 
 
@@ -91,8 +96,12 @@ def index(request):
     except TournamentPage.DoesNotExist:
         page = None
 
+    news_items = request.tournament.tournamentnewsitem_set.filter(
+        is_published=True).order_by('-published')
+
     tmpl_dict = {
         'page': page,
+        'news_items': news_items,
     }
 
     return render(
@@ -135,3 +144,74 @@ def page(request, slug):
 
     return render(request,
         'tournament/page.html', tmpl_dict)
+
+
+def news_item(request, slug):
+
+    lookup_args = {
+        'slug': slug,
+    }
+
+    if not request.user.is_authenticated():
+        lookup_args.update({
+            'is_published': True})
+
+    try:
+        item = request.tournament.tournamentnewsitem_set.get(
+            **lookup_args)
+    except TournamentNewsItem.DoesNotExist:
+        raise Http404
+
+    tmpl_dict = {
+        'news_item': item,
+    }
+
+    return render(request,
+        'tournament/news_item.html', tmpl_dict)
+
+
+def news_edit(request, slug=None):
+    if not request.user.is_authenticated():
+        return HttpResponse('No access!')
+
+    create_new = True
+    kwargs = {}
+    tmpl_dict = {}
+
+    if slug:
+        news_item = get_object_or_404(TournamentNewsItem,
+            tournament=request.tournament,
+            slug=slug)
+
+        kwargs.update({'instance': news_item})
+        tmpl_dict.update({'news_item': news_item})
+        create_new = False
+
+    if request.method == 'POST':
+        form = TournamentNewsItemForm(request.POST, **kwargs)
+
+        if form.is_valid():
+            item = form.save(commit=False)
+
+            if create_new:
+                item.user = request.user
+                item.tournament = request.tournament
+                item.created = datetime.now()
+                item.slug = slugify(item.title)
+
+            if item.is_published and item.published is None:
+                item.published = datetime.now()
+
+            item.save()
+            return HttpResponseRedirect(reverse(
+                'tournament-news-item', args=[item.slug,]))
+    else:
+        form = TournamentNewsItemForm(**kwargs)
+
+    tmpl_dict.update({
+        'form': form,
+        'sidebar': None,
+    })
+
+    return render(request,
+        'tournament/news_item_edit.html', tmpl_dict)
