@@ -33,5 +33,11 @@ urlpatterns += patterns(
     url(
         r'^(?P<slug>[-\w]+)/edit/$',
         'page_edit',
-        name='tournament-page-edit')
+        name='tournament-page-edit'),
+
+
+    url(r'^news/create/$', 'news_edit', name='tournament-news-create'),
+    url(r'^news/(?P<slug>[-\w]+)/$', 'news_item', name='tournament-news-item'),
+    url(r'^news/(?P<slug>[-\w]+)/edit/$', 'news_edit', name='tournament-news-edit'),
+
 )
