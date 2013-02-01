@@ -6,11 +6,12 @@ from crispy_forms.layout import Submit
 
 from datetime import datetime
 
-from .models import (   Player,
-                        PlayerClass,
-                        TournamentPlayer,
-                        TournamentNewsItem,
-                        TournamentPage,)
+from .models import (Player,
+                     PlayerClass,
+                     TournamentPlayer,
+                     TournamentNewsItem,
+                     TournamentOption,
+                     TournamentPage,)
 
 
 class TournamentNewsItemForm(forms.ModelForm):
@@ -28,7 +29,6 @@ class TournamentNewsItemForm(forms.ModelForm):
                 'tournament-news-create')
 
         super(TournamentNewsItemForm, self).__init__(*kargs, **kwargs)
-
 
     class Meta:
         model = TournamentNewsItem
@@ -54,7 +54,7 @@ class TournamentPageForm(forms.ModelForm):
     class Meta:
         model = TournamentPage
         fields = ('title', 'body', 'show_in_navigation',
-            'navigation_position')
+                  'navigation_position')
 
 
 class PlayerForm(forms.ModelForm):
@@ -73,13 +73,13 @@ class RegistrationForm(PlayerForm):
 
     pdga_terms = forms.BooleanField(
         label='Approve PDGA terms',
-        help_text='You must approve the PDGA terms to register for this tournament.')
-
+        help_text='You must approve the PDGA terms' +
+                  'to register for this tournament.')
 
     class Meta:
         model = Player
         fields = ('player_class', 'pdga_number', 'pdga_terms',
-            'name', 'country', 'email', 'phonenumber')
+                  'name', 'country', 'email', 'phonenumber')
 
     def __init__(self, *kargs, **kwargs):
 
@@ -89,28 +89,31 @@ class RegistrationForm(PlayerForm):
 
         super(RegistrationForm, self).__init__(*kargs, **kwargs)
 
-
         # Take care of choices for "options" field
         option_choices = []
         for o in self.tournament.tournamentoption_set.all():
             label = '%s - %d %s' % (o.name, o.price,
-                self.tournament.currency)
+                                    self.tournament.currency)
 
             option_choices.append((o.id, label))
 
         self.fields['options'].choices = option_choices
 
         # Take care of choices for player class
-        self.fields['player_class'].choices = (('','--'),)
+        self.fields['player_class'].choices = (('', '--'), )
 
         if self.tournament.registration_stages:
             stage = self.tournament.get_registration_stage()
 
             if stage:
+                rating = '%s - requires %s rating - %s'
                 self.fields['player_class'].choices += [
-                    (c.player_class.id, '%s - requires %s rating - %s' % (
-                        c.player_class.name, c.rating_required, c.get_class_price())
-                    ) for c in stage.registrationstageclass_set.all()]
+                    (c.player_class.id, rating % (
+                        c.player_class.name,
+                        c.rating_required,
+                        c.get_class_price())
+                    )
+                for c in stage.registrationstageclass_set.all()]
         else:
             self.fields['player_class'].choices += [
                 (c.id, c.name) for c in self.tournament.classes.all()]
@@ -143,5 +146,6 @@ class RegistrationForm(PlayerForm):
         # And finally, send user an email
         tp.send_registration_email()
 
-        # Run management command to update rank
-        management.call_command('pdgarank', tp.player.id)
+        if tp.player.pdga_number:
+            # Run management command to update rank
+            management.call_command('pdgarank', tp.player.id)

@@ -67,8 +67,8 @@ class Tournament(models.Model):
     tournament_admin_email = models.EmailField(
         blank=True, null=True)
 
-    currency = models.CharField(max_length=3,
-        blank=True, null=True)
+    currency = models.CharField(
+        max_length=3, blank=True, null=True)
 
     def get_stages_json(self):
         current = self.get_registration_stage()
@@ -103,7 +103,7 @@ class Tournament(models.Model):
             now = datetime.utcnow().replace(tzinfo=utc)
 
             if now > self.registration_opens and \
-                now < self.registration_ends:
+                    now < self.registration_ends:
 
                 return True
 
@@ -139,7 +139,6 @@ class Tournament(models.Model):
         return self.name
 
 
-
 class Player(models.Model):
     name = models.CharField(max_length=50)
     email = models.EmailField(blank=True, null=True)
@@ -149,11 +148,11 @@ class Player(models.Model):
         blank=True,
         null=True)
 
-    user = models.ForeignKey(User,
-        blank=True, null=True)
+    user = models.ForeignKey(
+        User, blank=True, null=True)
 
-    phonenumber = models.CharField(max_length=20,
-        blank=True, null=True)
+    phonenumber = models.CharField(
+        max_length=20, blank=True, null=True)
 
     pdga_rating = models.PositiveSmallIntegerField(
         blank=True, null=True)
@@ -195,8 +194,10 @@ class TournamentPlayer(models.Model):
     is_paid = models.BooleanField()
     options = models.ManyToManyField(TournamentOption)
 
-
     def send_registration_email(self):
+        if not self.player.email:
+            return
+
         subject = 'Registration for %s' % self.tournament.name
         email_template = get_template(
             'tournament/registration-email.txt')
@@ -217,15 +218,14 @@ class TournamentPlayer(models.Model):
         for option in self.options.all():
             total_amount += option.price
 
-
         context = Context({
             'tournament': self.tournament,
             'player': self.player,
             'player_class': self.player_class,
             'tournament_player': self,
             'price': '%d %s' % (price, self.tournament.currency),
-            'total_amount': '%d %s' % (total_amount,
-                self.tournament.currency)
+            'total_amount': '%d %s' % (
+                total_amount, self.tournament.currency)
         })
 
         email_body = email_template.render(context)
@@ -249,9 +249,8 @@ class TournamentPage(models.Model):
     navigation_position = models.PositiveSmallIntegerField(
         blank=True, null=True)
 
-
     class Meta:
-        ordering = ['navigation_position',]
+        ordering = ['navigation_position', ]
 
     def __unicode__(self):
         return self.title
@@ -269,7 +268,7 @@ class TournamentNewsItem(models.Model):
     is_published = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['-created',]
+        ordering = ['-created', ]
 
     def __unicode__(self):
         return self.title

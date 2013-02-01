@@ -1,6 +1,7 @@
 from django.conf import settings
 from tourney.tournament.models import Tournament
 
+
 class TournamentMiddleware:
     def process_request(self, request):
         if settings.TOURNAMENT_ID:

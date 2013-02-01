@@ -1,14 +1,14 @@
 from django.contrib import admin
-from tourney.tournament.models import ( Tournament,
-                                        TournamentPlayer,
-                                        TournamentPage,
-                                        TournamentNewsItem,
-                                        TournamentClassPrice,
-                                        TournamentOption,
-                                        Player,
-                                        PlayerClass,
-                                        RegistrationStage,
-                                        RegistrationStageClass,)
+from tourney.tournament.models import (Tournament,
+                                       TournamentPlayer,
+                                       TournamentPage,
+                                       TournamentNewsItem,
+                                       TournamentClassPrice,
+                                       TournamentOption,
+                                       Player,
+                                       PlayerClass,
+                                       RegistrationStage,
+                                       RegistrationStageClass,)
 
 
 class TournamentAdmin(admin.ModelAdmin):
@@ -25,13 +25,13 @@ class RegistrationStageAdmin(admin.ModelAdmin):
 
 class RegistrationStageClassAdmin(admin.ModelAdmin):
     list_display = ('registration_stage', 'player_class',
-        'rating_required')
+                    'rating_required')
 
 
 class TournamentPageAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     list_display = ('tournament', 'title', 'show_in_navigation',
-        'navigation_position',)
+                    'navigation_position',)
 
 
 class TournamentOptionAdmin(admin.ModelAdmin):
@@ -43,7 +43,8 @@ class TournamentClassPriceAdmin(admin.ModelAdmin):
 
 
 class TournamentNewsItemAdmin(admin.ModelAdmin):
-    list_display = ('tournament', 'title', 'created', 'is_published')
+    list_display = ('tournament', 'title', 'created',
+                    'is_published')
 
 
 admin.site.register(TournamentPage, TournamentPageAdmin)
@@ -56,4 +57,4 @@ admin.site.register(Player)
 admin.site.register(PlayerClass)
 admin.site.register(RegistrationStage, RegistrationStageAdmin)
 admin.site.register(RegistrationStageClass,
-    RegistrationStageClassAdmin)
+                    RegistrationStageClassAdmin)
