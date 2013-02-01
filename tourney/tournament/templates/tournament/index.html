@@ -28,8 +28,6 @@
 {% endfor %}
 </div>
 
-
-
 {% if user.is_authenticated %}
     <p><a class="btn create-news-button" href="{% url "tournament-news-create" %}">Create news item</a></p>
 {% endif %}
