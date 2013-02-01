@@ -2,26 +2,23 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.text import slugify
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
-from django.conf import settings
 from django.utils import simplejson
 
 from django_countries.countries import OFFICIAL_COUNTRIES
 from datetime import datetime
 
 from .forms import RegistrationForm, TournamentPageForm, TournamentNewsItemForm
-from .models import (   TournamentPlayer,
-                        Tournament,
-                        TournamentPage,
-                        TournamentNewsItem,)
+from .models import (TournamentPage,
+                     TournamentNewsItem,)
 from .utils.pdga import PDGARanking
 
 
-FLIPPED_COUNTRIES = dict([(x,y) for y,x in OFFICIAL_COUNTRIES.items()])
+FLIPPED_COUNTRIES = dict([(x, y) for y, x in OFFICIAL_COUNTRIES.items()])
 
 
 def players(request):
-    return render(request,
-        'tournament/players.html')
+    return render(
+        request, 'tournament/players.html')
 
 
 def check_pdga_number(request):
@@ -85,8 +82,8 @@ def registration(request):
             'current_stage': tournament.get_registration_stage()
         })
 
-    return render(request,
-        'tournament/registration.html', tmpl_dict)
+    return render(
+        request, 'tournament/registration.html', tmpl_dict)
 
 
 def index(request):
@@ -111,8 +108,8 @@ def index(request):
 
 
 def page_edit(request, slug):
-    page = get_object_or_404(TournamentPage,
-        slug=slug, tournament=request.tournament)
+    page = get_object_or_404(
+        TournamentPage, slug=slug, tournament=request.tournament)
 
     if request.method == 'POST':
         form = TournamentPageForm(
@@ -120,7 +117,7 @@ def page_edit(request, slug):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse(
-                'tournament-page', args=[page.slug,]))
+                'tournament-page', args=[page.slug, ]))
     else:
         form = TournamentPageForm(instance=page)
 
@@ -130,20 +127,20 @@ def page_edit(request, slug):
         'sidebar': False,
     }
 
-    return render(request,
-        'tournament/page_edit.html', tmpl_dict)
+    return render(
+        request, 'tournament/page_edit.html', tmpl_dict)
 
 
 def page(request, slug):
-    page = get_object_or_404(TournamentPage,
-        slug=slug, tournament=request.tournament)
+    page = get_object_or_404(
+        TournamentPage, slug=slug, tournament=request.tournament)
 
     tmpl_dict = {
         'page': page
     }
 
-    return render(request,
-        'tournament/page.html', tmpl_dict)
+    return render(
+        request, 'tournament/page.html', tmpl_dict)
 
 
 def news_item(request, slug):
@@ -166,8 +163,10 @@ def news_item(request, slug):
         'news_item': item,
     }
 
-    return render(request,
-        'tournament/news_item.html', tmpl_dict)
+    return render(
+        request,
+        'tournament/news_item.html',
+        tmpl_dict)
 
 
 def news_edit(request, slug=None):
@@ -179,7 +178,8 @@ def news_edit(request, slug=None):
     tmpl_dict = {}
 
     if slug:
-        news_item = get_object_or_404(TournamentNewsItem,
+        news_item = get_object_or_404(
+            TournamentNewsItem,
             tournament=request.tournament,
             slug=slug)
 
@@ -204,7 +204,7 @@ def news_edit(request, slug=None):
 
             item.save()
             return HttpResponseRedirect(reverse(
-                'tournament-news-item', args=[item.slug,]))
+                'tournament-news-item', args=[item.slug, ]))
     else:
         form = TournamentNewsItemForm(**kwargs)
 
@@ -213,5 +213,7 @@ def news_edit(request, slug=None):
         'sidebar': None,
     })
 
-    return render(request,
-        'tournament/news_item_edit.html', tmpl_dict)
+    return render(
+        request,
+        'tournament/news_item_edit.html',
+        tmpl_dict)

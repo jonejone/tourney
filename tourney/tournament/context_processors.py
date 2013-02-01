@@ -1,5 +1,6 @@
 from tourney.tournament.models import TournamentPage
 
+
 def tournament(request):
     context = {}
 
@@ -10,7 +11,7 @@ def tournament(request):
 
         context.update({
             'tournament': request.tournament,
-            'tournament_pages': pages,})
+            'tournament_pages': pages, })
 
         # See if we have a sidebar page
         try:

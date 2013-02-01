@@ -18,8 +18,8 @@ class Command(BaseCommand):
 
         # Check if PDGA number is entered for this player
         if not player.pdga_number:
-            raise CommandError('Player %s doesnt' % args[0]
-                + ' ' + 'have a PDGA number')
+            raise CommandError('Player %s doesnt' % args[0] +
+                               ' ' + 'have a PDGA number')
 
         # Seems we have everything, make call to PDGA
         pdga = PDGARanking(player.pdga_number)
@@ -28,7 +28,8 @@ class Command(BaseCommand):
             player.pdga_rating = pdga.rating
             player.save()
             self.stdout.write('Succesfully updated PDGA rating to' +
-                ' ' + pdga.rating + ' for player ' + player.name)
+                              ' ' + pdga.rating + ' for player ' +
+                              player.name)
         else:
             self.stdout.write('Unable to find PDGA rating ' +
-                'for this player')
+                              'for this player')
