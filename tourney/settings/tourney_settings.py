@@ -2,8 +2,9 @@ import os
 import dj_database_url
 
 PROJECT_ROOT = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), '..'))
+    os.path.join(os.path.dirname(__file__), '../..'))
 
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles/')
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -90,5 +91,6 @@ if os.environ.get('SENDGRID_USERNAME'):
 TOURNAMENT_ID = 1
 CRISPY_TEMPLATE_PACK = 'bootstrap'
 
-CKEDITOR_UPLOAD_PATH = os.path.join(PROJECT_ROOT, 'media/editor_uploads')
+CKEDITOR_UPLOAD_PATH = os.path.abspath(
+    os.path.join(MEDIA_ROOT, 'editor_uploads'))
 CKEDITOR_UPLOAD_PREFIX = '%seditor_uploads/' % MEDIA_URL
