@@ -70,6 +70,9 @@ class Tournament(models.Model):
     currency = models.CharField(
         max_length=3, blank=True, null=True)
 
+    header_image = models.ImageField(
+        upload_to='tournament-headers/', blank=True, null=True)
+
     def get_stages_json(self):
         current = self.get_registration_stage()
         stages = []

@@ -1,6 +1,6 @@
 /* For the header to move down */
 @media (min-width: 980px) {
-    body {padding-top: 60px;}
+    /*body {padding-top: 60px;}*/
 }
 
 .edit-page-form #id_title,
@@ -42,4 +42,16 @@
 
 .create-news-button {
     margin-top: 30px;
+}
+
+.header-image {
+    display: block;
+}
+
+.top-nav-bar {
+    margin-bottom: 15px;
+}
+
+.top-nav-container {
+    margin-top: 5px;
 }
