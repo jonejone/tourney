@@ -9,7 +9,7 @@
     {{ news_item.body|safe }}
 </div>
 
-{% if user.is_authenticated %}
+{% if user.is_tournament_admin %}
 <p><a class="btn" href="{% url "tournament-news-edit" news_item.slug %}">Edit news item</a></p>
 {% endif %}
 

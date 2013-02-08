@@ -4,7 +4,7 @@
 
 {% block content %}
 
-{% if user.is_authenticated %}
+{% if is_tournament_admin %}
 <p><a class="btn" href="{% url "tournament-page-edit" page.slug %}">Edit page</a></p>
 {% endif %}
 

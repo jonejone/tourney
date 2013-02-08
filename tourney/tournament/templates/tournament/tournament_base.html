@@ -28,7 +28,8 @@
           <div class="navbar-inner">
             <div class="container top-nav-container">
                 {% if tournament.header_image %}
-                    <img class="header-image" src="{{ tournament.header_image.url }}" alt="">
+                    <a href="{% url "tournament-index" %}"><img
+                        class="header-image" src="{{ tournament.header_image.url }}" alt=""></a>
                 {% endif %}
               <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                 <span class="icon-bar"></span>
@@ -60,7 +61,7 @@
                 <div class="span3">
                     {{ sidebar.body|safe }}
 
-                    {% if user.is_authenticated %}
+                    {% if is_tournament_admin %}
                     <p style="margin-top: 2em;"><a class="btn" href="{% url "tournament-page-edit" sidebar.slug %}">Edit sidebar</a></p>
                     {% endif %}
                 </div>

@@ -3,11 +3,11 @@
 {% block content %}
 
 {% if page %}
-    {% if user.is_authenticated %}
+    {{ page.body|safe }}
+
+    {% if is_tournament_admin %}
     <p><a class="btn" href="{% url "tournament-page-edit" page.slug %}">Edit page</a></p>
     {% endif %}
-
-    {{ page.body|safe }}
 {% else %}
     <h1>Welcome to {{ tournament.name }}</h1>
     <p>No frontpage is configured for this tournament.</p>
@@ -28,7 +28,7 @@
 {% endfor %}
 </div>
 
-{% if user.is_authenticated %}
+{% if is_tournament_admin %}
     <p><a class="btn create-news-button" href="{% url "tournament-news-create" %}">Create news item</a></p>
 {% endif %}
 
