@@ -20,6 +20,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'djangotoolbox.sites.dynamicsite.DynamicSiteIDMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -49,10 +50,11 @@ INSTALLED_APPS = (
     'ckeditor',
 
     'tourney.tournament',
+    'tourney.frontend',
 )
 
 TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
-ROOT_URLCONF = 'tourney.tournament.urls'
+ROOT_URLCONF = 'tourney.frontend.urls'
 #LANGUAGE_CODE = 'nb_NO'
 MEDIA_URL = '/media/'
 ACCOUNT_ACTIVATION_DAYS = 30
