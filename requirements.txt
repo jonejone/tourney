@@ -1,5 +1,6 @@
 BeautifulSoup
 Django
+psycopg2==2.4.5
 Pillow==1.7.8
 boto==2.6.0
 distribute==0.6.10
