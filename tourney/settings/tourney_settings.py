@@ -4,9 +4,6 @@ import dj_database_url
 PROJECT_ROOT = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '../..'))
 
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles/')
-
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
@@ -47,7 +44,7 @@ INSTALLED_APPS = (
     'boto',
     'storages',
     'crispy_forms',
-    'ckeditor',
+    #'ckeditor',
 
     'tourney.tournament',
     'tourney.frontend',
@@ -56,7 +53,6 @@ INSTALLED_APPS = (
 TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
 ROOT_URLCONF = 'tourney.frontend.urls'
 #LANGUAGE_CODE = 'nb_NO'
-MEDIA_URL = '/media/'
 ACCOUNT_ACTIVATION_DAYS = 30
 
 DEBUG = False
@@ -82,6 +78,7 @@ ADMINS = (
     ('Jone Eide', 'jone@idev.no'),
 )
 
+
 if os.environ.get('SENDGRID_USERNAME'):
     EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
     EMAIL_HOST = 'smtp.sendgrid.net'
@@ -90,9 +87,6 @@ if os.environ.get('SENDGRID_USERNAME'):
     EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
 
 
-TOURNAMENT_ID = 1
 CRISPY_TEMPLATE_PACK = 'bootstrap'
 
-CKEDITOR_UPLOAD_PATH = os.path.abspath(
-    os.path.join(MEDIA_ROOT, 'editor_uploads'))
-CKEDITOR_UPLOAD_PREFIX = '%seditor_uploads/' % MEDIA_URL
+
