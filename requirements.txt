@@ -1,5 +1,5 @@
 BeautifulSoup
-Django==1.5b2
+Django
 Pillow==1.7.8
 boto==2.6.0
 distribute==0.6.10
