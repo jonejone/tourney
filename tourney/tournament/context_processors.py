@@ -4,7 +4,7 @@ from tourney.tournament.models import TournamentPage
 def tournament(request):
     context = {}
 
-    if request.tournament:
+    if hasattr(request, 'tournament'):
         pages = request.tournament.tournamentpage_set.filter(
             show_in_navigation=True).order_by(
                 'navigation_position')
@@ -21,5 +21,9 @@ def tournament(request):
             pass
         else:
             context.update({'sidebar': sidebar})
+
+    if hasattr(request, 'is_tournament_admin'):
+        context.update({'is_tournament_admin':
+            request.is_tournament_admin})
 
     return context
