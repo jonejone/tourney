@@ -8,6 +8,7 @@ from django.utils.timezone import utc
 from django.utils import simplejson
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 
 from ckeditor.fields import RichTextField
 
@@ -275,3 +276,13 @@ class TournamentNewsItem(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+class TournamentSite(models.Model):
+    tournament = models.ForeignKey(Tournament)
+    site = models.ForeignKey(Site)
+
+
+class TournamentAdmin(models.Model):
+    tournament = models.ForeignKey(Tournament)
+    user = models.ForeignKey(User)

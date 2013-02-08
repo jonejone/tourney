@@ -5,10 +5,20 @@ from tourney.tournament.models import (Tournament,
                                        TournamentNewsItem,
                                        TournamentClassPrice,
                                        TournamentOption,
+                                       TournamentSite,
+                                       TournamentAdmin,
                                        Player,
                                        PlayerClass,
                                        RegistrationStage,
                                        RegistrationStageClass,)
+
+
+class TournamentSiteAdmin(admin.ModelAdmin):
+    list_display = ('tournament', 'site')
+
+
+class TournamentAdminAdmin(admin.ModelAdmin):
+    list_display = ('user', 'tournament',)
 
 
 class TournamentAdmin(admin.ModelAdmin):
@@ -53,6 +63,8 @@ admin.site.register(Tournament, TournamentAdmin)
 admin.site.register(TournamentOption, TournamentOptionAdmin)
 admin.site.register(TournamentClassPrice, TournamentClassPriceAdmin)
 admin.site.register(TournamentPlayer, TournamentPlayerAdmin)
+admin.site.register(TournamentSite, TournamentSiteAdmin)
+#admin.site.register(TournamentAdmin, TournamentAdminAdmin)
 admin.site.register(Player)
 admin.site.register(PlayerClass)
 admin.site.register(RegistrationStage, RegistrationStageAdmin)
