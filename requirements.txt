@@ -1,5 +1,5 @@
 BeautifulSoup
-https://www.djangoproject.com/download/1.5b2/tarball/
+https://www.djangoproject.com/download/1.4.3/tarball/
 psycopg2==2.4.5
 Pillow==1.7.8
 boto==2.6.0
