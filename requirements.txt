@@ -1,5 +1,5 @@
 BeautifulSoup
--e git+http://github.com/django/django.git
+-e git+http://github.com/django/django.git#egg=Django
 psycopg2==2.4.5
 Pillow==1.7.8
 boto==2.6.0
