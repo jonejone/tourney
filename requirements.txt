@@ -1,5 +1,4 @@
 BeautifulSoup
-https://www.djangoproject.com/download/1.4.3/tarball/?
 git://github.com/django/django.git
 psycopg2==2.4.5
 Pillow==1.7.8
