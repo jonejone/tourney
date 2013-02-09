@@ -9,7 +9,6 @@ django-boto==0.1.6b
 django-ckeditor==3.6.2.1
 django-countries==1.5
 django-crispy-forms==1.2.3
-django-extensions==1.0.2
 django-nose==1.1
 django-registration==0.8
 django-storages==1.1.6

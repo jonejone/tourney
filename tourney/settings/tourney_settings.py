@@ -36,7 +36,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
 
-    'django_extensions',
     'django_nose',
     'django_countries',
     'registration',
