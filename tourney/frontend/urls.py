@@ -18,7 +18,7 @@ if settings.DEBUG:
    )
 
 
-urlpatterns = patterns(
+urlpatterns += patterns(
     'tourney.frontend.views',
     url(r'^$', 'index', name='frontend-index'),
 )
