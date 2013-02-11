@@ -69,6 +69,7 @@ if os.environ.get('AWS_ACCESS_KEY_ID'):
     AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
     AWS_BUCKET_NAME = os.environ['AWS_BUCKET_NAME']
     AWS_BUCKET_URL = 'https://s3.amazonaws.com/%s/' % AWS_BUCKET_NAME
+    AWS_QUERYSTRING_AUTH = False
     STATIC_URL = '%sstatic/' % AWS_BUCKET_URL
     MEDIA_URL = '%smedia/' % AWS_BUCKET_URL
     STATICFILES_STORAGE = 'tourney.s3utils.StaticRootS3BotoStorage'
