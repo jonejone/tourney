@@ -41,7 +41,7 @@ INSTALLED_APPS = (
     'boto',
     'storages',
     'crispy_forms',
-    #'ckeditor',
+    'ckeditor',
 
     'tourney.tournament',
     'tourney.frontend',
@@ -59,6 +59,8 @@ if os.environ.get('TOURNEY_DEBUG'):
 
 DATABASES = {'default': dj_database_url.config()}
 
+CKEDITOR_UPLOAD_PATH = 'editor_uploads/'
+
 # If we find AWS_ACCESS_KEY_ID, assume usage of S3
 # for both static files and media
 if os.environ.get('AWS_ACCESS_KEY_ID'):
@@ -71,15 +73,12 @@ if os.environ.get('AWS_ACCESS_KEY_ID'):
     MEDIA_URL = '%smedia/' % AWS_BUCKET_URL
     STATICFILES_STORAGE = 'tourney.s3utils.StaticRootS3BotoStorage'
     DEFAULT_FILE_STORAGE = 'tourney.s3utils.MediaRootS3BotoStorage'
+
 else:
     # Lets use local paths instead of S3
     MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
     STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles/')
-
-    #CKEDITOR_UPLOAD_PATH = os.path.abspath(
-    #    os.path.join(MEDIA_ROOT, 'editor_uploads'))
-    #CKEDITOR_UPLOAD_PREFIX = '%seditor_uploads/' % MEDIA_URL
 
 ADMINS = (
     ('Jone Eide', 'jone@idev.no'),
