@@ -52,6 +52,7 @@ TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
 ROOT_URLCONF = 'tourney.frontend.urls'
 #LANGUAGE_CODE = 'nb_NO'
 ACCOUNT_ACTIVATION_DAYS = 30
+TIME_ZONE = 'Europe/Oslo'
 
 DEBUG = False
 if os.environ.get('TOURNEY_DEBUG'):
