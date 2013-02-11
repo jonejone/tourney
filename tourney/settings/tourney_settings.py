@@ -26,7 +26,6 @@ MIDDLEWARE_CLASSES = (
     'tourney.tournament.middleware.TournamentMiddleware',
 )
 
-
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,10 +59,8 @@ if os.environ.get('TOURNEY_DEBUG'):
 
 DATABASES = {'default': dj_database_url.config()}
 
-# S3 configuration
-#STATICFILES_STORAGE = 'caddybook.s3utils.StaticRootS3BotoStorage'
-#DEFAULT_FILE_STORAGE = 'caddybook.s3utils.MediaRootS3BotoStorage'
-
+# If we find AWS_ACCESS_KEY_ID, assume usage of S3
+# for both static files and media
 if os.environ.get('AWS_ACCESS_KEY_ID'):
     AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
@@ -72,12 +69,23 @@ if os.environ.get('AWS_ACCESS_KEY_ID'):
     AWS_BUCKET_URL = 'https://s3.amazonaws.com/%s/' % AWS_BUCKET_NAME
     STATIC_URL = '%sstatic/' % AWS_BUCKET_URL
     MEDIA_URL = '%smedia/' % AWS_BUCKET_URL
+    STATICFILES_STORAGE = 'tourney.s3utils.StaticRootS3BotoStorage'
+    DEFAULT_FILE_STORAGE = 'tourney.s3utils.MediaRootS3BotoStorage'
+else:
+    # Lets use local paths instead of S3
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles/')
+
+    #CKEDITOR_UPLOAD_PATH = os.path.abspath(
+    #    os.path.join(MEDIA_ROOT, 'editor_uploads'))
+    #CKEDITOR_UPLOAD_PREFIX = '%seditor_uploads/' % MEDIA_URL
 
 ADMINS = (
     ('Jone Eide', 'jone@idev.no'),
 )
 
-
+# Pick up SendGrid config from Heroku environment
 if os.environ.get('SENDGRID_USERNAME'):
     EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
     EMAIL_HOST = 'smtp.sendgrid.net'
@@ -87,5 +95,3 @@ if os.environ.get('SENDGRID_USERNAME'):
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap'
-
-
