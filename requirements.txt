@@ -20,3 +20,5 @@ paramiko==1.7.6
 pexpect==2.3
 pycrypto==2.1.0
 virtualenv==1.4.9
+gunicorn==0.16.1
+newrelic
