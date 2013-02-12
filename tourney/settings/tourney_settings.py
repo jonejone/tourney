@@ -51,6 +51,7 @@ TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
 ROOT_URLCONF = 'tourney.frontend.urls'
 #LANGUAGE_CODE = 'nb_NO'
 ACCOUNT_ACTIVATION_DAYS = 30
+GOOGLE_ANALYTICS_ACCOUNT = 'UA-38447981-2'
 TIME_ZONE = 'Europe/Oslo'
 
 DEBUG = False

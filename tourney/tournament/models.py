@@ -74,6 +74,9 @@ class Tournament(models.Model):
     header_image = models.ImageField(
         upload_to='tournament-headers/', blank=True, null=True)
 
+    google_analytics_account = models.CharField(
+        blank=True, null=True, max_length=30)
+
     def get_stages_json(self):
         current = self.get_registration_stage()
         stages = []
