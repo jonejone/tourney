@@ -1,1 +1,1 @@
-web: gunicorn tourney.wsgi:application
+web: newrelic-admin run-program gunicorn tourney.wsgi:application
