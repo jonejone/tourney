@@ -198,6 +198,9 @@ class TournamentPlayer(models.Model):
     is_paid = models.BooleanField()
     options = models.ManyToManyField(TournamentOption)
 
+    class Meta:
+        ordering = ['player_class', '-player__pdga_rating', ]
+
     def send_registration_email(self):
         if not self.player.email:
             return
