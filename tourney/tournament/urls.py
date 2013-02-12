@@ -67,3 +67,11 @@ urlpatterns += patterns(
         'news_edit',
         name='tournament-news-edit'),
 )
+
+urlpatterns += patterns(
+    'tourney.tournament.ajaxviews',
+    url(
+        r'^ajax/update-player-paid/$',
+        'update_player_paid',
+        name='tournament-ajax-update-player-paid'),
+)

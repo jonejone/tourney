@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
+from django.core.context_processors import csrf
 
 from django_countries.countries import OFFICIAL_COUNTRIES
 from datetime import datetime
@@ -17,8 +18,12 @@ FLIPPED_COUNTRIES = dict([(x, y) for y, x in OFFICIAL_COUNTRIES.items()])
 
 
 def players(request):
+    tmpl_dict = {
+        'csrf': csrf(request),
+    }
+
     return render(
-        request, 'tournament/players.html')
+        request, 'tournament/players.html', tmpl_dict)
 
 
 def check_pdga_number(request):
