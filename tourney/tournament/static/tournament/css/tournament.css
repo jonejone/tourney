@@ -55,3 +55,17 @@
 .top-nav-container {
     margin-top: 5px;
 }
+
+.is_paid_admin {
+    color: #0088CC;
+}
+
+.is_paid_admin:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.player-table td {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
