@@ -17,9 +17,17 @@ from .utils.pdga import PDGARanking
 FLIPPED_COUNTRIES = dict([(x, y) for y, x in OFFICIAL_COUNTRIES.items()])
 
 
-def players(request):
+def players(request, embed=False):
+
+    extends_tmpl = 'tournament/tournament_base.html'
+
+    if embed:
+        extends_tmpl = 'tournament/embed_base.html'
+
     tmpl_dict = {
         'csrf': csrf(request),
+        'extends_tmpl': extends_tmpl,
+        'is_embedded': embed,
     }
 
     return render(
@@ -57,14 +65,27 @@ def check_pdga_number(request):
         mimetype='application/json')
 
 
-def registration_complete(request):
+def registration_complete(request, embed=False):
+    extends_tmpl = 'tournament/tournament_base.html'
+
+    if embed:
+        extends_tmpl = 'tournament/embed_base.html'
+
+    tmpl_dict = {'extends_tmpl': extends_tmpl}
+
     return render(
         request,
-        'tournament/registration-complete.html')
+        'tournament/registration-complete.html',
+        tmpl_dict)
 
 
-def registration(request):
+def registration(request, embed=False):
     tournament = request.tournament
+    extends_tmpl = 'tournament/tournament_base.html'
+
+    if embed:
+        extends_tmpl = 'tournament/embed_base.html'
+
 
     if request.method == 'POST':
         form = RegistrationForm(
@@ -72,14 +93,20 @@ def registration(request):
             tournament=tournament)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse(
-                'tournament-registration-complete'))
+            if embed:
+                return HttpResponseRedirect(reverse(
+                    'tournament-registration-complete-embed'))
+            else:
+                return HttpResponseRedirect(reverse(
+                    'tournament-registration-complete'))
     else:
         form = RegistrationForm(
             tournament=tournament)
 
     tmpl_dict = {
         'form': form,
+        'extends_tmpl': extends_tmpl,
+        'is_embedded': embed,
     }
 
     if tournament.registration_stages:

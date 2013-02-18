@@ -1,4 +1,4 @@
-{% extends "tournament/tournament_base.html" %}
+{% extends extends_tmpl %}
 
 {% block endbody %}
 {% if is_tournament_admin %}
@@ -114,7 +114,7 @@ $(function() {
     </tbody>
 </table>
 
-{% if tournament.is_registration_open %}
+{% if tournament.is_registration_open and not is_embedded %}
 <p><a href="{% url "tournament-registration" %}" class="btn btn-info">Register for {{ tournament.name }}</a></p>
 {% endif %}
 

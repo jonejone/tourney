@@ -5,7 +5,10 @@
         this.timeout;
         this.rating;
         this.prepare();
-        this.disableButton();
+
+        if (this.config.stages) {
+            this.disableButton();
+        }
     };
 
     RegistrationPdga.prototype = {
@@ -70,8 +73,6 @@
             $('#id_pdga_number').bind('keyup', changeFunction);
             $('#id_pdga_number').bind('click', changeFunction);
             changeFunction();
-
-
         },
 
         disableButton: function() {
@@ -85,6 +86,11 @@
         },
 
         validateRating: function() {
+            if (!this.config.stages) {
+                this.enableButton();
+                return;
+            }
+
             var stage = this.getCurrentStage();
             var class_id = $('#id_player_class').val();
 

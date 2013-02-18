@@ -24,9 +24,20 @@ urlpatterns += patterns(
     'tourney.tournament.views',
     url(r'^$', 'index', name='tournament-index'),
     url(
+        r'^registration/embed/$',
+        'registration',
+        {'embed': True},
+        name='tournament-registration-embed'),
+    url(
         r'^registration/$',
         'registration',
         name='tournament-registration'),
+    url(
+        r'^registration-complete/embed/$',
+        'registration_complete',
+        {'embed': True},
+        name='tournament-registration-complete-embed'),
+
     url(
         r'^registration-complete/$',
         'registration_complete',
@@ -41,6 +52,12 @@ urlpatterns += patterns(
         r'^players/$',
         'players',
         name='tournament-players'),
+
+    url(
+        r'^players/embed/$',
+        'players',
+        {'embed': True},
+        name='tournament-players-embed'),
 
     url(
         r'^(?P<slug>[-\w]+)/$',

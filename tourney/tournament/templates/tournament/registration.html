@@ -1,4 +1,4 @@
-{% extends "tournament/tournament_base.html" %}
+{% extends extends_tmpl %}
 
 {% block endbody %}
 <script src="{{ STATIC_URL }}tournament/js/registration.js"></script>
@@ -8,7 +8,11 @@ $(function() {
     var config = {
         'delay': 750,
         'ajax_url': '{% url "tournament-ajax-check-pdga-number" %}',
+        {% if tournament.registration_stages %}
         'stages': $.parseJSON('{{ tournament.get_stages_json|safe }}'),
+        {% else %}
+        'stages': false,
+        {% endif %}
     };
 
     var registration_module = TOURNEY.module('registration');
@@ -51,7 +55,7 @@ $(function() {
 {% endif %}
 
 {% if tournament.is_registration_open %}
-<form method="post" action="{% url "tournament-registration" %}">{% csrf_token %}
+<form method="post" action="{% if is_embedded %}{% url "tournament-registration-embed" %}{% else %}{% url "tournament-registration" %}{% endif %}">{% csrf_token %}
     {% include "tournament/bootstrap_form.html" %}
 </form>
 {% else %}
