@@ -87,17 +87,23 @@ class RegistrationForm(PlayerForm):
             self.tournament = kwargs.get('tournament')
             del kwargs['tournament']
 
+        # If there actually are no choices for the "options" field
+        # for this tournament, we just remove the field from the form
+        if not self.tournament.tournamentoption_set.count():
+            del self.base_fields['options']
+
         super(RegistrationForm, self).__init__(*kargs, **kwargs)
 
         # Take care of choices for "options" field
-        option_choices = []
-        for o in self.tournament.tournamentoption_set.all():
-            label = '%s - %d %s' % (o.name, o.price,
-                                    self.tournament.currency)
+        if 'options' in self.fields.keys():
+            option_choices = []
+            for o in self.tournament.tournamentoption_set.all():
+                label = '%s - %d %s' % (o.name, o.price,
+                                        self.tournament.currency)
 
-            option_choices.append((o.id, label))
+                option_choices.append((o.id, label))
 
-        self.fields['options'].choices = option_choices
+            self.fields['options'].choices = option_choices
 
         # Take care of choices for player class
         self.fields['player_class'].choices = (('', '--'), )
