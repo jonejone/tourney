@@ -89,6 +89,14 @@ class Tournament(models.Model):
     pdga_rules_approval = models.BooleanField(
         default=0)
 
+    def get_url(self):
+        try:
+            ts = self.tournamentsite_set.all()[0]
+        except IndexError:
+            return None
+
+        return 'http://%s/' % ts.site.domain
+
     def get_stages_json(self):
         current = self.get_registration_stage()
         stages = []

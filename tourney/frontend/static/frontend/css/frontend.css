@@ -1,0 +1,11 @@
+/* For the header to move down */
+@media (min-width: 980px) {
+}
+
+.top-nav-bar {
+    margin-bottom: 15px;
+}
+
+.tournaments-table {
+    max-width: 700px;
+}

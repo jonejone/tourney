@@ -1,5 +1,38 @@
 {% extends "frontend/base.html" %}
+{% load i18n %}
 
 {% block content %}
-<h1>Welcome to DG Tourney</h1>
+<h1>{% trans "Welcome to DiscTourney.com!" %}</h1>
+
+<p>
+{% blocktrans %}This page has been created to make it easier for disc golf clubs to host tournaments, and lets you host a complete homepage for the tournament, which includes registration, player lists, individual content pages with text and pictures, and more. The service is completely free.{% endblocktrans %}
+</p>
+
+<h3>{% trans "Tournaments hosted by DiscTourney.com" %}</h3>
+
+<table class="table table-dotted table-striped tournaments-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Registration open</th>
+            <th>Players</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for tournament in tournaments %}
+        <tr>
+            <td><a href="{{ tournament.get_url }}">{{ tournament.name }}</a></td>
+            <td>
+                {{ tournament.start_date }}
+            </td>
+            <td>{% if tournament.is_registration_open %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
+            <td>
+                {{ tournament.tournamentplayer_set.count }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}
