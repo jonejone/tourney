@@ -90,7 +90,14 @@ class RegistrationForm(PlayerForm):
         # If there actually are no choices for the "options" field
         # for this tournament, we just remove the field from the form
         if not self.tournament.tournamentoption_set.count():
-            del self.base_fields['options']
+            if 'options' in self.base_fields.keys():
+                del self.base_fields['options']
+
+        # Each tournament has a setting to toggle the PDGA terms field,
+        # so we must remove the field if it is turned off
+        if not self.tournament.pdga_rules_approval:
+            if 'pdga_terms' in self.base_fields.keys():
+                del self.base_fields['pdga_terms']
 
         super(RegistrationForm, self).__init__(*kargs, **kwargs)
 
@@ -140,17 +147,18 @@ class RegistrationForm(PlayerForm):
             registered=datetime.now())
 
         # TournamentPlayer saved, lets save options
-        options = []
-        for option_id in self.cleaned_data['options']:
-            try:
-                option = self.tournament.tournamentoption_set.get(
-                    id=option_id)
-            except TournamentOption.DoesNotExist:
-                pass
-            else:
-                options.append(option)
+        if 'options' in self.fields.keys():
+            options = []
+            for option_id in self.cleaned_data['options']:
+                try:
+                    option = self.tournament.tournamentoption_set.get(
+                        id=option_id)
+                except TournamentOption.DoesNotExist:
+                    pass
+                else:
+                    options.append(option)
 
-        tp.options = options
+            tp.options = options
 
         # And finally, send user an email
         tp.send_registration_email()
