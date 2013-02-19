@@ -86,6 +86,9 @@ class Tournament(models.Model):
     google_analytics_account = models.CharField(
         blank=True, null=True, max_length=30)
 
+    pdga_rules_approval = models.BooleanField(
+        default=0)
+
     def get_stages_json(self):
         current = self.get_registration_stage()
         stages = []
