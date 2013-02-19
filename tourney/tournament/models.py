@@ -19,6 +19,15 @@ class PlayerClass(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_class_price(self, tournament):
+        try:
+            p = tournament.tournamentclassprice_set.get(
+                player_class=self)
+        except TournamentClassPrice.DoesNotExist:
+            return None
+
+        return '%d %s' % (p.price, tournament.currency)
+
 
 class RegistrationStage(models.Model):
     tournament = models.ForeignKey('Tournament')

@@ -116,7 +116,10 @@ class RegistrationForm(PlayerForm):
                 for c in stage.registrationstageclass_set.all()]
         else:
             self.fields['player_class'].choices += [
-                (c.id, c.name) for c in self.tournament.classes.all()]
+                (c.id, '%s - %s' % (
+                    c.name,
+                    c.get_class_price(self.tournament))
+                ) for c in self.tournament.classes.all()]
 
     def save(self, *kargs, **kwargs):
         player = super(RegistrationForm, self).save(*kwargs, **kwargs)
