@@ -45,6 +45,8 @@ INSTALLED_APPS = (
 
     'tourney.tournament',
     'tourney.frontend',
+
+    'south',
 )
 
 TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
