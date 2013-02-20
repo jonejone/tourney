@@ -89,6 +89,12 @@ class Tournament(models.Model):
     pdga_rules_approval = models.BooleanField(
         default=0)
 
+    max_players = models.PositiveSmallIntegerField(
+        default=72)
+
+    wildcard_spots = models.PositiveSmallIntegerField(
+        default=0)
+
     def get_url(self):
         try:
             ts = self.tournamentsite_set.all()[0]
