@@ -95,6 +95,10 @@ class Tournament(models.Model):
     wildcard_spots = models.PositiveSmallIntegerField(
         default=0)
 
+    def get_available_spots(self):
+        players = self.tournamentplayer_set.count()
+        return self.max_players - self.wildcard_spots - players
+
     def get_url(self):
         try:
             ts = self.tournamentsite_set.all()[0]
