@@ -26,7 +26,7 @@ class TournamentAdmin(admin.ModelAdmin):
 
 
 class TournamentPlayerAdmin(admin.ModelAdmin):
-    list_display = ('player', 'tournament', 'player_class')
+    list_display = ('player', 'tournament', 'player_class', 'is_waiting_list')
     list_filter = ('tournament', 'player_class')
 
 

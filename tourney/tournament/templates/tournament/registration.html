@@ -54,6 +54,13 @@ $(function() {
 </table>
 {% endif %}
 
+{% if tournament.is_registration_open and tournament.is_registration_full %}
+<div class="alert">
+    This tournament has reached its max player capacity, and new registrations will
+    be put on a waiting list.
+</div>
+{% endif %}
+
 {% if tournament.is_registration_open %}
 <form method="post" action="{% if is_embedded %}{% url "tournament-registration-embed" %}{% else %}{% url "tournament-registration" %}{% endif %}">{% csrf_token %}
     {% include "tournament/bootstrap_form.html" %}

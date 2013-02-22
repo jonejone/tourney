@@ -117,6 +117,8 @@ def registration(request, embed=False):
     response = render(
         request, 'tournament/registration.html', tmpl_dict)
 
+    # We need this header so IE will allow third-party
+    # cookies (required for the embedded iframes)
     response['P3P'] = "CP=\"CAO PSA OUR\""
 
     return response

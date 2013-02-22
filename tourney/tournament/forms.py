@@ -146,6 +146,10 @@ class RegistrationForm(PlayerForm):
             player_class=player_class,
             registered=datetime.now())
 
+        if self.tournament.is_registration_full():
+            tp.is_waiting_list = True
+            tp.save()
+
         # TournamentPlayer saved, lets save options
         if 'options' in self.fields.keys():
             options = []

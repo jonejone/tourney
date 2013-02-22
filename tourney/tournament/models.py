@@ -172,6 +172,12 @@ class Tournament(models.Model):
 
             return False
 
+    def is_registration_full(self):
+        if self.get_available_spots() > 0:
+            return False
+
+        return True
+
     def __unicode__(self):
         return self.name
 
@@ -230,6 +236,7 @@ class TournamentPlayer(models.Model):
     registered = models.DateTimeField()
     is_paid = models.BooleanField()
     options = models.ManyToManyField(TournamentOption)
+    is_waiting_list = models.BooleanField(default=0)
 
     class Meta:
         ordering = ['player_class', '-player__pdga_rating', ]
