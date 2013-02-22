@@ -114,8 +114,13 @@ def registration(request, embed=False):
             'current_stage': tournament.get_registration_stage()
         })
 
-    return render(
+    response = render(
         request, 'tournament/registration.html', tmpl_dict)
+
+    response['P3P'] = "CP=\"CAO PSA OUR\""
+
+    return response
+
 
 
 def index(request):
