@@ -35,7 +35,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
 
-    'django_nose',
     'django_countries',
     'registration',
     'boto',
@@ -47,6 +46,8 @@ INSTALLED_APPS = (
     'tourney.frontend',
 
     'south',
+
+    'django_nose',
 )
 
 TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
@@ -98,3 +99,5 @@ if os.environ.get('SENDGRID_USERNAME'):
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap'
+
+ALLOWED_HOSTS = ('.sulaopen.com', '.disctourney.com',)
