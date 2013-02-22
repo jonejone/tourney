@@ -17,4 +17,4 @@ virtualenv==1.4.9
 gunicorn==0.16.1
 south
 newrelic==1.10.0.28
-BeautifulSoup==3.1.0.1
+BeautifulSoup
