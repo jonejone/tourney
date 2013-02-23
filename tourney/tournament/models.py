@@ -244,7 +244,8 @@ class TournamentPlayer(models.Model):
     tournament = models.ForeignKey(Tournament)
     registered = models.DateTimeField()
     is_paid = models.BooleanField()
-    options = models.ManyToManyField(TournamentOption)
+    options = models.ManyToManyField(
+        TournamentOption, blank=True)
     is_waiting_list = models.BooleanField(default=0)
 
     class Meta:
