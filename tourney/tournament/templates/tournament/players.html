@@ -17,6 +17,9 @@
     <dt>{% trans "Available spots" %}</dt>
     <dd>
         {{ tournament.get_available_spots }}
+        {% if tournament.get_available_spots == 0 %}
+        ({{ tournament.get_waiting_list_count }} on waiting list)
+        {% endif %}
     </dd>
 </dl>
 
@@ -48,7 +51,7 @@
             </tr>
             {% endif %}
             {% for tp in class.list %}
-            <tr data-tournament-player-id="{{ tp.id }}">
+            <tr data-tournament-player-id="{{ tp.id }}" class="{% if tp.is_waiting_list %}waiting-list{% endif %}">
                 <td>
                     {{ tp.player.name }}
                 </td>
@@ -65,7 +68,8 @@
                         N/A
                     {% endif %}
                 </td>
-                <td>{{ tp.player.pdga_rating }}</td>
+                <td>
+                    {% if tp.player.pdga_rating %}{{ tp.player.pdga_rating }}{% endif %}</td>
                 <td class="is_paid" data-is-paid="{% if tp.is_paid %}1{% else %}0{% endif %}">
                     {% if tp.is_paid %}
                         Yes

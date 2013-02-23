@@ -1,4 +1,5 @@
 {% extends extends_tmpl %}
+{% load i18n %}
 
 {% block endbody %}
 <script src="{{ STATIC_URL }}tournament/js/registration.js"></script>
@@ -53,6 +54,16 @@ $(function() {
     </tbody>
 </table>
 {% endif %}
+
+<dl>
+    <dt>{% trans "Available spots" %}</dt>
+    <dd>
+        {{ tournament.get_available_spots }}
+        {% if tournament.get_available_spots == 0 %}
+        ({{ tournament.get_waiting_list_count }} on waiting list)
+        {% endif %}
+    </dd>
+</dl>
 
 {% if tournament.is_registration_open and tournament.is_registration_full %}
 <div class="alert">

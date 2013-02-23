@@ -99,6 +99,10 @@ class Tournament(models.Model):
         players = self.tournamentplayer_set.count()
         return self.max_players - self.wildcard_spots - players
 
+    def get_waiting_list_count(self):
+        return self.tournamentplayer_set.filter(
+            is_waiting_list=True).count()
+
     def get_url(self):
         try:
             ts = self.tournamentsite_set.all()[0]
