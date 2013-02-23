@@ -1,3 +1,4 @@
+from django.utils.timezone import now
 from django import forms
 from django.core.urlresolvers import reverse
 from django.core import management
@@ -140,16 +141,23 @@ class RegistrationForm(PlayerForm):
         player_class = PlayerClass.objects.get(
             id=self.cleaned_data['player_class'])
 
-        tp = TournamentPlayer.objects.create(
-            tournament=self.tournament,
-            player=player,
-            player_class=player_class,
-            registered=datetime.now())
 
-        if self.tournament.is_registration_full():
-            tp.is_waiting_list = True
-            tp.save()
-        else:
+        tp_kwargs = {
+            'tournament': self.tournament,
+            'player': player,
+            'player_class': player_class,
+            'registered': now(),
+        }
+
+        was_full = self.tournament.is_registration_full()
+
+        if was_full:
+            tp_kwargs.update({'is_waiting_list': True})
+
+        # Create TournamentPlayer
+        tp = TournamentPlayer.objects.create(**tp_kwargs)
+
+        if not was_full:
             tp.send_registration_email()
 
         # TournamentPlayer saved, lets save options

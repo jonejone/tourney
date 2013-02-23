@@ -96,8 +96,13 @@ class Tournament(models.Model):
         default=0)
 
     def get_available_spots(self):
-        players = self.tournamentplayer_set.count()
+        players = self.tournamentplayer_set.filter(
+            is_waiting_list=False).count()
         return self.max_players - self.wildcard_spots - players
+
+    def get_player_list_count(self):
+        return self.tournamentplayer_set.filter(
+            is_waiting_list=False).count()
 
     def get_waiting_list_count(self):
         return self.tournamentplayer_set.filter(
