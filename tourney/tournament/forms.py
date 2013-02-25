@@ -80,27 +80,27 @@ class RegistrationForm(PlayerForm):
     class Meta:
         model = Player
         fields = ('player_class', 'pdga_number', 'pdga_terms',
-                  'name', 'country', 'email', 'phonenumber')
+                  'name', 'country', 'email', 'phonenumber', 'options')
 
     def __init__(self, *kargs, **kwargs):
 
-        if kwargs.get('tournament'):
-            self.tournament = kwargs.get('tournament')
+        if 'tournament' in kwargs:
+            self.tournament = kwargs['tournament']
             del kwargs['tournament']
+
+        super(RegistrationForm, self).__init__(*kargs, **kwargs)
 
         # If there actually are no choices for the "options" field
         # for this tournament, we just remove the field from the form
-        if not self.tournament.tournamentoption_set.count():
-            if 'options' in self.base_fields.keys():
-                del self.base_fields['options']
+        if self.tournament.tournamentoption_set.count() == 0:
+            del self.fields['options']
 
         # Each tournament has a setting to toggle the PDGA terms field,
         # so we must remove the field if it is turned off
         if not self.tournament.pdga_rules_approval:
-            if 'pdga_terms' in self.base_fields.keys():
-                del self.base_fields['pdga_terms']
+            if 'pdga_terms' in self.fields:
+                del self.fields['pdga_terms']
 
-        super(RegistrationForm, self).__init__(*kargs, **kwargs)
 
         # Take care of choices for "options" field
         if 'options' in self.fields.keys():
