@@ -251,6 +251,14 @@ class TournamentPlayer(models.Model):
     class Meta:
         ordering = ['player_class', '-player__pdga_rating', ]
 
+    def accept_player(self):
+        if not self.is_waiting_list:
+            return
+
+        self.is_waiting_list = False
+        self.save()
+        self.send_registration_email()
+
     def send_registration_email(self):
         if not self.player.email:
             return
