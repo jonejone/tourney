@@ -98,9 +98,7 @@ class RegistrationForm(PlayerForm):
         # Each tournament has a setting to toggle the PDGA terms field,
         # so we must remove the field if it is turned off
         if not self.tournament.pdga_rules_approval:
-            if 'pdga_terms' in self.fields:
-                del self.fields['pdga_terms']
-
+            del self.fields['pdga_terms']
 
         # Take care of choices for "options" field
         if 'options' in self.fields.keys():
