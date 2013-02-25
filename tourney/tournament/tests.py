@@ -1,5 +1,7 @@
 #-*-coding: utf8
 from django.test import TestCase
+from django.core import mail
+from django.core.management import call_command
 from django.utils.timezone import utc
 from django.utils.timezone import now
 from django.contrib.auth.models import User
@@ -16,7 +18,32 @@ from .models import (Tournament, Player, PlayerClass,
                      TournamentClassPrice,
                      TournamentOption,
                      TournamentSite,
+                     TournamentPlayer,
                      RegistrationStageClass,)
+
+
+def generate_tournament_player(tournament):
+    player_class = tournament.classes.all()[0]
+    create_kwargs = {
+        'player': generate_player(),
+        'player_class': player_class,
+        'tournament': tournament,
+        'registered': now(),
+    }
+
+    if tournament.get_available_spots() < 1:
+        create_kwargs.update({'is_waiting_list': True})
+
+    return TournamentPlayer.objects.create(**create_kwargs)
+
+
+def generate_player():
+    player_kwargs = {
+        'name': 'Some player name',
+    }
+
+    return Player.objects.create(
+        **player_kwargs)
 
 
 def generate_user():
@@ -70,6 +97,12 @@ def generate_tournament(user=None):
     return tournament
 
 
+def generate_tournament_class_prices(tournament):
+    return [TournamentClassPrice.objects.create(
+        tournament=tournament,
+        player_class=player_class,
+        price=100) for player_class in tournament.classes.all()]
+
 def generate_tournament_options(tournament):
     return [TournamentOption.objects.create(
         name=x,
@@ -95,6 +128,11 @@ class TournamentTestCase(TestCase):
         ts = TournamentSite.objects.create(
             tournament=self.tournament,
             site=self.site)
+
+        # Add some config
+        self.tournament.currency_code = 'NOK'
+
+        generate_tournament_class_prices(self.tournament)
 
 
 class TournamentAnalyticsTest(TournamentTestCase):
@@ -217,6 +255,107 @@ class TournamentOptionTestCase(TournamentTestCase):
         self.assertTrue(
             'options' not in form.fields)
 
+
+class WaitingListTest(TournamentTestCase):
+    def setUp(self, *kargs, **kwargs):
+
+        super(WaitingListTest, self).setUp(
+            *kargs, **kwargs)
+
+        self.tournament.max_players = 1
+        self.tournament.wildcard_spots = 0
+
+        generate_tournament_player(self.tournament)
+        generate_tournament_player(self.tournament)
+
+
+
+class WaitingListEmailTest(WaitingListTest):
+    def setUp(self, *kargs, **kwargs):
+
+        super(WaitingListEmailTest, self).setUp(
+            *kargs, **kwargs)
+
+        self.tournament.tournament_admin_email = 'foo@bar.com'
+        player = self.tournament.tournamentplayer_set.get(
+            is_waiting_list=True)
+
+        player.player.email = 'bar@foo.com'
+        self.player = player
+
+    def email_test(self):
+        outbox_length_before = len(mail.outbox)
+        self.player.send_registration_email()
+        self.assertEqual(
+            len(mail.outbox),
+            outbox_length_before + 1)
+
+
+class WaitingListCommandTest(WaitingListTest):
+    def test_sync_command(self):
+        players = self.tournament.tournamentplayer_set.filter(
+            is_waiting_list=True)
+
+        players_waiting_list_before = self.tournament.\
+            get_waiting_list_count()
+
+        players_list_before = self.tournament.\
+            get_player_list_count()
+
+        spots_before = self.tournament.get_available_spots()
+
+        args = ['some-tournament']
+        opts = {'accept': True}
+        call_command('waitinglist', *args, **opts)
+
+        # Make sure player list increased by one
+        self.assertEqual(
+            self.tournament.get_player_list_count(),
+            players_waiting_list_before + 1)
+
+        # Make sure waiting list count reduced by one
+        self.assertEqual(
+            self.tournament.get_waiting_list_count(),
+            players_waiting_list_before - 1)
+
+        # Make sure available spots reduced by one
+        self.assertEqual(
+            self.tournament.get_available_spots(),
+            spots_before - 1)
+
+
+    def test_sync_player_command(self):
+        players = self.tournament.tournamentplayer_set.filter(
+            is_waiting_list=True)
+
+        player = players[0]
+
+        players_waiting_list_before = self.tournament.\
+            get_waiting_list_count()
+
+        players_list_before = self.tournament.\
+            get_player_list_count()
+
+        spots_before = self.tournament.get_available_spots()
+
+        args = ['some-tournament']
+        opts = {'acceptplayer': player.id}
+        call_command('waitinglist', *args, **opts)
+
+        # Make sure player list increased by one
+        self.assertEqual(
+            self.tournament.get_player_list_count(),
+            players_waiting_list_before + 1)
+
+        # Make sure waiting list count reduced by one
+        self.assertEqual(
+            self.tournament.get_waiting_list_count(),
+            players_waiting_list_before - 1)
+
+        # Make sure available spots reduced by one
+        self.assertEqual(
+            self.tournament.get_available_spots(),
+            spots_before - 1)
 
 class EmbedTest(TournamentTestCase):
     def test_players(self):
