@@ -8,10 +8,12 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.utils.timezone import now
 
+from mock import patch
+from StringIO import StringIO
 from datetime import datetime, date, timedelta
-
 from nose.plugins.attrib import attr
 
+from .utils.pdga import PDGARanking
 from .forms import RegistrationForm
 from .models import (Tournament, Player, PlayerClass,
                      RegistrationStage,
@@ -114,8 +116,6 @@ def generate_tournament_options(tournament):
 def generate_player_classes():
     return [PlayerClass.objects.create(name=x) for x in
         ['open', 'women', 'amateur', 'masters',]]
-
-
 
 
 class TournamentTestCase(TestCase):
@@ -285,10 +285,92 @@ class WaitingListEmailTest(WaitingListTest):
 
     def email_test(self):
         outbox_length_before = len(mail.outbox)
-        self.player.send_registration_email()
+        self.player.accept_player()
         self.assertEqual(
             len(mail.outbox),
             outbox_length_before + 1)
+
+
+class PDGARankUtilTest(TestCase):
+    @patch('tourney.tournament.utils.pdga.urlopen')
+    def test_working(self, urlopen_mock):
+
+        # Mock response from urlopen for PDGA lookup
+        urlopen_mock.return_value = StringIO(pdga_response)
+
+        pdga_number = '28903'
+        pdga = PDGARanking(pdga_number)
+
+        # Assure correct values based on our mock
+        self.assertEqual(pdga.rating, 1027)
+        self.assertEqual(pdga.name, 'Karl Johan Hoj Nybo')
+
+
+class PDGARankCommandTest(TournamentTestCase):
+    @patch('tourney.tournament.utils.pdga.urlopen')
+    def test_update_missing_invalid(self, urlopen_mock):
+        t = self.tournament
+
+        # Mock response from urlopen for PDGA lookup
+        urlopen_mock.return_value = StringIO('Bad response!')
+
+        # Lets generate a player player with PDGA number
+        p1 = generate_tournament_player(t)
+        p1.player.pdga_number = '28903'
+        p1.player.save()
+
+        # Call the management command
+        args = ['some-tournament', ]
+        opts = {'updatemissing': True}
+
+        with patch('sys.stdout', new_callable=StringIO) as stdout_mock:
+            call_command('pdgarank', *args, **opts)
+            self.assertTrue(
+                'unable to update %s' % (p1.player.name) \
+                in stdout_mock.getvalue())
+
+    @patch('tourney.tournament.utils.pdga.urlopen')
+    def test_update_missing_none(self, urlopen_mock):
+        t = self.tournament
+
+        # Mock response from urlopen for PDGA lookup
+        urlopen_mock.return_value = StringIO(pdga_response)
+
+        # Call the management command
+        args = ['some-tournament', ]
+        opts = {'updatemissing': True}
+
+        with patch('sys.stdout', new_callable=StringIO) as stdout_mock:
+            call_command('pdgarank', *args, **opts)
+            self.assertTrue(
+                'No players to update' in stdout_mock.getvalue())
+
+    @patch('tourney.tournament.utils.pdga.urlopen')
+    def test_update_missing(self, urlopen_mock):
+        t = self.tournament
+
+        # Mock response from urlopen for PDGA lookup
+        urlopen_mock.return_value = StringIO(pdga_response)
+
+        # Lets generate a player player with PDGA number
+        p1 = generate_tournament_player(t)
+        p1.player.pdga_number = '28903'
+        p1.player.save()
+
+        # Call the management command
+        args = ['some-tournament', ]
+        opts = {'updatemissing': True}
+
+        with patch('sys.stdout', new_callable=StringIO) as stdout_mock:
+            call_command('pdgarank', *args, **opts)
+
+            self.assertTrue(
+                'Trying to update 1 players' in stdout_mock.getvalue())
+
+        # Now make sure the player has a PDGA rating saved
+        p = t.tournamentplayer_set.all()[0]
+
+        self.assertEqual(p.player.pdga_rating, 1027)
 
 
 class WaitingListCommandTest(WaitingListTest):
@@ -409,10 +491,6 @@ class RegisterPlayerTest(TournamentTestCase):
             t.tournamentplayer_set.count(),
             initial_player_count+1)
 
-
-from tourney.tournament.utils.pdga import PDGARanking
-from mock import patch
-from StringIO import StringIO
 
 
 
