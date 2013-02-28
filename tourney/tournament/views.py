@@ -86,7 +86,6 @@ def registration(request, embed=False):
     if embed:
         extends_tmpl = 'tournament/embed_base.html'
 
-
     if request.method == 'POST':
         form = RegistrationForm(
             request.POST,
