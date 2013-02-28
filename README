@@ -1,0 +1,10 @@
+Tourney
+=======
+
+Tourney is a BSD-licensed Django project that hosts websites for disc golf tournaments. The application lets a user create a new tournament, fully manage everything with regards to registration, when registration opens and so on, waiting lists, sending out emails with payment information and a lot more.
+
+It is currently deployed on Heroku on disctourney.com, where it hosts a few Norwegian disc golf tournaments. The project comes packaged so it is easily deployable to Heroku (and other environments).
+
+Feel free to fork and create pull requests if you have any suggestions to improvements!
+
+- Jone Eide
