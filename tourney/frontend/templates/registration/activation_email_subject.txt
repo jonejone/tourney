@@ -1,0 +1,2 @@
+{% load i18n %}
+{% blocktrans with domain=site.domain %}Activation key for account on {{ domain }}{% endblocktrans %}

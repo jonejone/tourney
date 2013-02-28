@@ -1,0 +1,22 @@
+{% extends "tournament/tournament_base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "Login" %}</h1>
+
+<p>{% blocktrans %}Here you can login to your account.{% endblocktrans %}</p>
+
+{% if form.errors %}
+<div class="alert alert-danger">
+    {% trans "Invalid username and/or password, please try again." %}
+</div>
+{% endif %}
+
+<form class="form-horizontal" method="post" action="{% url "auth_login" %}" enctype="multipart/form-data">{% csrf_token %}
+    {% include "tournament/bootstrap_form.html" %}
+</form>
+
+{% url "auth_password_reset" as url %}
+
+{% blocktrans with url=url %}Forgotten your password? <a href="{{ url }}">Click here to reset</a>{% endblocktrans %}</p>
+{% endblock %}

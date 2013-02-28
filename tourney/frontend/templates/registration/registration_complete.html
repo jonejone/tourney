@@ -1,0 +1,8 @@
+{% extends "tournament/tournament_base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "Registration" %}</h1>
+
+<p>{% blocktrans %}Your account has now been created, and we have sent you an email containing your activation code. Please check this email and click the link inside.{% endblocktrans %}</p>
+{% endblock %}

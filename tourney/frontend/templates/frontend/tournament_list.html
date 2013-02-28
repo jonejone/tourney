@@ -1,0 +1,26 @@
+{% load i18n %}
+<table class="table table-dotted table-striped tournaments-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Registration open</th>
+            <th>Players</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for tournament in tournaments %}
+        <tr>
+            <td><a href="{{ tournament.get_url }}">{{ tournament.name }}</a></td>
+            <td>
+                {{ tournament.start_date }}
+            </td>
+            <td>{% if tournament.is_registration_open %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
+            <td>
+                {{ tournament.tournamentplayer_set.count }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+

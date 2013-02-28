@@ -1,0 +1,12 @@
+{% extends "tournament/tournament_base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "Registration" %}</h1>
+
+<p>{% blocktrans %}By creating an account on this site you can manage tournaments and more.{% endblocktrans %}</p>
+
+<form class="form-horizontal" method="post" action="{% url "registration_register" %}" enctype="multipart/form-data">{% csrf_token %}
+    {% include "tournament/bootstrap_form.html" %}
+</form>
+{% endblock %}

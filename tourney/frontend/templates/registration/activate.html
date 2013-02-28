@@ -1,0 +1,9 @@
+{% extends "tournament/tournament_base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "Activation failed" %}</h1>
+
+<p>{% blocktrans %}Your attempt to activate your account has failed. Are you sure you clicked the link correctly, or pasted the activation code? Please check again. You could also see this error because your account has already been activated, for example because of clicking the link twice.{% endblocktrans %}</p>
+
+{% endblock %}

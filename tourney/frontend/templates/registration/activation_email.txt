@@ -1,0 +1,14 @@
+{% load i18n %}
+{% url "registration_activate" activation_key as url %}
+{% blocktrans with domain=site.domain url=url %}
+Hello,
+
+You have received this email because someone have registered with your email address on {{ domain }}.
+
+Please follow this link to activate your key: http://{{ domain }}{{ url }}
+
+If you don't click the link above to activate your account within {{ expiration_days }} days, your account will be deleted automatically. 
+
+Thanks and regards,
+{{ domain }}
+{% endblocktrans %}

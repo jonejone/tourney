@@ -1,0 +1,12 @@
+{% extends extends_tmpl %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "Welcome!" %}</h1>
+<p>{% trans "Thanks for logging in to your account on our site. You can now manage your tournaments from your account. See below for a list of tournaments where you are an administrator." %}</p>
+
+<h3>{% trans "My tournaments" %}</h3>
+
+{% include "frontend/tournament_list.html" %}
+
+{% endblock %}
