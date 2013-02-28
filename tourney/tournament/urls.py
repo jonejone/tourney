@@ -8,7 +8,13 @@ urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
     (r'^ckeditor/', include('ckeditor.urls')),
+    (r'^accounts/', include('registration.backends.default.urls')),
 
+    # The welcome to logged in view
+    url(
+        r'^accounts/profile/',
+        'tourney.frontend.views.profile',
+        name='tournament-accounts-profile'),
 )
 
 

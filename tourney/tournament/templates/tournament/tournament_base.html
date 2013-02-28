@@ -59,6 +59,22 @@
                     <li><a href="{% url "tournament-page" page.slug %}">{{ page.title }}</a></li>
                   {% endfor %}
                 </ul>
+
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        {% if not user.is_authenticated %}
+                            <a href="{% url "auth_login" %}">{% trans "Login" %}</a>
+                        {% else %}
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            {% trans "Account" %}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{% url "auth_logout" %}">{% trans "Logout" %}</a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </li>
               </div>
             </div>
           </div>
@@ -66,21 +82,22 @@
         {% endblock %}
 
         <div class="container">
-            <div class="row">
-                <div class="{% if sidebar %}span8{% else %}span12{% endif %}">
+            <div class="row-fluid">
+                <div class="{% if sidebar %}span9{% else %}span12{% endif %}">
                     {% block content %}{% endblock %}
                 </div>
 
                 {% if sidebar %}
                 <div class="span3">
-                    {{ sidebar.body|safe }}
+                    <div class="sidebar-wrapper">
+                        {{ sidebar.body|safe }}
 
-                    {% if is_tournament_admin %}
-                    <p style="margin-top: 2em;"><a class="btn" href="{% url "tournament-page-edit" sidebar.slug %}">Edit sidebar</a></p>
+                        {% if is_tournament_admin %}
+                        <p style="margin-top: 2em;"><a class="btn" href="{% url "tournament-page-edit" sidebar.slug %}">Edit sidebar</a></p>
+                        {% endif %}
+                    </div>
                     {% endif %}
                 </div>
-                {% endif %}
-            </div>
 
         </div>
 

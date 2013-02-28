@@ -3,9 +3,21 @@
     /*body {padding-top: 60px;}*/
 }
 
+html body .container {
+    max-width: 980px;
+}
+
+.sidebar-wrapper {
+    float: right;
+}
+
 .edit-page-form #id_title,
 .edit-page-form #id_body {
     width: 500px;
+}
+
+.tournaments-table {
+    max-width: 600px;
 }
 
 .player-table {

@@ -21,7 +21,7 @@ class TournamentAdminAdmin(admin.ModelAdmin):
     list_display = ('user', 'tournament',)
 
 
-class TournamentAdmin(admin.ModelAdmin):
+class TournamentAdminClass(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
@@ -60,12 +60,12 @@ class TournamentNewsItemAdmin(admin.ModelAdmin):
 
 admin.site.register(TournamentPage, TournamentPageAdmin)
 admin.site.register(TournamentNewsItem, TournamentNewsItemAdmin)
-admin.site.register(Tournament, TournamentAdmin)
+admin.site.register(Tournament, TournamentAdminClass)
 admin.site.register(TournamentOption, TournamentOptionAdmin)
 admin.site.register(TournamentClassPrice, TournamentClassPriceAdmin)
 admin.site.register(TournamentPlayer, TournamentPlayerAdmin)
 admin.site.register(TournamentSite, TournamentSiteAdmin)
-#admin.site.register(TournamentAdmin, TournamentAdminAdmin)
+admin.site.register(TournamentAdmin, TournamentAdminAdmin)
 admin.site.register(Player)
 admin.site.register(PlayerClass)
 admin.site.register(RegistrationStage, RegistrationStageAdmin)
