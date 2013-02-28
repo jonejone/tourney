@@ -1,6 +1,6 @@
-import urllib2
 from BeautifulSoup import BeautifulSoup
 from HTMLParser import HTMLParseError
+from urllib2 import urlopen
 
 
 class PDGARanking:
@@ -12,7 +12,7 @@ class PDGARanking:
         self.parse()
 
     def load(self):
-        self.response = urllib2.urlopen(
+        self.response = urlopen(
             self.url).read()
 
     def parse(self):
@@ -21,11 +21,11 @@ class PDGARanking:
 
             # Get current rating
             p = soup.find('p', attrs={'class': 'current-rating'})
-            rating = p.contents[1].replace(' ', '')
+            rating = p.contents[1].strip()
 
             # Get the name also
             h1 = soup.find('h1', attrs={'class': 'page-title'})
-            name = h1.contents[0].split('#')[0]
+            name = h1.contents[0].split('#')[0].strip()
 
             # And location
             location = soup.find('p', attrs={'class':
@@ -38,7 +38,7 @@ class PDGARanking:
             self.rating = None
             self.name = None
         else:
-            self.rating = rating
+            self.rating = int(rating)
             self.name = name
             self.location = location
 
