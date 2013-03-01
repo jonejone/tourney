@@ -1,20 +1,60 @@
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
 from django.utils.text import slugify
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
 from django.core.context_processors import csrf
+from django.contrib.auth.decorators import login_required
+from django.utils.translation import ugettext_lazy as _
 
 from django_countries.countries import OFFICIAL_COUNTRIES
 from datetime import datetime
 
-from .forms import RegistrationForm, TournamentPageForm, TournamentNewsItemForm
+from .forms import (
+    RegistrationForm,
+    TournamentPageForm,
+    TournamentForm,
+    TournamentNewsItemForm)
+
 from .models import (TournamentPage,
                      TournamentNewsItem,)
 from .utils.pdga import PDGARanking
 
 
 FLIPPED_COUNTRIES = dict([(x, y) for y, x in OFFICIAL_COUNTRIES.items()])
+
+
+@login_required
+def edit_tournament(request):
+
+    if not request.is_tournament_admin:
+        raise Http404
+
+    if request.method == 'POST':
+        form = TournamentForm(
+            request.POST,
+            instance=request.tournament)
+
+        if form.is_valid():
+            t = form.save()
+            messages.success(
+                request,
+                _('Tournament has been updated.'))
+            return HttpResponseRedirect(reverse(
+                'tournament-admin-edit'))
+    else:
+        form = TournamentForm(
+            instance=request.tournament)
+
+    tmpl_dict = {
+        'form': form,
+    }
+
+    return render(
+        request,
+        'tournament/admin/edit-tournament.html',
+        tmpl_dict)
 
 
 def players(request, embed=False):

@@ -9,10 +9,18 @@ from datetime import datetime
 
 from .models import (Player,
                      PlayerClass,
+                     Tournament,
                      TournamentPlayer,
                      TournamentNewsItem,
                      TournamentOption,
                      TournamentPage,)
+
+
+class TournamentForm(forms.ModelForm):
+    class Meta:
+        model = Tournament
+        exclude = (
+            'slug', 'user', 'registration_stages',)
 
 
 class TournamentNewsItemForm(forms.ModelForm):

@@ -15,6 +15,11 @@ urlpatterns = patterns(
         r'^accounts/profile/',
         'tourney.frontend.views.profile',
         name='tournament-accounts-profile'),
+
+    url(
+        r'^edit/$',
+        'tourney.tournament.views.edit_tournament',
+        name='tournament-admin-edit'),
 )
 
 
@@ -89,6 +94,8 @@ urlpatterns += patterns(
         r'^news/(?P<slug>[-\w]+)/edit/$',
         'news_edit',
         name='tournament-news-edit'),
+
+
 )
 
 urlpatterns += patterns(
