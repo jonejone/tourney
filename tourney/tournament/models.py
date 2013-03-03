@@ -238,6 +238,10 @@ class TournamentClassPrice(models.Model):
     player_class = models.ForeignKey(PlayerClass)
 
 
+class NoTournamentSpotsException(Exception):
+    pass
+
+
 class TournamentPlayer(models.Model):
     player = models.ForeignKey(Player)
     player_class = models.ForeignKey(PlayerClass)
@@ -254,6 +258,10 @@ class TournamentPlayer(models.Model):
     def accept_player(self):
         if not self.is_waiting_list:
             return
+
+        # We can't accept player if there are no spots
+        if self.tournament.get_available_spots() < 1:
+            raise NoTournamentSpotsException
 
         self.is_waiting_list = False
         self.save()
