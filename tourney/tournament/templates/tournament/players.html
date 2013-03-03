@@ -17,8 +17,8 @@
     <dt>{% trans "Available spots" %}</dt>
     <dd>
         {{ tournament.get_available_spots }}
-        {% if tournament.get_available_spots < 1 %}
-        ({{ tournament.get_waiting_list_count }} on waiting list)
+        {% if tournament.get_waiting_list_count > 0 %}
+        ({{ tournament.get_waiting_list_count }} on <a href="{% url "tournament-waiting-list" %}">waiting list</a>)
         {% endif %}
     </dd>
 </dl>
@@ -30,7 +30,7 @@
 </div>
 {% endif %}
 
-{% regroup tournament.tournamentplayer_set.all by player_class as player_list %}
+{% regroup tournament.get_player_list by player_class as player_list %}
 
 <table class="table table-dotted table-striped player-table">
     <thead>
