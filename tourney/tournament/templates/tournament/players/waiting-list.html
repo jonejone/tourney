@@ -1,0 +1,107 @@
+{% extends "tournament/tournament_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Waiting list" %} - {{ tournament.name }}{% endblock %}
+
+{% block endbody %}
+<script src="{{ STATIC_URL }}tournament/js/status_bar.js"></script>
+<script src="{{ STATIC_URL }}tournament/js/waitinglist.js"></script>
+<script>
+$(function() {
+    var config = {
+        'action_url': '{% url "tournament-ajax-player-action" %}',
+        'status_bar_container': $('.ajax-status-bar'),
+        'lang': {
+            'error': '{% trans "An error occured while trying to perform your action." %}',
+            'error_message': '{% trans "An error occured:" %}',
+            'remove_success': '{% trans "Player has been removed from the tournament." %}',
+            'accept_success': '{% trans "Player has been accepted into the tournament." %}',
+            'remove_trying': '{% trans "Trying to remove player from the tournament" %}',
+            'accept_trying': '{% trans "Trying to accept player into the tournament" %}',
+        }
+    };
+    var module = TOURNEY.module('waitinglist');
+    window.waitinglist = new module.ActionsManager(config);
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>{% trans "Waiting list" %}</h1>
+
+<dl>
+    <dt>{% trans "Players signed up" %}</dt>
+    <dd>
+        {{ tournament.get_player_list_count }} / {{ tournament.max_players }}
+    </dd>
+    <dt>{% trans "Wildcard spots" %}</dt>
+    <dd>
+        {{ tournament.wildcard_spots }}
+    </dd>
+    <dt>{% trans "Available spots" %}</dt>
+    <dd>
+        {{ tournament.get_available_spots }}
+        {% if tournament.get_available_spots < 1 %}
+        ({{ tournament.get_waiting_list_count }} on waiting list)
+        {% endif %}
+    </dd>
+</dl>
+
+<div class="ajax-status-bar" style="display: none;">
+    <span class="label"></span>
+</div>
+
+<table class="table table-dotted table-striped player-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Country</th>
+            <th>Division</th>
+            <th>PDGA</th>
+            <th>Rating</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tp in players %}
+            <tr data-tournament-player-id="{{ tp.id }}" class="{% if tp.is_waiting_list %}waiting-list{% endif %}">
+                <td>
+                    {{ tp.player.name }}
+                </td>
+                <td>
+                    <img src="{{ tp.player.country.flag }}" />
+                </td>
+                <td>{{ tp.player_class.name }}</td>
+                <td>
+                    {% if tp.player.pdga_number %}
+                    <a href="http://www.pdga.com/player-stats?PDGANum={{ tp.player.pdga_number }}">
+                        {{ tp.player.pdga_number }}
+                    </a>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    {% if tp.player.pdga_rating %}{{ tp.player.pdga_rating }}{% endif %}</td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">
+                            {% trans "Actions" %}
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a data-action="remove" href="#">{% trans "Delete from tournament" %}</a>
+                            </li>
+                            <li>
+                                <a data-action="accept" href="#">{% trans "Accept into tournament" %}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

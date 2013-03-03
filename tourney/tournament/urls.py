@@ -20,6 +20,7 @@ urlpatterns = patterns(
         r'^edit/$',
         'tourney.tournament.views.edit_tournament',
         name='tournament-admin-edit'),
+
 )
 
 
@@ -63,6 +64,16 @@ urlpatterns += patterns(
         r'^players/$',
         'players',
         name='tournament-players'),
+
+    url(
+        r'^ajax/player-action/$',
+        'ajax_player_action',
+        name='tournament-ajax-player-action'),
+
+    url(
+        r'^players/waiting-list/$',
+        'waiting_list',
+        name='tournament-waiting-list'),
 
     url(
         r'^players/embed/$',

@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, get_object_or_404
 from django.utils.text import slugify
 from django.http import HttpResponseRedirect, HttpResponse, Http404
@@ -17,12 +18,84 @@ from .forms import (
     TournamentForm,
     TournamentNewsItemForm)
 
-from .models import (TournamentPage,
-                     TournamentNewsItem,)
+from .models import (
+    TournamentPage,
+    NoTournamentSpotsException,
+    TournamentNewsItem)
+
 from .utils.pdga import PDGARanking
 
 
 FLIPPED_COUNTRIES = dict([(x, y) for y, x in OFFICIAL_COUNTRIES.items()])
+
+
+@login_required
+@csrf_exempt
+def ajax_player_action(request):
+
+    # User must be admin
+    if not request.is_tournament_admin:
+        raise Http404
+
+    # We only accept POST requests
+    if request.method != 'POST':
+        raise Http404
+
+    # Our allowed actions for a player
+    allowed_actions = [
+        'waiting-list-accept',
+        'waiting-list-remove',
+    ]
+
+    action = request.POST.get('action')
+    player_id = request.POST.get('tournamentplayer_id')
+    json_data = {
+        'success': False,
+    }
+
+    try:
+        player = request.tournament.tournamentplayer_set.get(
+            id=player_id)
+    except TournamentPlayer.DoesNotExist:
+        raise Http404
+
+    if action not in allowed_actions:
+        raise Http404
+
+    if action == 'waiting-list-remove':
+        player.delete()
+        json_data.update({
+            'success': True,
+            'removed': True})
+
+    if action == 'waiting-list-accept':
+        try:
+            player.accept_player()
+        except NoTournamentSpotsException:
+            json_data.update({'error': 'No available tournament spots'})
+        else:
+            json_data.update({
+                'success': True,
+                'removed': True})
+
+    return HttpResponse(
+        simplejson.dumps(json_data),
+        mimetype='application/json')
+
+
+def waiting_list(request):
+    tournament = request.tournament
+    players = tournament.tournamentplayer_set.filter(
+        is_waiting_list=True)
+
+    tmpl_dict = {
+        'players': players,
+    }
+
+    return render(
+        request,
+        'tournament/players/waiting-list.html',
+        tmpl_dict)
 
 
 @login_required
