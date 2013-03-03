@@ -32,6 +32,7 @@ FLIPPED_COUNTRIES = dict([(x, y) for y, x in OFFICIAL_COUNTRIES.items()])
 @login_required
 @csrf_exempt
 def ajax_player_action(request):
+    t = request.tournament
 
     # User must be admin
     if not request.is_tournament_admin:
@@ -78,6 +79,17 @@ def ajax_player_action(request):
                 'success': True,
                 'removed': True})
 
+    # Add some counters
+    json_data.update({
+        'updater_data': {
+            'wildcard-spots': t.wildcard_spots,
+            'available-spots': t.get_available_spots(),
+            'waiting-list-count': t.get_waiting_list_count(),
+            'player-list-count': t.get_player_list_count(),
+            'max-players': t.max_players,
+        }
+    })
+
     return HttpResponse(
         simplejson.dumps(json_data),
         mimetype='application/json')
@@ -86,7 +98,7 @@ def ajax_player_action(request):
 def waiting_list(request):
     tournament = request.tournament
     players = tournament.tournamentplayer_set.filter(
-        is_waiting_list=True)
+        is_waiting_list=True).order_by('registered')
 
     tmpl_dict = {
         'players': players,

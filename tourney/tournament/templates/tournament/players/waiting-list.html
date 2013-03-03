@@ -32,17 +32,22 @@ $(function() {
 <dl>
     <dt>{% trans "Players signed up" %}</dt>
     <dd>
-        {{ tournament.get_player_list_count }} / {{ tournament.max_players }}
+        <span class="updater-player-list-count">{{ tournament.get_player_list_count }}</span> 
+        /
+        <span class="updater-max-players">{{ tournament.max_players }}</span>
     </dd>
     <dt>{% trans "Wildcard spots" %}</dt>
     <dd>
-        {{ tournament.wildcard_spots }}
+        <span class="updater-wildcard-spots">
+            {{ tournament.wildcard_spots }}
+        </span>
     </dd>
     <dt>{% trans "Available spots" %}</dt>
     <dd>
-        {{ tournament.get_available_spots }}
-        {% if tournament.get_available_spots < 1 %}
-        ({{ tournament.get_waiting_list_count }} on waiting list)
+        <span class="updater-available-spots">{{ tournament.get_available_spots }}</span>
+
+        {% if tournament.get_waiting_list_count > 0 %}
+        (<span class="updater-waiting-list-count">{{ tournament.get_waiting_list_count }}</span> on waiting list)
         {% endif %}
     </dd>
 </dl>
@@ -54,17 +59,21 @@ $(function() {
 <table class="table table-dotted table-striped player-table">
     <thead>
         <tr>
+            <th>#</th>
             <th>Name</th>
             <th>Country</th>
             <th>Division</th>
             <th>PDGA</th>
             <th>Rating</th>
+            {% if is_tournament_admin %}
             <th>Actions</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
         {% for tp in players %}
-            <tr data-tournament-player-id="{{ tp.id }}" class="{% if tp.is_waiting_list %}waiting-list{% endif %}">
+            <tr data-tournament-player-id="{{ tp.id }}">
+                <td>{{ forloop.counter }}</td>
                 <td>
                     {{ tp.player.name }}
                 </td>
@@ -82,7 +91,9 @@ $(function() {
                     {% endif %}
                 </td>
                 <td>
-                    {% if tp.player.pdga_rating %}{{ tp.player.pdga_rating }}{% endif %}</td>
+                    {% if tp.player.pdga_rating %}{{ tp.player.pdga_rating }}{% endif %}
+                </td>
+                {% if is_tournament_admin %}
                 <td>
                     <div class="btn-group">
                         <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">
@@ -99,6 +110,7 @@ $(function() {
                         </ul>
                     </div>
                 </td>
+                {% endif %}
             </tr>
         {% endfor %}
     </tbody>

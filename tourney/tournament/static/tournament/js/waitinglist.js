@@ -1,7 +1,28 @@
 (function(waitinglist) {
 
+    var Updater = function() {
+        this.config = {
+            'available-spots': $('.updater-available-spots'),
+            'max-players': $('.updater-max-players'),
+            'waiting-list-count': $('.updater-waiting-list-count'),
+            'wildcard-spots': $('.updater-wildcard-spots'),
+            'player-list-count': $('.updater-player-list-count'),
+        };
+    };
+
+    Updater.prototype = {
+        update: function(data) {
+            $.each(data, function(key, value) {
+                this.config[key].html(value);
+            }.bind(this));
+        }
+    };
+
+    waitinglist.Updater = Updater;
+
     var ActionsManager = function(config) {
         this.config = config;
+        this.updater = new Updater();
         this.bindEvents();
 
         /* Create a status bar for messaging */
@@ -54,6 +75,11 @@
 
                             s.setSuccess(
                                 this.config.lang[action + '_success']);
+                        }
+
+                        /* Update counters if data available */
+                        if (data.updater_data) {
+                            this.updater.update(data.updater_data);
                         }
                     } else {
                         if (data.error) {
