@@ -100,9 +100,12 @@ class Tournament(models.Model):
             is_waiting_list=False).count()
         return self.max_players - self.wildcard_spots - players
 
-    def get_player_list_count(self):
+    def get_player_list(self):
         return self.tournamentplayer_set.filter(
-            is_waiting_list=False).count()
+            is_waiting_list=False)
+
+    def get_player_list_count(self):
+        return self.get_player_list().count()
 
     def get_waiting_list_count(self):
         return self.tournamentplayer_set.filter(
@@ -182,7 +185,9 @@ class Tournament(models.Model):
             return False
 
     def is_registration_full(self):
-        if self.get_available_spots() > 0:
+        if self.get_available_spots() > 0 and \
+            self.get_waiting_list_count() < 1:
+
             return False
 
         return True
