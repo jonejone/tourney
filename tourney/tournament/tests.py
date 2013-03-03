@@ -1,4 +1,5 @@
 #-*-coding: utf8
+from django.utils import simplejson
 from django.test import TestCase
 from django.core import mail
 from django.core.management import call_command
@@ -14,7 +15,7 @@ from datetime import datetime, date, timedelta
 from nose.plugins.attrib import attr
 
 from .utils.pdga import PDGARanking
-from .forms import RegistrationForm
+from .forms import RegistrationForm, TournamentForm
 from .models import (Tournament, Player, PlayerClass,
                      RegistrationStage,
                      TournamentClassPrice,
@@ -50,7 +51,7 @@ def generate_player():
 
 def generate_user():
     user = User.objects.create_user(
-        'test', 'foo@bar.com', 'foo')
+        'test', 'foo@bar.com', 'password')
 
     return user
 
@@ -133,6 +134,151 @@ class TournamentTestCase(TestCase):
         self.tournament.currency_code = 'NOK'
 
         generate_tournament_class_prices(self.tournament)
+
+
+class WaitingListTestCase(TournamentTestCase):
+    def setUp(self, *kargs, **kwargs):
+
+        super(WaitingListTestCase, self).setUp(
+            *kargs, **kwargs)
+
+        self.tournament.max_players = 1
+        self.tournament.wildcard_spots = 0
+
+        generate_tournament_player(self.tournament)
+        generate_tournament_player(self.tournament)
+
+
+class TournamentAdminTestCase(TournamentTestCase):
+    def setUp(self):
+        super(TournamentAdminTestCase, self).setUp()
+
+        # First we must login
+        user = self.client.login(
+            username=self.user.username,
+            password='password')
+
+        # Now we must make this user an admin
+        self.tournament.tournamentadmin_set.create(
+            user=self.user)
+
+
+class TournamentPlayerActionTestCase(TournamentAdminTestCase):
+    def setUp(self, *kargs, **kwargs):
+        super(TournamentPlayerActionTestCase, self).setUp(
+            *kargs, **kwargs)
+
+        # Add some players and settings
+        self.tournament.max_players = 1
+        self.tournament.wildcard_spots = 0
+
+        generate_tournament_player(self.tournament)
+        generate_tournament_player(self.tournament)
+
+        # Add a spot so there is one available
+        self.tournament.max_players += 1
+        self.tournament.save()
+
+    def test_remove_player(self):
+        t = self.tournament
+
+        player = self.tournament.tournamentplayer_set.filter(
+            is_waiting_list=True)[0]
+
+        self.assertEqual(
+            t.get_waiting_list_count(), 1)
+
+        player_count_before = t.get_player_list_count()
+
+        post_data = {
+            'tournamentplayer_id': player.id,
+            'action': 'waiting-list-remove',
+        }
+
+        r = self.client.post('/ajax/player-action/', post_data)
+
+        # Check JSON response
+        json_response = simplejson.loads(r.content)
+
+        self.assertEqual(
+            json_response['success'], True)
+
+        # Make sure we got a 200 response
+        self.assertEqual(
+            r.status_code,
+            200)
+
+        # Now there shouldn't be anyone on waiting list
+        self.assertEqual(
+            t.get_waiting_list_count(), 0)
+
+        # The players count should stay the same
+        self.assertEqual(
+            t.get_player_list_count(),
+            player_count_before)
+
+    def test_accept_player(self):
+        t = self.tournament
+
+        player = self.tournament.tournamentplayer_set.filter(
+            is_waiting_list=True)[0]
+
+        self.assertEqual(
+            t.get_waiting_list_count(), 1)
+
+        player_count_before = t.get_player_list_count()
+
+        post_data = {
+            'tournamentplayer_id': player.id,
+            'action': 'waiting-list-accept',
+        }
+
+        r = self.client.post('/ajax/player-action/', post_data)
+
+        # Make sure we got a 200 response
+        self.assertEqual(
+            r.status_code,
+            200)
+
+        # Check JSON response
+        json_response = simplejson.loads(r.content)
+
+        self.assertEqual(
+            json_response['success'], True)
+
+
+        # Now there shouldn't be anyone on waiting list
+        self.assertEqual(
+            t.get_waiting_list_count(), 0)
+
+        # Make sure players count increased by one
+        self.assertEqual(
+            t.get_player_list_count(),
+            player_count_before + 1)
+
+
+class TournamentEditTestCase(TournamentAdminTestCase):
+    def _test_edit_tournament_post(self):
+
+        t = self.tournament
+
+        # Create a form with our tournament
+        form = TournamentForm(
+            instance=t)
+
+        post_data = form.initial
+        post_data.update({'name': 'A new name'})
+
+        r = self.client.post('/edit/', post_data)
+
+    def test_edit_tournament_get(self):
+        r = self.client.get('/edit/')
+        self.assertEqual(r.status_code, 200)
+
+        # Make sure it contains a form
+        self.assertTrue(
+            '<form method="post" action="/edit/"' in \
+                r.content)
 
 
 class TournamentAnalyticsTest(TournamentTestCase):
@@ -256,27 +402,15 @@ class TournamentOptionTestCase(TournamentTestCase):
             'options' not in form.fields)
 
 
-class WaitingListTest(TournamentTestCase):
-    def setUp(self, *kargs, **kwargs):
-
-        super(WaitingListTest, self).setUp(
-            *kargs, **kwargs)
-
-        self.tournament.max_players = 1
-        self.tournament.wildcard_spots = 0
-
-        generate_tournament_player(self.tournament)
-        generate_tournament_player(self.tournament)
-
-
-
-class WaitingListEmailTest(WaitingListTest):
+class WaitingListEmailTest(WaitingListTestCase):
     def setUp(self, *kargs, **kwargs):
 
         super(WaitingListEmailTest, self).setUp(
             *kargs, **kwargs)
 
         self.tournament.tournament_admin_email = 'foo@bar.com'
+        self.tournament.max_players = 10
+
         player = self.tournament.tournamentplayer_set.get(
             is_waiting_list=True)
 
@@ -373,7 +507,7 @@ class PDGARankCommandTest(TournamentTestCase):
         self.assertEqual(p.player.pdga_rating, 1027)
 
 
-class WaitingListCommandTest(WaitingListTest):
+class WaitingListCommandTest(WaitingListTestCase):
     def test_sync_command(self):
         players = self.tournament.tournamentplayer_set.filter(
             is_waiting_list=True)
