@@ -95,14 +95,20 @@ def ajax_player_action(request):
         mimetype='application/json')
 
 
-def waiting_list(request):
+def waiting_list(request, embed=False):
     tournament = request.tournament
     players = tournament.tournamentplayer_set.filter(
         is_waiting_list=True).order_by('registered')
 
     tmpl_dict = {
         'players': players,
+        'is_embedded': embed,
+        'extends_tmpl': 'tournament/tournament_base.html',
     }
+
+    if embed:
+        tmpl_dict.update({
+            'extends_tmpl': 'tournament/embed_base.htm'})
 
     return render(
         request,

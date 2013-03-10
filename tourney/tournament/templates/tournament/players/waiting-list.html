@@ -1,4 +1,4 @@
-{% extends "tournament/tournament_base.html" %}
+{% extends extends_tmpl %}
 {% load i18n %}
 
 {% block title %}{% trans "Waiting list" %} - {{ tournament.name }}{% endblock %}
@@ -96,8 +96,7 @@ $(function() {
                 {% if is_tournament_admin %}
                 <td>
                     <div class="btn-group">
-                        <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">
-                            {% trans "Actions" %}
+                        <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
