@@ -3,11 +3,22 @@
     var RegistrationPdga = function(config) {
         this.config = config;
         this.timeout;
-        this.rating;
+        this.rating = 0;
         this.prepare();
 
         if (this.config.stages) {
-            this.disableButton();
+            var rating_over_zero = false;
+            var stage = this.getCurrentStage();
+
+            $(stage.classes).each(function(i, class_) {
+                if(class_.rating_required > 0) {
+                    rating_over_zero = true;
+                }
+            });
+
+            if(rating_over_zero) {
+                this.disableButton();
+            }
         }
     };
 
@@ -85,6 +96,18 @@
             this.button.removeAttr('disabled');
         },
 
+        getClassById: function(id) {
+            var return_class = false;
+
+            $(this.getCurrentStage().classes).each(function(i, class_) {
+                if (class_.class_id == id) {
+                    return_class = class_;
+                }
+            });
+
+            return return_class;
+        },
+
         validateRating: function() {
             if (!this.config.stages) {
                 this.enableButton();
@@ -92,27 +115,32 @@
             }
 
             var stage = this.getCurrentStage();
-            var class_id = $('#id_player_class').val();
 
-            if(!class_id || !this.rating) {
+            var class_id = parseInt(
+                $('#id_player_class').val(), 10);
+
+            var class_ = this.getClassById(class_id);
+
+            if(!class_) {
                 return;
             }
 
             var rating = this.rating;
-            $(stage.classes).each(function(i, class_) {
-                if (class_.class_id == class_id) {
-                    var required_rating = class_.rating_required;
-                    var diff = required_rating - rating;
+            var required_rating = class_.rating_required;
+            var diff = required_rating - rating;
 
-                    if(required_rating > rating) {
-                        this.status_bar.setError('Rating ' + rating + ' does not meet criteria for this class (' + required_rating + ')');
-                        this.disableButton();
-                    } else {
-                        this.status_bar.setSuccess('Rating ' + rating + ' meets criteria for this class (' + required_rating + ')');
-                        this.enableButton();
-                    }
-                }
-            }.bind(this));
+            if (required_rating === 0) {
+                this.enableButton();
+                return;
+            }
+
+            if(required_rating > rating) {
+                this.status_bar.setError('Rating ' + rating + ' does not meet criteria for this class (' + required_rating + ')');
+                this.disableButton();
+            } else {
+                this.status_bar.setSuccess('Rating ' + rating + ' meets criteria for this class (' + required_rating + ')');
+                this.enableButton();
+            }
         },
 
         getCurrentStage: function() {
