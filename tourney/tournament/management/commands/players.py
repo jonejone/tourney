@@ -8,6 +8,14 @@ class Command(BaseCommand):
     args = ''
     help = 'Lists all players with their options'
 
+    option_list = BaseCommand.option_list + (
+        make_option('--with-options-only',
+            action='store_true',
+            dest='options-only',
+            default=False,
+            help='Only show players that has chosen any options.'),
+        )
+
     def validate_tournament(self, *args, **options):
         # First we must validate tournament
         try:
@@ -22,10 +30,16 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.validate_tournament(*args, **options)
 
-        players = self.tournament.tournamentplayer_set.all()
+        if options['options-only']:
+            players = []
+            for p in self.tournament.tournamentplayer_set.all():
+                if p.options.count() > 0:
+                    players.append(p)
+        else:
+            players = self.tournament.tournamentplayer_set.all()
 
         for player in players:
-            options = [opt.name for opt in player.options.all()]
+            opts = [opt.name for opt in player.options.all()]
 
             if player.options.count() == 0:
                 output = '%(player_name)s - %(total_price)s'
@@ -34,7 +48,7 @@ class Command(BaseCommand):
 
             output_data = {
                 'player_name': player.player.name,
-                'options': ', '.join(options),
+                'options': ', '.join(opts),
                 'total_price': '%i %s' % (
                     player.get_player_price(),
                     self.tournament.currency),
