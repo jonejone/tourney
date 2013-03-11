@@ -273,6 +273,24 @@ class TournamentPlayer(models.Model):
         self.save()
         self.send_registration_email()
 
+    def get_options_price(self):
+        price = 0
+
+        for option in self.options.all():
+            price += option.price
+
+        return price
+
+    def get_player_price(self):
+        return self.get_class_price() + \
+            self.get_options_price()
+
+    def get_class_price(self):
+        p = self.tournament.tournamentclassprice_set.get(
+            player_class=self.player_class)
+
+        return p.price
+
     def send_registration_email(self):
         if not self.player.email:
             return
