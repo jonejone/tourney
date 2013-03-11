@@ -223,6 +223,7 @@ class Player(models.Model):
 class TournamentOption(models.Model):
     tournament = models.ForeignKey(Tournament)
     name = models.CharField(max_length=50)
+    is_available = models.BooleanField(default=True)
     price = models.DecimalField(
         decimal_places=2,
         max_digits=8)

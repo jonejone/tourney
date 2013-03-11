@@ -111,7 +111,9 @@ class RegistrationForm(PlayerForm):
         # Take care of choices for "options" field
         if 'options' in self.fields.keys():
             option_choices = []
-            for o in self.tournament.tournamentoption_set.all():
+            for o in self.tournament.tournamentoption_set.filter(
+                is_available=True):
+
                 label = '%s - %d %s' % (o.name, o.price,
                                         self.tournament.currency)
 

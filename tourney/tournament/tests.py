@@ -380,6 +380,32 @@ class RegistrationOpenTest(TournamentTestCase):
 
 
 class TournamentOptionTestCase(TournamentTestCase):
+    def test_available(self):
+        t = self.tournament
+        options = generate_tournament_options(
+            tournament=t)
+
+        form = RegistrationForm(tournament=t)
+
+        # Lets take one of the options, make sure displays
+        # properly in the form. Then, set "is_available" to
+        # false, re-render form, and make sure the option
+        # now is no longer available
+        option = options[0]
+
+        self.assertTrue(
+            option.name in form.as_table())
+
+        # Okay, time to make it unavailable
+        option.is_available = False
+        option.save()
+
+        # Re-create form
+        form = RegistrationForm(tournament=t)
+
+        self.assertTrue(
+            option.name not in form.as_table())
+
     def test_options(self):
         t = self.tournament
 
