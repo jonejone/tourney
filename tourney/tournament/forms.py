@@ -165,9 +165,6 @@ class RegistrationForm(PlayerForm):
         # Create TournamentPlayer
         tp = TournamentPlayer.objects.create(**tp_kwargs)
 
-        if not was_full:
-            tp.send_registration_email()
-
         # TournamentPlayer saved, lets save options
         if 'options' in self.fields.keys():
             options = []
@@ -181,6 +178,9 @@ class RegistrationForm(PlayerForm):
                     options.append(option)
 
             tp.options = options
+
+        if not was_full:
+            tp.send_registration_email()
 
         if tp.player.pdga_number:
             # Run management command to update rank
