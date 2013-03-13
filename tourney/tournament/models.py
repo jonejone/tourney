@@ -261,6 +261,11 @@ class TournamentPlayer(models.Model):
     class Meta:
         ordering = ['player_class', '-player__pdga_rating', ]
 
+    def __unicode__(self):
+        return '\'%s\' in %s' % (
+            self.player.name,
+            self.tournament.name)
+
     def accept_player(self):
         if not self.is_waiting_list:
             return
