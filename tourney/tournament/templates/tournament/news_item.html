@@ -1,4 +1,5 @@
 {% extends "tournament/tournament_base.html" %}
+{% load i18n %}
 
 {% block title %}{{ news_item.title }} - {{ tournament.name }}{% endblock %}
 
@@ -10,7 +11,7 @@
 </div>
 
 {% if user.is_tournament_admin %}
-<p><a class="btn" href="{% url "tournament-news-edit" news_item.slug %}">Edit news item</a></p>
+<p><a class="btn" href="{% url "tournament-news-edit" news_item.slug %}">{% trans "Edit news item" %}</a></p>
 {% endif %}
 
 {% endblock %}

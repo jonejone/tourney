@@ -1,14 +1,14 @@
 {% extends "tournament/tournament_base.html" %}
 {% load crispy_forms_tags %}
 
+{% block title %}{{ page.title }} - {{ tournament.name }}{% endblock %}
+
 {% block endhead %}
 {{ form.media }}
 {% endblock %}
 
 {% block content %}
-<h1>Edit page "{{ page.title }}"</h1>
+    <h1>{% blocktrans with title=page.title %}Edit page "{{ title }}"{% endblocktrans %}</h1>
 
-{% crispy form form.helper %}
-
-
+    {% crispy form form.helper %}
 {% endblock %}

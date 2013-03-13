@@ -1,4 +1,5 @@
 {% extends "tournament/tournament_base.html" %}
+{% load i18n %}
 
 {% block content %}
 
@@ -6,11 +7,11 @@
     {{ page.body|safe }}
 
     {% if is_tournament_admin %}
-    <p><a class="btn" href="{% url "tournament-page-edit" page.slug %}">Edit page</a></p>
+    <p><a class="btn" href="{% url "tournament-page-edit" page.slug %}">{% trans "Edit page" %}</a></p>
     {% endif %}
 {% else %}
-    <h1>Welcome to {{ tournament.name }}</h1>
-    <p>No frontpage is configured for this tournament.</p>
+    <h1>{% blocktrans with name=tournament.name %}Welcome to {{ name }}{% endblocktrans %}</h1>
+    <p>{% trans "No frontpage is configured for this tournament." %}</p>
 {% endif %}
 
 <div class="news-container">
@@ -18,18 +19,18 @@
     <article class="news-container-small">
         <header>
             <h2><a href="{% url "tournament-news-item" news_item.slug %}">{{ news_item.title }}</a></h2>
-            <p class="published">Published on {{ news_item.published }}</p>
+            <p class="published">{% blocktrans with published=news_item.published %}Published on {{ published }}{% endblocktrans %}</p>
         </header>
         {{ news_item.introduction|safe }}
         <footer>
-            <p><a href="{% url "tournament-news-item" news_item.slug %}">Read more</a></p>
+            <p><a href="{% url "tournament-news-item" news_item.slug %}">{% trans "Read more" %}</a></p>
         </footer>
     </article>
 {% endfor %}
 </div>
 
 {% if is_tournament_admin %}
-    <p><a class="btn create-news-button" href="{% url "tournament-news-create" %}">Create news item</a></p>
+    <p><a class="btn create-news-button" href="{% url "tournament-news-create" %}">{% trans "Create news item" %}</a></p>
 {% endif %}
 
 {% endblock %}

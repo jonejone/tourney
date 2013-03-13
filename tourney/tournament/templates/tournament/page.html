@@ -1,15 +1,15 @@
 {% extends "tournament/tournament_base.html" %}
+{% load i18n %}
 
 {% block title %}{{ page.title }} - {{ tournament.name }}{% endblock %}
 
 {% block content %}
 
 {% if is_tournament_admin %}
-<p><a class="btn" href="{% url "tournament-page-edit" page.slug %}">Edit page</a></p>
+<p><a class="btn" href="{% url "tournament-page-edit" page.slug %}">{% trans "Edit page" %}</a></p>
 {% endif %}
 
 <div class="page-container">
     {{ page.body|safe }}
 </div>
-
 {% endblock %}

@@ -1,5 +1,8 @@
 {% extends extends_tmpl %}
+{% load i18n %}
+
+{% block title %}{% blocktrans with name=tournament.name %}Registration complete for {{ name }}{% endblocktrans %}{% endblock %}
 
 {% block content %}
-<h1>Thanks for registering!</h1>
+<h1>{% trans "Thanks for registering!" %}</h1>
 {% endblock %}
