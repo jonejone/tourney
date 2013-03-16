@@ -1,5 +1,6 @@
 from datetime import datetime, date
 
+from django.utils.translation import ugettext_lazy as _
 from django.template.loader import get_template
 from django.template import Context
 from django.core.mail import send_mail
@@ -55,44 +56,65 @@ class RegistrationStageClass(models.Model):
 
 
 class Tournament(models.Model):
-    name = models.CharField(max_length=100)
+
+    name = models.CharField(
+        _('Name'),
+        max_length=100)
+
     slug = models.SlugField()
     user = models.ForeignKey(User)
-    classes = models.ManyToManyField(PlayerClass)
-    start_date = models.DateField()
-    end_date = models.DateField(blank=True, null=True)
+
+    classes = models.ManyToManyField(
+        PlayerClass, help_text=_('Classes'))
+
+    start_date = models.DateField(
+        _('Start date'))
+
+    end_date = models.DateField(
+        _('End date'), blank=True, null=True)
 
     registration_stages = models.BooleanField(
+        _('Registration stages'),
         default=False)
 
     registration_opens = models.DateTimeField(
+        _('Registration opens'),
         blank=True, null=True)
 
     registration_ends = models.DateTimeField(
+        _('Registration ends'),
         blank=True, null=True)
 
     payment_information = models.TextField(
+        _('Payment information'),
         blank=True, null=True)
 
     tournament_admin_email = models.EmailField(
+        _('Admin email address'),
         blank=True, null=True)
 
     currency = models.CharField(
+        _('Currency'),
         max_length=3, blank=True, null=True)
 
     header_image = models.ImageField(
+        _('Header image'),
         upload_to='tournament-headers/', blank=True, null=True)
 
     google_analytics_account = models.CharField(
+        _('Google Analytics account'),
         blank=True, null=True, max_length=30)
 
     pdga_rules_approval = models.BooleanField(
+        _('Require PDGA rules approval'),
         default=0)
 
     max_players = models.PositiveSmallIntegerField(
+        _('Max players'),
         default=72)
 
     wildcard_spots = models.PositiveSmallIntegerField(
+        _('Wildcard spots'),
         default=0)
 
     def get_available_spots(self):
@@ -210,11 +232,16 @@ class Tournament(models.Model):
 
 
 class Player(models.Model):
-    name = models.CharField(max_length=50)
-    email = models.EmailField(blank=True, null=True)
+    name = models.CharField(
+        _('Name'),
+        max_length=50)
+
+    email = models.EmailField(
+        _('Email'),
+        blank=True, null=True)
 
     pdga_number = models.PositiveIntegerField(
-        verbose_name='PDGA Number',
+        verbose_name=_('PDGA Number'),
         blank=True,
         null=True)
 
@@ -222,12 +249,15 @@ class Player(models.Model):
         User, blank=True, null=True)
 
     phonenumber = models.CharField(
+        _('Phonenumber'),
         max_length=20, blank=True, null=True)
 
     pdga_rating = models.PositiveSmallIntegerField(
+        _('PDGA Rating'),
         blank=True, null=True)
 
-    country = CountryField()
+    country = CountryField(
+        _('Country'))
 
     def __unicode__(self):
         return self.name

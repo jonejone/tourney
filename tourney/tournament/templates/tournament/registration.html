@@ -24,13 +24,13 @@ $(function() {
 {% endblock %}
 
 {% block content %}
-<h1>Registration</h1>
+<h1>{% trans "Registration" %}</h1>
 
 {% if tournament.registration_stages %}
 <table class="table table-dotted registration-stages-table">
     <thead>
         <tr>
-            <th>Stage</th>
+            <th>{% trans "Stage" %}</th>
             {% for class in tournament.classes.all %}
             <th>{{ class.name }}</th>
             {% endfor %}
@@ -39,11 +39,12 @@ $(function() {
     <tbody>
         {% for stage in tournament.registrationstage_set.all %}
         <tr{% ifequal stage current_stage %} class="info"{% endifequal %}>
-            <td>Stage {{ forloop.counter }}, opens {{ stage.opens }}</td>
+            <td>
+                {% blocktrans with counter=forloop.counter opens=stage.opens %}Stage {{ counter }}, opens {{ opens }}{% endblocktrans %}</td>
             {% for stage_class in stage.registrationstageclass_set.all %}
             <td>
                 {% ifequal 0 stage_class.rating_required %}
-                    <i>All</i>
+                    <i>{% trans "All" %}</i>
                 {% else %}
                     {{ stage_class.rating_required }}
                 {% endifequal %}
@@ -60,15 +61,14 @@ $(function() {
     <dd>
         {{ tournament.get_available_spots }}
         {% if tournament.get_available_spots == 0 %}
-        ({{ tournament.get_waiting_list_count }} on waiting list)
+        {% blocktrans with count=tournament.get_waiting_list_count %}({{ count }} on waiting list){% endblocktrans %}
         {% endif %}
     </dd>
 </dl>
 
 {% if tournament.is_registration_open and tournament.is_registration_full %}
 <div class="alert">
-    This tournament has reached its max player capacity, and new registrations will
-    be put on a waiting list.
+    {% trans "This tournament has reached its max player capacity, and new registrations will be put on a waiting list." %}
 </div>
 {% endif %}
 
@@ -78,16 +78,16 @@ $(function() {
 </form>
 {% else %}
     {% if tournament.registration_stages %}
-        <p>No stage is open curently.</p>
+        <p>{% trans "No stage is open curently." %}</p>
     {% else %}
         {% if tournament.is_registration_finished %}
         <div class="alert alert-error">
-            Registration for this tournament closed {{ tournament.registration_ends }}
+            {% blocktrans with ends=tournament.registration_ends %}Registration for this tournament closed {{ ends }}{% endblocktrans %}
         </div>
         {% else %}
         <div class="alert">
-            Registration for this tournament has not opened yet.<br/>
-            Registration opens on <strong>{{ tournament.registration_opens }}</strong>
+            {% trans "Registration for this tournament has not opened yet." %}<br/>
+            {% blocktrans with opens=tournament.registration_opens %}Registration opens on <strong>{{ opens }}</strong>{% endblocktrans %}
         </div>
         {% endif %}
     {% endif %}

@@ -14,6 +14,13 @@ class TournamentMiddleware:
         except TournamentSite.DoesNotExist:
             pass
         else:
+            from django.utils import translation
+
+            if ts.tournament.id == 1:
+                translation.activate('en')
+                request.LANGUAGE_CODE = 'en'
+
+
             tournament = ts.tournament
 
             request.tournament = tournament

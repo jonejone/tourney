@@ -7,6 +7,8 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
+
+    (r'^localeurl/', include('localeurl.urls')),
     (r'^ckeditor/', include('ckeditor.urls')),
     (r'^accounts/', include('tourney.frontend.registration_urls')),
 

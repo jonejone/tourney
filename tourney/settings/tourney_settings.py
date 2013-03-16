@@ -7,6 +7,7 @@ PROJECT_ROOT = os.path.abspath(
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
+    "django.core.context_processors.request",
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.static",
@@ -18,15 +19,17 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 MIDDLEWARE_CLASSES = (
     'djangotoolbox.sites.dynamicsite.DynamicSiteIDMiddleware',
+    'localeurl.middleware.LocaleURLMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'tourney.tournament.middleware.TournamentMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 INSTALLED_APPS = (
+    'localeurl',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -52,11 +55,18 @@ INSTALLED_APPS = (
 
 TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
 ROOT_URLCONF = 'tourney.frontend.urls'
-#LANGUAGE_CODE = 'nb_NO'
 ACCOUNT_ACTIVATION_DAYS = 30
 GOOGLE_ANALYTICS_ACCOUNT = 'UA-38447981-2'
 TIME_ZONE = 'Europe/Oslo'
 DEFAULT_FROM_EMAIL = 'mail@disctourney.com'
+
+LANGUAGE_CODE = 'no'
+LANGUAGES =(
+    ('no', 'Norsk'),
+    ('en', 'English'),
+)
+
+PREFIX_DEFAULT_LOCALE = False
 
 DEBUG = False
 if os.environ.get('TOURNEY_DEBUG'):

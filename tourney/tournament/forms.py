@@ -1,3 +1,4 @@
+from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 from django import forms
 from django.core.urlresolvers import reverse
@@ -143,15 +144,18 @@ class PlayerForm(forms.ModelForm):
 
 
 class RegistrationForm(PlayerForm):
-    player_class = forms.ChoiceField()
+    player_class = forms.ChoiceField(
+        label=_('Player class'))
+
     options = forms.MultipleChoiceField(
+        label=_('Options'),
         widget=forms.widgets.CheckboxSelectMultiple,
         required=False)
 
     pdga_terms = forms.BooleanField(
-        label='Approve PDGA terms',
-        help_text='You must approve the PDGA terms' +
-                  'to register for this tournament.')
+        label=_('Approve PDGA terms'),
+        help_text=_('You must approve the PDGA terms' +
+                  'to register for this tournament.'))
 
     class Meta:
         model = Player

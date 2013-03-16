@@ -1,3 +1,4 @@
+{% load localeurl_tags %}
 {% load i18n %}
 <!DOCTYPE html>
 <html>
@@ -58,6 +59,26 @@
                   {% for page in tournament_pages %}
                     <li><a href="{% url "tournament-page" page.slug %}">{{ page.title }}</a></li>
                   {% endfor %}
+                </ul>
+
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            {% trans "Language" %}
+                            <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                        {% for lang in LANGUAGES %}
+                            <li>
+                                <a href="{{ request.path|chlocale:lang.0 }}">
+                                    {{ lang.1 }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </li>
                 </ul>
 
                 <ul class="nav pull-right">

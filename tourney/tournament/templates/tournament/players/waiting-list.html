@@ -47,7 +47,7 @@ $(function() {
         <span class="updater-available-spots">{{ tournament.get_available_spots }}</span>
 
         {% if tournament.get_waiting_list_count > 0 %}
-        (<span class="updater-waiting-list-count">{{ tournament.get_waiting_list_count }}</span> on waiting list)
+        (<span class="updater-waiting-list-count">{{ tournament.get_waiting_list_count }}</span> {% trans "on waiting list" %})
         {% endif %}
     </dd>
 </dl>
@@ -60,13 +60,13 @@ $(function() {
     <thead>
         <tr>
             <th>#</th>
-            <th>Name</th>
-            <th>Country</th>
-            <th>Division</th>
-            <th>PDGA</th>
-            <th>Rating</th>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Country" %}</th>
+            <th>{% trans "Division" %}</th>
+            <th>{% trans "PDGA" %}</th>
+            <th>{% trans "Rating" %}</th>
             {% if is_tournament_admin %}
-            <th>Actions</th>
+            <th>{% trans "Actions" %}</th>
             {% endif %}
         </tr>
     </thead>
@@ -87,7 +87,7 @@ $(function() {
                         {{ tp.player.pdga_number }}
                     </a>
                     {% else %}
-                        N/A
+                        {% trans "N/A" %}
                     {% endif %}
                 </td>
                 <td>
