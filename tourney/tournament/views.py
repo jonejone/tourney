@@ -16,10 +16,13 @@ from .forms import (
     RegistrationForm,
     TournamentPageForm,
     TournamentForm,
+    TournamentPlayerForm,
+    TournamentRegistrationForm,
     TournamentNewsItemForm)
 
 from .models import (
     TournamentPage,
+    TournamentPlayer,
     NoTournamentSpotsException,
     TournamentNewsItem)
 
@@ -145,6 +148,87 @@ def edit_tournament(request):
     return render(
         request,
         'tournament/admin/edit-tournament.html',
+        tmpl_dict)
+
+
+def player_edit_registration(request, tp_id):
+
+    # User must be admin
+    if not request.is_tournament_admin:
+        raise Http404
+
+    try:
+        tp = request.tournament.tournamentplayer_set.get(
+            id=tp_id)
+    except TournamentPlayer.DoesNotExist:
+        raise Http404
+
+    if request.method == 'POST':
+        form = TournamentRegistrationForm(
+            request.POST,
+            instance=tp)
+
+        if form.is_valid():
+            tp = form.save()
+
+            messages.success(
+                request,
+                _('Tournament registration has been updated.'))
+
+            return HttpResponseRedirect(reverse(
+                'tournament-registration-edit', args=[tp.id]))
+
+    else:
+        form = TournamentRegistrationForm(instance=tp)
+
+    tmpl_dict = {
+        'form': form,
+        'player': tp,
+    }
+
+    return render(
+        request,
+        'tournament/admin/edit-registration.html',
+        tmpl_dict)
+
+
+def player_edit(request, tp_id):
+
+    # User must be admin
+    if not request.is_tournament_admin:
+        raise Http404
+
+    try:
+        tp = request.tournament.tournamentplayer_set.get(
+            id=tp_id)
+    except TournamentPlayer.DoesNotExist:
+        raise Http404
+
+    if request.method == 'POST':
+        form = TournamentPlayerForm(
+            request.POST,
+            instance=tp.player)
+
+        if form.is_valid():
+            player = form.save()
+
+            messages.success(
+                request,
+                _('Tournament player has been updated.'))
+
+            return HttpResponseRedirect(reverse(
+                'tournament-player-edit', args=[tp.id]))
+    else:
+        form = TournamentPlayerForm(instance=tp.player)
+
+    tmpl_dict = {
+        'form': form,
+        'player': tp,
+    }
+
+    return render(
+        request,
+        'tournament/admin/edit-player.html',
         tmpl_dict)
 
 

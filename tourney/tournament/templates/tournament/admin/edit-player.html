@@ -1,0 +1,19 @@
+{% extends "tournament/tournament_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Edit player" %} - {{ player.player.name }}{% endblock %}
+
+{% block content %}
+
+<h1>{% trans "Edit player" %} {{ player.player.name }}</h1>
+
+{% if form.errors %}
+<div class="alert alert-error">
+     {% trans "Please correct fields marked in red below and try again." %}
+</div>
+{% endif %}
+
+<form method="post" action="{% url "tournament-player-edit" player.id %}">{% csrf_token %}
+    {% include "tournament/bootstrap_form.html" %}
+</form>
+{% endblock %}

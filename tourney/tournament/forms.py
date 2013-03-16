@@ -16,6 +16,18 @@ from .models import (Player,
                      TournamentPage,)
 
 
+class TournamentPlayerForm(forms.ModelForm):
+    class Meta:
+        model = Player
+        exclude = ('user',)
+
+
+class TournamentRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = TournamentPlayer
+        exclude = ('tournament', 'player')
+
+
 class TournamentForm(forms.ModelForm):
     class Meta:
         model = Tournament
