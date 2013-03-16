@@ -3,6 +3,7 @@
 
 {% block title %}{% blocktrans with name=tournament.name %}Player list - {{ name }}{% endblocktrans %}{% endblock %}
 
+
 {% block content %}
 <h1>{% trans "Players" %}</h1>
 
@@ -31,6 +32,10 @@
 </div>
 {% endif %}
 
+<div class="ajax-status-bar" style="display: none;">
+    <span class="label"></span>
+</div>
+
 {% regroup tournament.get_player_list by player_class as player_list %}
 
 <table class="table table-dotted table-striped player-table">
@@ -42,6 +47,9 @@
             <th>{% trans "PDGA" %}</th>
             <th>{% trans "Rating" %}</th>
             <th>{% trans "Paid" %}</th>
+            {% if is_tournament_admin %}
+            <th>{% trans "Actions" %}</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -78,6 +86,28 @@
                         {% trans "No" %}
                     {% endif %}
                 </td>
+
+                {% if is_tournament_admin %}
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{% url "tournament-registration-edit" tp.id %}">{% trans "Edit this registration" %}</a>
+                            </li>
+                            <li>
+                                <a href="{% url "tournament-player-edit" tp.id %}">{% trans "Edit this player" %}</a>
+                            </li>
+                            <li>
+                                <a data-action="remove" href="#">{% trans "Delete from tournament" %}</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </td>
+                {% endif %}
             </tr>
             {% endfor %}
         {% endfor %}
@@ -92,7 +122,28 @@
 
 {% block endbody %}
 {% if is_tournament_admin %}
+
+
+<script src="{{ STATIC_URL }}tournament/js/status_bar.js"></script>
+<script src="{{ STATIC_URL }}tournament/js/playeractions.js"></script>
 <script>
+$(function() {
+    var config = {
+        'action_url': '{% url "tournament-ajax-player-action" %}',
+        'status_bar_container': $('.ajax-status-bar'),
+        'lang': {
+            'error': '{% trans "An error occured while trying to perform your action." %}',
+            'error_message': '{% trans "An error occured:" %}',
+            'remove_success': '{% trans "Player has been removed from the tournament." %}',
+            'accept_success': '{% trans "Player has been accepted into the tournament." %}',
+            'remove_trying': '{% trans "Trying to remove player from the tournament" %}',
+            'accept_trying': '{% trans "Trying to accept player into the tournament" %}',
+        }
+    };
+    var module = TOURNEY.module('playeractions');
+    window.actionsmanager = new module.ActionsManager(config);
+});
+
 $(function() {
     var set_paid_url = '{% url "tournament-ajax-update-player-paid" %}';
     var csrf_token = '{{ csrf.csrf_token }}';

@@ -5,7 +5,7 @@
 
 {% block endbody %}
 <script src="{{ STATIC_URL }}tournament/js/status_bar.js"></script>
-<script src="{{ STATIC_URL }}tournament/js/waitinglist.js"></script>
+<script src="{{ STATIC_URL }}tournament/js/playeractions.js"></script>
 <script>
 $(function() {
     var config = {
@@ -20,8 +20,8 @@ $(function() {
             'accept_trying': '{% trans "Trying to accept player into the tournament" %}',
         }
     };
-    var module = TOURNEY.module('waitinglist');
-    window.waitinglist = new module.ActionsManager(config);
+    var module = TOURNEY.module('playeractions');
+    window.playeractions = new module.ActionsManager(config);
 });
 </script>
 {% endblock %}
@@ -100,6 +100,12 @@ $(function() {
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
+                            <li>
+                                <a href="{% url "tournament-registration-edit" tp.id %}">{% trans "Edit this registration" %}</a>
+                            </li>
+                            <li>
+                                <a href="{% url "tournament-player-edit" tp.id %}">{% trans "Edit this player" %}</a>
+                            </li>
                             <li>
                                 <a data-action="remove" href="#">{% trans "Delete from tournament" %}</a>
                             </li>
