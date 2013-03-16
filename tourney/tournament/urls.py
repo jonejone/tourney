@@ -61,6 +61,16 @@ urlpatterns += patterns(
         name='tournament-ajax-check-pdga-number'),
 
     url(
+        r'^players/(?P<tp_id>\d+)/edit-player/$',
+        'player_edit',
+        name='tournament-player-edit'),
+
+    url(
+        r'^players/(?P<tp_id>\d+)/edit-registration/$',
+        'player_edit_registration',
+        name='tournament-registration-edit'),
+
+    url(
         r'^players/$',
         'players',
         name='tournament-players'),
