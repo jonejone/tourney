@@ -55,12 +55,6 @@
 
         performAction: function(action, player_id) {
 
-            // Some actions just want to redirect elsewhere
-            if(action == 'edit') {
-                console.log('Redirectin', player_id);
-                return;
-            }
-
             // Lets have our status bar easily available
             var s = this.status_bar;
             s.setWarning(this.config.lang[action + '_trying']);
