@@ -56,6 +56,7 @@ ROOT_URLCONF = 'tourney.frontend.urls'
 ACCOUNT_ACTIVATION_DAYS = 30
 GOOGLE_ANALYTICS_ACCOUNT = 'UA-38447981-2'
 TIME_ZONE = 'Europe/Oslo'
+DEFAULT_FROM_EMAIL = 'mail@disctourney.com'
 
 DEBUG = False
 if os.environ.get('TOURNEY_DEBUG'):
