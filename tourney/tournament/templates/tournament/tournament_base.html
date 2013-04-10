@@ -75,6 +75,7 @@
                             {% if is_tournament_admin %}
                             <li class="divider"></li>
                             <li><a href="{% url "tournament-admin-edit" %}">{% trans "Tournament settings" %}</a></li>
+                            <li><a href="{% url "tournament-admin-email-players" %}">{% trans "Send email to players" %}</a></li>
                             <li><a href="{% url "tournament-waiting-list" %}">{% trans "Manage waiting list" %}</a></li>
                             {% endif %}
                         </ul>

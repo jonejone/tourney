@@ -45,8 +45,13 @@ def generate_player():
         'name': 'Some player name',
     }
 
-    return Player.objects.create(
+    player = Player.objects.create(
         **player_kwargs)
+
+    player.email = 'player%i@example.com' % player.id
+    player.save()
+
+    return player
 
 
 def generate_user():
@@ -255,6 +260,64 @@ class TournamentPlayerActionTestCase(TournamentAdminTestCase):
         self.assertEqual(
             t.get_player_list_count(),
             player_count_before + 1)
+
+
+class TournamentMailPlayersTestCase(TournamentAdminTestCase):
+    def setUp(self, *kargs, **kwargs):
+
+        super(TournamentMailPlayersTestCase, self).setUp(
+            *kargs, **kwargs)
+
+        self.tournament.max_players = 5
+        self.tournament.wildcard_spots = 0
+
+        generate_tournament_player(self.tournament)
+        generate_tournament_player(self.tournament)
+        generate_tournament_player(self.tournament)
+        generate_tournament_player(self.tournament)
+        generate_tournament_player(self.tournament)
+        generate_tournament_player(self.tournament)
+        generate_tournament_player(self.tournament)
+
+    @attr('include')
+    def test_post(self):
+
+        outbox_length = len(mail.outbox)
+
+        post_data = {
+            'email_player_list': True,
+            'email_waiting_list': True,
+            'sender': 'mail@example.com',
+            'subject': 'Testing an email sending!',
+            'body': 'This is my body'
+        }
+
+        r = self.client.post('/email-players/', post_data)
+
+        # Check the status response
+        self.assertEqual(r.status_code, 302)
+
+        # Make sure our outbox has mail for all players
+        self.assertTrue(
+            len(mail.outbox) > outbox_length)
+
+    def test_get(self):
+
+        r = self.client.get('/email-players/')
+        self.assertEqual(r.status_code, 200)
+
+        # Make sure it contains a form
+        self.assertTrue(
+            '<form method="post" action="/email-players/"' in \
+                r.content)
+
+        # Make sure it displays correctly the amount of
+        # players in the list, as well as waiting
+        self.assertTrue(
+            'accepted players (5)' in r.content)
+
+        self.assertTrue(
+            'waiting list (2)' in r.content)
 
 
 class TournamentEditTestCase(TournamentAdminTestCase):

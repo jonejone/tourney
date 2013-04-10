@@ -17,6 +17,7 @@ from .forms import (
     TournamentPageForm,
     TournamentForm,
     TournamentPlayerForm,
+    EmailPlayersForm,
     TournamentRegistrationForm,
     TournamentNewsItemForm)
 
@@ -116,6 +117,48 @@ def waiting_list(request, embed=False):
     return render(
         request,
         'tournament/players/waiting-list.html',
+        tmpl_dict)
+
+
+@login_required
+def email_players(request):
+
+    t = request.tournament
+
+    if not request.is_tournament_admin:
+        raise Http404
+
+    tmpl_dict = {}
+
+    if request.method == 'POST':
+        form = EmailPlayersForm(request.POST)
+        if form.is_valid():
+            form.save(tournament=t)
+
+            messages.success(
+                request,
+                _('Email has been sent out according to your selections.'))
+
+            return HttpResponseRedirect(reverse(
+                'tournament-admin-email-players'))
+    else:
+        form = EmailPlayersForm()
+
+    if t.tournament_admin_email:
+        form.fields['sender'].initial = t.tournament_admin_email
+
+    form.fields['email_player_list'].label = \
+        'Email accepted players (%i)' % t.get_player_list_email_count()
+
+    form.fields['email_waiting_list'].label = \
+        'Email players on waiting list (%i)' % t.get_waiting_list_email_count()
+
+    tmpl_dict.update({
+        'form': form})
+
+    return render(
+        request,
+        'tournament/admin/email-players.html',
         tmpl_dict)
 
 

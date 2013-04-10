@@ -1,0 +1,19 @@
+{% extends "tournament/tournament_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Send email to players" %}{% endblock %}
+
+{% block content %}
+
+<h1>{% trans "Send email to players" %}</h1>
+
+{% if form.errors %}
+<div class="alert alert-error">
+     {% trans "Please correct fields marked in red below and try again." %}
+</div>
+{% endif %}
+
+<form method="post" action="{% url "tournament-admin-email-players" %}">{% csrf_token %}
+    {% include "tournament/bootstrap_form.html" %}
+</form>
+{% endblock %}

@@ -17,6 +17,11 @@ urlpatterns = patterns(
         name='tournament-accounts-profile'),
 
     url(
+        r'^email-players/$',
+        'tourney.tournament.views.email_players',
+        name='tournament-admin-email-players'),
+
+    url(
         r'^edit/$',
         'tourney.tournament.views.edit_tournament',
         name='tournament-admin-edit'),

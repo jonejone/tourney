@@ -15,6 +15,59 @@ from .models import (Player,
                      TournamentOption,
                      TournamentPage,)
 
+from django.core.mail import send_mass_mail
+
+class EmailPlayersForm(forms.Form):
+
+    email_player_list = forms.BooleanField(
+        required=False,
+        initial=True)
+
+    email_waiting_list = forms.BooleanField(
+        required=False,
+        initial=True)
+
+    subject = forms.CharField()
+
+    body = forms.CharField(
+        widget=forms.Textarea()
+    )
+
+    sender = forms.CharField()
+
+    def get_emails(self, tournament, player_list, waiting_list):
+        if not player_list and not waiting_list:
+            return []
+
+        emails = []
+
+        if waiting_list:
+            for player in tournament.get_waiting_list():
+                if player.player.email:
+                    emails.append(player.player.email)
+
+        if player_list:
+            for player in tournament.get_player_list():
+                if player.player.email:
+                    emails.append(player.player.email)
+
+        return emails
+
+    def save(self, tournament):
+
+        recipients = self.get_emails(
+            tournament,
+            self.cleaned_data['email_player_list'],
+            self.cleaned_data['email_waiting_list'])
+
+        message = (
+            self.cleaned_data['subject'],
+            self.cleaned_data['body'],
+            self.cleaned_data['sender'],
+            recipients)
+
+        send_mass_mail((message,))
+
 
 class TournamentPlayerForm(forms.ModelForm):
     class Meta:

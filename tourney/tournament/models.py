@@ -104,12 +104,25 @@ class Tournament(models.Model):
         return self.tournamentplayer_set.filter(
             is_waiting_list=False)
 
+    def get_player_list_email_count(self):
+        return self.get_player_list().filter(
+            player__email__isnull=False).exclude(
+                player__email='').count()
+
     def get_player_list_count(self):
         return self.get_player_list().count()
 
-    def get_waiting_list_count(self):
+    def get_waiting_list(self):
         return self.tournamentplayer_set.filter(
-            is_waiting_list=True).count()
+            is_waiting_list=True)
+
+    def get_waiting_list_count(self):
+        return self.get_waiting_list().count()
+
+    def get_waiting_list_email_count(self):
+        return self.get_waiting_list().filter(
+            player__email__isnull=False).exclude(
+                player__email='').count()
 
     def get_url(self):
         try:
