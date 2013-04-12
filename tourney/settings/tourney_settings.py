@@ -101,4 +101,7 @@ if os.environ.get('SENDGRID_USERNAME'):
 
 CRISPY_TEMPLATE_PACK = 'bootstrap'
 
-ALLOWED_HOSTS = ('.sulaopen.com', '.disctourney.com',)
+ALLOWED_HOSTS = (
+    '.sulaopen.com',
+    '.disctourney.com',
+    '.haugalandopen.com')
