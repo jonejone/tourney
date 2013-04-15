@@ -55,18 +55,21 @@ class EmailPlayersForm(forms.Form):
 
     def save(self, tournament):
 
+        messages = []
         recipients = self.get_emails(
             tournament,
             self.cleaned_data['email_player_list'],
             self.cleaned_data['email_waiting_list'])
 
-        message = (
-            self.cleaned_data['subject'],
-            self.cleaned_data['body'],
-            self.cleaned_data['sender'],
-            recipients)
+        for recipient in recipients:
 
-        send_mass_mail((message,))
+            messages.append((
+                self.cleaned_data['subject'],
+                self.cleaned_data['body'],
+                self.cleaned_data['sender'],
+                [recipient,]))
+
+        send_mass_mail(messages)
 
 
 class TournamentPlayerForm(forms.ModelForm):
