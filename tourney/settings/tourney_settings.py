@@ -19,12 +19,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 MIDDLEWARE_CLASSES = (
     'djangotoolbox.sites.dynamicsite.DynamicSiteIDMiddleware',
+    'tourney.tournament.middleware.TournamentMiddleware',
+    'tourney.tournament.middleware.TournamentLanguageMiddleware',
     'localeurl.middleware.LocaleURLMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'tourney.tournament.middleware.TournamentMiddleware',
+    'tourney.tournament.middleware.TournamentAdminMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
@@ -60,7 +62,7 @@ GOOGLE_ANALYTICS_ACCOUNT = 'UA-38447981-2'
 TIME_ZONE = 'Europe/Oslo'
 DEFAULT_FROM_EMAIL = 'mail@disctourney.com'
 
-LANGUAGE_CODE = 'no'
+LANGUAGE_CODE = 'en'
 LANGUAGES =(
     ('no', 'Norsk'),
     ('en', 'English'),

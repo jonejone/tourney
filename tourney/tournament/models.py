@@ -117,6 +117,13 @@ class Tournament(models.Model):
         _('Wildcard spots'),
         default=0)
 
+    @property
+    def language_code(self):
+        if self.id == 1:
+            return 'en'
+        else:
+            return 'no'
+
     def get_available_spots(self):
         players = self.tournamentplayer_set.filter(
             is_waiting_list=False).count()
