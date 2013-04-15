@@ -10,6 +10,7 @@ from django.utils import simplejson
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.conf import settings
 
 from ckeditor.fields import RichTextField
 
@@ -66,6 +67,12 @@ class Tournament(models.Model):
 
     classes = models.ManyToManyField(
         PlayerClass, help_text=_('Classes'))
+
+    language = models.CharField(
+        _('Language'),
+        max_length=5,
+        default='en',
+        choices=settings.LANGUAGES)
 
     start_date = models.DateField(
         _('Start date'))
