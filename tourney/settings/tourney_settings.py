@@ -1,6 +1,8 @@
 import os
 import dj_database_url
 
+from tourney.tournament.utils.language import default_language
+
 PROJECT_ROOT = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '../..'))
 
@@ -69,6 +71,7 @@ LANGUAGES =(
 )
 
 PREFIX_DEFAULT_LOCALE = False
+DEFAULT_LANGUAGE = default_language
 
 DEBUG = False
 if os.environ.get('TOURNEY_DEBUG'):
