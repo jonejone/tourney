@@ -6,6 +6,6 @@ def default_language():
     try:
         site = current.tournamentsite_set.all()[0]
     except IndexError:
-        return False
+        return ''
 
     return site.tournament.language
