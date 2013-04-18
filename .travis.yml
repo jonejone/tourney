@@ -3,4 +3,6 @@ python:
   - "2.6"
 
 install: "pip install -r requirements.txt --use-mirrors"
-script: "python manage.py test"
+script: "python manage.py test --with-coverage --cover-erase --cover-package=tourney"
+after_success:
+    - coveralls

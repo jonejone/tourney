@@ -19,3 +19,4 @@ newrelic==1.10.0.28
 BeautifulSoup==3.2.1
 South==0.7.6
 mock==1.0.1
+coverage==3.6
