@@ -77,6 +77,7 @@ def generate_tournament(user=None):
         'currency': 'NOK',
         'user': user,
         'registration_stages': False,
+        'tournament_admin_email': 'tourney@admin.com',
     }
 
     # Set start and end dates to 4 weeks
