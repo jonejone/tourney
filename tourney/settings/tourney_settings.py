@@ -58,6 +58,8 @@ INSTALLED_APPS = (
 )
 
 TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
+SOUTH_TESTS_MIGRATE = False
+
 ROOT_URLCONF = 'tourney.frontend.urls'
 ACCOUNT_ACTIVATION_DAYS = 30
 GOOGLE_ANALYTICS_ACCOUNT = 'UA-38447981-2'
