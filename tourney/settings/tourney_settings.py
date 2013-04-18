@@ -79,7 +79,8 @@ DEBUG = False
 if os.environ.get('TOURNEY_DEBUG'):
     DEBUG = True
 
-DATABASES = {'default': dj_database_url.config()}
+DATABASES = {'default': dj_database_url.config(default=
+    'sqlite://')}
 
 CKEDITOR_UPLOAD_PATH = 'editor_uploads/'
 
