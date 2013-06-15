@@ -41,8 +41,9 @@
 <table class="table table-dotted table-striped player-table">
     <thead>
         <tr>
+            <th>&nbsp;</th>
             <th>{% trans "Name" %}</th>
-            <th>{% trans "Country" %}</th>
+            <th>{% trans "Club" %}</th>
             <th>{% trans "Division" %}</th>
             <th>{% trans "PDGA" %}</th>
             <th>{% trans "Rating" %}</th>
@@ -56,16 +57,27 @@
         {% for class in player_list %}
             {% if not forloop.first %}
             <tr>
-                <td colspan="6">&nbsp;</td>
+            {% if is_tournament_admin %}
+                <td colspan="8">&nbsp;</td>
+            {% else %}
+                <td colspan="7">&nbsp;</td>
+            {% endif %}
             </tr>
             {% endif %}
             {% for tp in class.list %}
             <tr data-tournament-player-id="{{ tp.id }}" class="{% if tp.is_waiting_list %}waiting-list{% endif %}">
                 <td>
+                    <img src="{{ tp.player.country.flag }}" />
+                </td>
+                <td>
                     {{ tp.player.name }}
                 </td>
                 <td>
-                    <img src="{{ tp.player.country.flag }}" />
+                    {% if tp.player.club %}
+                        {{ tp.player.club }}
+                    {% else %}
+                        {% trans "N/A" %}
+                    {% endif %}
                 </td>
                 <td>{{ tp.player_class.name }}</td>
                 <td>

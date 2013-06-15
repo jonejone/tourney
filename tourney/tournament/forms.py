@@ -139,7 +139,7 @@ class PlayerForm(forms.ModelForm):
     class Meta:
         model = Player
         fields = (
-            'pdga_number', 'name', 'email',
+            'pdga_number', 'name', 'club', 'email',
             'phonenumber')
 
 
@@ -160,7 +160,7 @@ class RegistrationForm(PlayerForm):
     class Meta:
         model = Player
         fields = ('player_class', 'pdga_number', 'pdga_terms',
-                  'name', 'country', 'email', 'phonenumber', 'options')
+                  'name', 'club', 'country', 'email', 'phonenumber', 'options')
 
     def __init__(self, *kargs, **kwargs):
 
