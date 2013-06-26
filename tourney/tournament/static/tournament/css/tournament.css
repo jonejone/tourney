@@ -20,8 +20,8 @@ html body .container {
     max-width: 600px;
 }
 
-.player-table {
-    max-width: 650px;
+body .container .player-table {
+    /*max-width: 700px;*/
 }
 
 .registration-stages-table {
@@ -85,4 +85,23 @@ html body .container {
 
 .player-table tr.waiting-list td {
     color: grey;
+}
+
+.navbar-inner .tournament-date {
+    display: block;
+    font-size: 11px;
+    line-height: 11px;
+    text-align: right;
+}
+
+.navbar .navbar-inner .brand {
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.player-table .class-title td {
+    font-weight: bold;
+    font-size: 16px;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }

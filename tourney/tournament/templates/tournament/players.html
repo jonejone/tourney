@@ -38,48 +38,39 @@
 
 {% regroup tournament.get_player_list by player_class as player_list %}
 
-<table class="table table-dotted table-striped player-table">
-    <thead>
-        <tr>
-            <th>&nbsp;</th>
-            <th>{% trans "Name" %}</th>
-            <th>{% trans "Club" %}</th>
-            <th>{% trans "Division" %}</th>
-            <th>{% trans "PDGA" %}</th>
-            <th>{% trans "Rating" %}</th>
-            <th>{% trans "Paid" %}</th>
-            {% if is_tournament_admin %}
-            <th>{% trans "Actions" %}</th>
-            {% endif %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for class in player_list %}
-            {% if not forloop.first %}
+    {% for class in player_list %}
+
+    <h3>{{ class.grouper }} ({{ class.list|length }})</h3>
+    <table class="table table-dotted table-striped player-table">
+        <thead>
             <tr>
-            {% if is_tournament_admin %}
-                <td colspan="8">&nbsp;</td>
-            {% else %}
-                <td colspan="7">&nbsp;</td>
-            {% endif %}
+                <th>&nbsp;</th>
+                <th width="35%">{% trans "Name" %}</th>
+                <th width="35%">{% trans "Club" %}</th>
+                <th width="10%">{% trans "PDGA" %}</th>
+                <th width="10%">{% trans "Rating" %}</th>
+                <th width="10%">{% trans "Paid" %}</th>
+                {% if is_tournament_admin %}
+                <th>{% trans "Actions" %}</th>
+                {% endif %}
             </tr>
-            {% endif %}
+        </thead>
+        <tbody>
             {% for tp in class.list %}
             <tr data-tournament-player-id="{{ tp.id }}" class="{% if tp.is_waiting_list %}waiting-list{% endif %}">
                 <td>
                     <img src="{{ tp.player.country.flag }}" />
                 </td>
                 <td>
-                    {{ tp.player.name }}
+                    {{ tp.player.name|truncatechars:50 }}
                 </td>
                 <td>
                     {% if tp.player.club %}
-                        {{ tp.player.club }}
+                        {{ tp.player.club|truncatechars:50 }}
                     {% else %}
                         {% trans "N/A" %}
                     {% endif %}
                 </td>
-                <td>{{ tp.player_class.name }}</td>
                 <td>
                     {% if tp.player.pdga_number %}
                     <a href="http://www.pdga.com/player-stats?PDGANum={{ tp.player.pdga_number }}">
@@ -122,9 +113,9 @@
                 {% endif %}
             </tr>
             {% endfor %}
-        {% endfor %}
     </tbody>
 </table>
+{% endfor %}
 
 {% if tournament.is_registration_open and not is_embedded %}
 <p><a href="{% url "tournament-registration" %}" class="btn btn-info">{% blocktrans with name=tournament.name %}Register for {{ name }}{% endblocktrans %}</a></p>
