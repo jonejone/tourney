@@ -20,8 +20,8 @@ html body .container {
     max-width: 600px;
 }
 
-body .container .player-table {
-    /*max-width: 700px;*/
+body .container .player-table img {
+    max-width: none;
 }
 
 .registration-stages-table {
