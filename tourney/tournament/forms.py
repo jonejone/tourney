@@ -170,6 +170,10 @@ class RegistrationForm(PlayerForm):
 
         super(RegistrationForm, self).__init__(*kargs, **kwargs)
 
+        # Set default country to Norway since all tourneys
+        # so far have been in Norway.
+        self.fields['country'].initial = 'NO'
+
         # If there actually are no choices for the "options" field
         # for this tournament, we just remove the field from the form
         if self.tournament.tournamentoption_set.count() == 0:
