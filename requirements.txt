@@ -1,7 +1,5 @@
 django==1.5
--e git+http://github.com/riklaunim/django-ckeditor.git#egg=django_ckeditor-3.6.2-py2.6-dev
-#-e git+http://github.com/riklaunim/django-ckeditor.git@07ebfb73b322d78990d0e222b5713b1eb00d059c#egg=django_ckeditor-3.6.2-py2.6-dev
-
+django-ckeditor-updated==4.2.7
 https://bitbucket.org/jone_eide/django-localeurl/get/tip.tar.gz
 psycopg2==2.4.5
 Pillow==1.7.8
