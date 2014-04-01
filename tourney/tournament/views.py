@@ -108,6 +108,7 @@ def waiting_list(request, embed=False):
         'players': players,
         'is_embedded': embed,
         'extends_tmpl': 'tournament/tournament_base.html',
+        'csrf': csrf(request),
     }
 
     if embed:
