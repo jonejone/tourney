@@ -28,6 +28,7 @@ class PDGARanking:
             h1 = soup.find('h1')
             name = h1.contents[0].split('#')[0].strip()
             name = name.replace('   ',' ');
+            name = name.replace('\t', '')
 
             # And location
             location = soup.find('li', attrs={'class':

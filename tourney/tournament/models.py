@@ -3,7 +3,7 @@ from datetime import datetime, date
 from django.utils.translation import ugettext_lazy as _
 from django.template.loader import get_template
 from django.template import Context
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django_countries import CountryField
 from django.utils.timezone import utc
 from django.utils import simplejson
@@ -274,6 +274,7 @@ class Player(models.Model):
         _('Country'))
 
     club = models.CharField(
+        _('Club'),
         max_length=100,
         blank=True,
         null=True,)
@@ -393,12 +394,16 @@ class TournamentPlayer(models.Model):
         })
 
         email_body = email_template.render(context)
+        from_email = self.tournament.tournament_admin_email
 
-        send_mail(
+        message = EmailMessage(
             subject,
             email_body,
-            self.tournament.tournament_admin_email,
-            [self.player.email, self.tournament.tournament_admin_email])
+            from_email,
+            [self.player.email, from_email],
+            headers = {'Reply-To': from_email})
+
+        message.send()
 
 
 class TournamentPage(models.Model):
