@@ -99,6 +99,12 @@ def ajax_player_action(request):
         mimetype='application/json')
 
 
+def options(request):
+    return render(
+        request,
+        'tournament/admin/options.html')
+
+
 def waiting_list(request, embed=False):
     tournament = request.tournament
     players = tournament.tournamentplayer_set.filter(

@@ -88,6 +88,11 @@ urlpatterns += patterns(
         name='tournament-ajax-player-action'),
 
     url(
+        r'^players/options/$',
+        'options',
+        name='tournament-options'),
+
+    url(
         r'^players/waiting-list/$',
         'waiting_list',
         name='tournament-waiting-list'),
