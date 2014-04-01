@@ -339,7 +339,8 @@ class TournamentPlayer(models.Model):
 
         self.is_waiting_list = False
         self.save()
-        self.send_registration_email()
+        self.send_accepted_email()
+        #self.send_registration_email()
 
     def get_options_price(self):
         price = 0
@@ -358,6 +359,32 @@ class TournamentPlayer(models.Model):
             player_class=self.player_class)
 
         return p.price
+
+    def send_accepted_email(self):
+        subject = _('Player accepted into %s' % self.tournament.name)
+        email_template = get_template(
+            'tournament/accepted-email.txt')
+
+        context = Context({
+            'tournament': self.tournament,
+            'player': self.player,
+            'player_class': self.player_class,
+            'tournament_player': self,
+        })
+
+        email_body = email_template.render(context)
+        from_email = self.tournament.tournament_admin_email
+
+        message = EmailMessage(
+            subject,
+            email_body,
+            from_email,
+            [self.player.email, from_email],
+            headers = {'Reply-To': from_email})
+
+        message.send()
+
+
 
     def send_registration_email(self):
         if not self.player.email:

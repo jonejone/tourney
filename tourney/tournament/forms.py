@@ -255,8 +255,7 @@ class RegistrationForm(PlayerForm):
 
             tp.options = options
 
-        if not was_full:
-            tp.send_registration_email()
+        tp.send_registration_email()
 
         if tp.player.pdga_number:
             # Run management command to update rank

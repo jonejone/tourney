@@ -2,6 +2,8 @@ Hello {{ player.name }},
 
 Thanks for registering to {{ tournament.name }}! This email confirms your registration,
 and your entered details are below for your reference.
+{% if tournament_player.is_waiting_list %}
+NB: Please note that you are not guaranteed a spot in the tournament as you have been put on the waiting list.{% endif %}
 
 Name: {{ player.name }}
 PDGA number: {{ player.pdga_number }}
