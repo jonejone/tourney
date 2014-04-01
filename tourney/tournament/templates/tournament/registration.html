@@ -66,6 +66,12 @@ $(function() {
     </dd>
 </dl>
 
+{% if tournament.registration_info %}
+<div class="alert">
+    {{ tournament.registration_info }}
+</div>
+{% endif %}
+
 {% if tournament.is_registration_open and tournament.is_registration_full %}
 <div class="alert">
     {% trans "This tournament has reached its max player capacity, and new registrations will be put on a waiting list." %}
