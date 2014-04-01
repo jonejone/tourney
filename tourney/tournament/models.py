@@ -124,6 +124,9 @@ class Tournament(models.Model):
         _('Wildcard spots'),
         default=0)
 
+    registration_info = models.TextField(
+        _('Registration info'), blank=True, null=True)
+
     @property
     def language_code(self):
         if self.id == 1:
