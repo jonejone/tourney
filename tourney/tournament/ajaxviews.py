@@ -7,7 +7,7 @@ from tourney.tournament.models import TournamentPlayer
 
 def update_player_paid(request):
 
-    if not hasattr(request, 'is_tournament_admin'):
+    if not hasattr(request, 'is_tournament_admin') or not request.is_tournament_admin:
         raise Http404
 
     is_paid = request.POST.get('is_paid', None)
