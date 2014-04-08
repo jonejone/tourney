@@ -4,6 +4,8 @@
 {% block title %}{% trans "Waiting list" %} - {{ tournament.name }}{% endblock %}
 
 {% block endbody %}
+
+{% if is_tournament_admin %}
 <script src="{{ STATIC_URL }}tournament/js/status_bar.js"></script>
 <script src="{{ STATIC_URL }}tournament/js/playeractions.js"></script>
 <script>
@@ -78,6 +80,7 @@ $(function() {
 });
 
 </script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
