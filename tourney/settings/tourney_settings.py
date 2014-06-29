@@ -121,6 +121,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap'
 
 ALLOWED_HOSTS = (
     '.bergenopen.no',
+    'pargolfnm.lillehammerfrisbee.no',
     '.sulaopen.com',
     '.disctourney.com',
     '.haugalandopen.com')
