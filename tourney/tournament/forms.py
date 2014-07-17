@@ -200,6 +200,15 @@ class RegistrationForm(PlayerForm):
         # Take care of choices for player class
         self.fields['player_class'].choices = (('', '--'), )
 
+        # Make some changes for couples tourneys
+        if self.tournament.is_couples_tourney:
+            # Remove PDGA field if couples tourney
+            del self.fields['pdga_number']
+
+            # Change labels
+            self.fields['name'].label = _('Name player 1 /  player 2')
+            self.fields['club'].label = _('Club player 1 / player 2')
+
         if self.tournament.registration_stages:
             stage = self.tournament.get_registration_stage()
 

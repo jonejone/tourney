@@ -8,11 +8,23 @@
 <h1>{% trans "Players" %}</h1>
 
 <dl>
-    <dt>{% trans "Players signed up" %}</dt>
+    <dt>
+        {% if tournament.is_couples_tourney %}
+            {% trans "Couples signed up" %}
+        {% else %}
+            {% trans "Players signed up" %}
+        {% endif %}
+    </dt>
     <dd>
         {{ tournament.get_player_list_count }}
     </dd>
-    <dt>{% trans "Max player count" %}</dt>
+    <dt>
+        {% if tournament.is_couples_tourney %}
+            {% trans "Max couples count" %}
+        {% else %}
+            {% trans "Max player count" %}
+        {% endif %}
+    </dt>
     <dd>
         {{ tournament.max_players }}
         {% if tournament.wildcard_spots %}(-{{ tournament.wildcard_spots }} wildcard spots){% endif %}
@@ -45,11 +57,15 @@
         <thead>
             <tr>
                 <th>&nbsp;</th>
-                <th width="35%">{% trans "Name" %}</th>
-                <th width="35%">{% trans "Club" %}</th>
+                <th width="35%">{% if tournament.is_couples_tourney %}{% trans "Name player 1 / player 2" %}{% else %}{% trans "Name" %}{% endif %}</th>
+                <th width="35%">{% if tournament.is_couples_tourney %}{% trans "Club player 1 / player 2" %}{% else %}{% trans "Club" %}{% endif %}</th>
+
+                {% if not tournament.is_couples_tourney %}
                 <th width="10%">{% trans "PDGA" %}</th>
                 <th width="10%">{% trans "Rating" %}</th>
-                <th width="10%">{% trans "Paid" %}</th>
+                 {% endif %}
+
+               <th width="10%">{% trans "Paid" %}</th>
                 {% if is_tournament_admin %}
                 <th>{% trans "Actions" %}</th>
                 {% endif %}
@@ -71,6 +87,8 @@
                         {% trans "N/A" %}
                     {% endif %}
                 </td>
+
+                {% if not tournament.is_couples_tourney %}
                 <td>
                     {% if tp.player.pdga_number %}
                     <a href="http://www.pdga.com/player-stats?PDGANum={{ tp.player.pdga_number }}">
@@ -81,7 +99,9 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if tp.player.pdga_rating %}{{ tp.player.pdga_rating }}{% endif %}</td>
+                    {% if tp.player.pdga_rating %}{{ tp.player.pdga_rating }}{% endif %}
+                </td>
+                {% endif %}
                 <td class="is_paid" data-is-paid="{% if tp.is_paid %}1{% else %}0{% endif %}">
                     {% if tp.is_paid %}
                         {% trans "Yes" %}

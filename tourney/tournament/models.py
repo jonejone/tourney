@@ -127,6 +127,9 @@ class Tournament(models.Model):
     registration_info = models.TextField(
         _('Registration info'), blank=True, null=True)
 
+    is_couples_tourney = models.BooleanField(
+        _('Couples tourney'), blank=True, default=False)
+
     @property
     def language_code(self):
         if self.id == 1:
