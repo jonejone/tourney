@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-26 23:27+0100\n"
+"POT-Creation-Date: 2014-07-17 14:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,8 +30,16 @@ msgstr "Godkjenn PDGA reglement"
 msgid "You must approve the PDGA terms"
 msgstr "Du må godkjenne PDGA reglementet"
 
-#: models.py:62 models.py:250 templates/tournament/players.html:48
-#: templates/tournament/players/waiting-list.html:63
+#: forms.py:209
+msgid "Name player 1 / player 2"
+msgstr "Navn spiller 1 / spiller 2"
+
+#: forms.py:210 templates/tournament/players.html:61
+msgid "Club player 1 / player 2"
+msgstr "Klubb spiller 1 / spiller 2"
+
+#: models.py:62 models.py:256 templates/tournament/players.html:60
+#: templates/tournament/players/waiting-list.html:120
 msgid "Name"
 msgstr "Navn"
 
@@ -39,7 +47,7 @@ msgstr "Navn"
 msgid "Classes"
 msgstr "Spillerklasser"
 
-#: models.py:72 templates/tournament/tournament_base.html:70
+#: models.py:72 templates/tournament/tournament_base.html:68
 msgid "Language"
 msgstr "Språk"
 
@@ -91,45 +99,77 @@ msgstr "Kreve akseptanse av PDGA regler"
 msgid "Max players"
 msgstr "Maks antall spillere"
 
-#: models.py:124 templates/tournament/players/waiting-list.html:39
+#: models.py:124 templates/tournament/players/waiting-list.html:96
 msgid "Wildcard spots"
 msgstr "Wildcard-plasser"
 
-#: models.py:254
+#: models.py:128
+msgid "Registration info"
+msgstr "Registreringsinfo"
+
+#: models.py:131
+msgid "Couples tourney"
+msgstr "Pargolfturnering"
+
+#: models.py:260
 msgid "Email"
 msgstr "Epost"
 
-#: models.py:258
+#: models.py:264
 msgid "PDGA Number"
 msgstr "PDGA-nummer"
 
-#: models.py:266
+#: models.py:272
 msgid "Phonenumber"
 msgstr "Telefon"
 
-#: models.py:270
+#: models.py:276
 msgid "PDGA Rating"
 msgstr ""
 
-#: models.py:274 templates/tournament/players/waiting-list.html:64
+#: models.py:280 templates/tournament/players/waiting-list.html:121
 msgid "Country"
 msgstr "Land"
 
-#: views.py:140
+#: models.py:283 templates/tournament/players.html:61
+msgid "Club"
+msgstr "Klubb"
+
+#: models.py:370
+#, fuzzy, python-format
+msgid "Player accepted into %s"
+msgstr "Spilleren har blitt akseptert til turneringen"
+
+#: views.py:147
 msgid "Email has been sent out according to your selections."
 msgstr "Epost har blitt sendt ut basert på dine valg."
 
-#: views.py:180
+#: views.py:187
 msgid "Tournament has been updated."
 msgstr "Turneringen har blitt oppdatert."
 
-#: views.py:219
+#: views.py:226
 msgid "Tournament registration has been updated."
 msgstr "Påmeldingen er oppdatert."
 
-#: views.py:260
+#: views.py:267
 msgid "Tournament player has been updated."
 msgstr "Spilleren har blitt oppdatert."
+
+#: templates/tournament/accepted-email.txt:1
+#, python-format
+msgid ""
+"Hello %(player)s,\n"
+"\n"
+"We are happy to inform you that you have been moved from the waiting list to "
+"the players list in %(tournament_name)s.\n"
+"\n"
+"See full players list on the tournament website: %(tournament_url)s\n"
+"\n"
+"----\n"
+"Thanks and regards,\n"
+"%(tournament_name)s\n"
+msgstr ""
 
 #: templates/tournament/bootstrap_form.html:26
 msgid "Save"
@@ -186,26 +226,34 @@ msgid "Player list - %(name)s"
 msgstr "Spillerliste - %(name)s"
 
 #: templates/tournament/players.html:8
-#: templates/tournament/tournament_base.html:60
+#: templates/tournament/tournament_base.html:58
 msgid "Players"
 msgstr "Spillere"
 
-#: templates/tournament/players.html:11
-#: templates/tournament/players/waiting-list.html:33
+#: templates/tournament/players.html:13
+msgid "Couples signed up"
+msgstr "Påmeldte par"
+
+#: templates/tournament/players.html:15
+#: templates/tournament/players/waiting-list.html:90
 msgid "Players signed up"
 msgstr "Påmeldte spillere"
 
-#: templates/tournament/players.html:15
+#: templates/tournament/players.html:23
+msgid "Max couples count"
+msgstr "Maks antall par"
+
+#: templates/tournament/players.html:25
 msgid "Max player count"
 msgstr "Maks antall spillere"
 
-#: templates/tournament/players.html:20
+#: templates/tournament/players.html:32
 #: templates/tournament/registration.html:60
-#: templates/tournament/players/waiting-list.html:45
+#: templates/tournament/players/waiting-list.html:102
 msgid "Available spots"
 msgstr "Ledige plasser"
 
-#: templates/tournament/players.html:31
+#: templates/tournament/players.html:43
 msgid ""
 "This tournament has reached its max player capacity, and new registrations "
 "will be put on the waiting list."
@@ -213,93 +261,96 @@ msgstr ""
 "Denne turneringen har nådd sin maks antall spillere, og nye påmeldinger vil "
 "havne på venteliste."
 
-#: templates/tournament/players.html:49
-msgid "Club"
-msgstr "Klubb"
-
-#: templates/tournament/players.html:50
-#: templates/tournament/players/waiting-list.html:66
+#: templates/tournament/players.html:64
+#: templates/tournament/players/waiting-list.html:123
 msgid "PDGA"
 msgstr ""
 
-#: templates/tournament/players.html:51
-#: templates/tournament/players/waiting-list.html:67
+#: templates/tournament/players.html:65
+#: templates/tournament/players/waiting-list.html:124
 msgid "Rating"
 msgstr ""
 
-#: templates/tournament/players.html:52
+#: templates/tournament/players.html:68
+#: templates/tournament/players/waiting-list.html:125
 msgid "Paid"
 msgstr "Betalt"
 
-#: templates/tournament/players.html:54
-#: templates/tournament/players/waiting-list.html:69
+#: templates/tournament/players.html:70
+#: templates/tournament/players/waiting-list.html:128
 msgid "Actions"
 msgstr "Handlinger"
 
-#: templates/tournament/players.html:71 templates/tournament/players.html:80
-#: templates/tournament/players/waiting-list.html:90
+#: templates/tournament/players.html:87 templates/tournament/players.html:98
+#: templates/tournament/players/waiting-list.html:149
 msgid "N/A"
 msgstr ""
 
-#: templates/tournament/players.html:87
+#: templates/tournament/players.html:107
+#: templates/tournament/players/waiting-list.html:64
+#: templates/tournament/players/waiting-list.html:158
 msgid "Yes"
 msgstr "Ja"
 
-#: templates/tournament/players.html:89
+#: templates/tournament/players.html:109
+#: templates/tournament/players/waiting-list.html:66
+#: templates/tournament/players/waiting-list.html:160
 msgid "No"
 msgstr "Nei"
 
-#: templates/tournament/players.html:101
-#: templates/tournament/players/waiting-list.html:104
+#: templates/tournament/players.html:121
+#: templates/tournament/players/waiting-list.html:172
 msgid "Edit this registration"
 msgstr "Rediger påmelding"
 
-#: templates/tournament/players.html:104
-#: templates/tournament/players/waiting-list.html:107
+#: templates/tournament/players.html:124
+#: templates/tournament/players/waiting-list.html:175
 msgid "Edit this player"
 msgstr "Rediger spiller"
 
-#: templates/tournament/players.html:107
-#: templates/tournament/players/waiting-list.html:110
+#: templates/tournament/players.html:127
+#: templates/tournament/players/waiting-list.html:178
 msgid "Delete from tournament"
 msgstr "Slett fra turneringen"
 
-#: templates/tournament/players.html:121
+#: templates/tournament/players.html:141
 #, python-format
 msgid "Register for %(name)s"
 msgstr "Registrer for %(name)s"
 
-#: templates/tournament/players.html:138
-#: templates/tournament/players/waiting-list.html:15
+#: templates/tournament/players.html:158
+#: templates/tournament/players/waiting-list.html:17
 msgid "An error occured while trying to perform your action."
 msgstr "En feil skjedde mens din handling ble forsøkt utført."
 
-#: templates/tournament/players.html:139
-#: templates/tournament/players/waiting-list.html:16
+#: templates/tournament/players.html:159
+#: templates/tournament/players/waiting-list.html:18
 msgid "An error occured:"
 msgstr "En feil skjedde:"
 
-#: templates/tournament/players.html:140
-#: templates/tournament/players/waiting-list.html:17
+#: templates/tournament/players.html:160
+#: templates/tournament/players/waiting-list.html:19
 msgid "Player has been removed from the tournament."
 msgstr "Spilleren har blitt fjernet fra turneringen."
 
-#: templates/tournament/players.html:141
-#: templates/tournament/players/waiting-list.html:18
+#: templates/tournament/players.html:161
+#: templates/tournament/players/waiting-list.html:20
 msgid "Player has been accepted into the tournament."
 msgstr "Spilleren har blitt akseptert til turneringen"
 
-#: templates/tournament/players.html:142
-#: templates/tournament/players/waiting-list.html:19
+#: templates/tournament/players.html:162
+#: templates/tournament/players/waiting-list.html:21
 msgid "Trying to remove player from the tournament"
 msgstr "Prøver å fjerne spilleren fra turneringen"
 
-#: templates/tournament/players.html:143
-#: templates/tournament/players/waiting-list.html:20
+#: templates/tournament/players.html:163
+#: templates/tournament/players/waiting-list.html:22
 msgid "Trying to accept player into the tournament"
 msgstr "Prøver å akseptere spilleren til turneringen"
 
-#: templates/tournament/players.html:193 templates/tournament/players.html:198
+#: templates/tournament/players.html:213 templates/tournament/players.html:218
+#: templates/tournament/players/waiting-list.html:72
+#: templates/tournament/players/waiting-list.html:77
 msgid "Unable to update payment information."
 msgstr "Kunne ikke oppdatere betalingsinformasjon."
 
@@ -313,7 +364,7 @@ msgid "Thanks for registering!"
 msgstr "Takk for at du registrerte deg!"
 
 #: templates/tournament/registration.html:27
-#: templates/tournament/tournament_base.html:59
+#: templates/tournament/tournament_base.html:57
 msgid "Registration"
 msgstr "Registrering"
 
@@ -335,7 +386,7 @@ msgstr "Alle"
 msgid "(%(count)s on waiting list)"
 msgstr "(%(count)s på venteliste)"
 
-#: templates/tournament/registration.html:71
+#: templates/tournament/registration.html:77
 msgid ""
 "This tournament has reached its max player capacity, and new registrations "
 "will be put on a waiting list."
@@ -343,49 +394,54 @@ msgstr ""
 "Denne turneringen har nådd sin maks antall spillere, og nye påmeldinger vil "
 "havne på venteliste."
 
-#: templates/tournament/registration.html:81
+#: templates/tournament/registration.html:87
 msgid "No stage is open curently."
 msgstr "Ingen faser er åpne nå."
 
-#: templates/tournament/registration.html:85
+#: templates/tournament/registration.html:91
 #, python-format
 msgid "Registration for this tournament closed %(ends)s"
 msgstr "Registrering for %(ends)s er stengt"
 
-#: templates/tournament/registration.html:89
+#: templates/tournament/registration.html:95
 msgid "Registration for this tournament has not opened yet."
 msgstr "Registreringen for denne turneringen har ikke startet enda."
 
-#: templates/tournament/registration.html:90
+#: templates/tournament/registration.html:96
 #, python-format
 msgid "Registration opens on <strong>%(opens)s</strong>"
 msgstr "Registreringen åpner <strong>%(opens)s</strong>"
 
-#: templates/tournament/tournament_base.html:89
+#: templates/tournament/tournament_base.html:87
 msgid "Login"
 msgstr "Logg inn"
 
-#: templates/tournament/tournament_base.html:92
+#: templates/tournament/tournament_base.html:90
 msgid "Account"
 msgstr "Min konto"
 
-#: templates/tournament/tournament_base.html:96
+#: templates/tournament/tournament_base.html:94
 msgid "Logout"
 msgstr "Logg ut"
 
-#: templates/tournament/tournament_base.html:100
+#: templates/tournament/tournament_base.html:98
 msgid "Tournament settings"
 msgstr "Rediger turnering"
 
-#: templates/tournament/tournament_base.html:101
+#: templates/tournament/tournament_base.html:99
 #: templates/tournament/admin/email-players.html:4
 #: templates/tournament/admin/email-players.html:8
 msgid "Send email to players"
 msgstr ""
 
-#: templates/tournament/tournament_base.html:102
+#: templates/tournament/tournament_base.html:100
 msgid "Manage waiting list"
 msgstr "Rediger venteliste"
+
+#: templates/tournament/tournament_base.html:101
+#: templates/tournament/admin/options.html:5
+msgid "Tournament options"
+msgstr "Turneringsvalg"
 
 #: templates/tournament/admin/edit-player.html:4
 #: templates/tournament/admin/edit-player.html:8
@@ -409,18 +465,18 @@ msgid "Edit tournament"
 msgstr "Rediger turnering"
 
 #: templates/tournament/players/waiting-list.html:4
-#: templates/tournament/players/waiting-list.html:30
+#: templates/tournament/players/waiting-list.html:87
 msgid "Waiting list"
 msgstr "Venteliste"
 
-#: templates/tournament/players/waiting-list.html:50
+#: templates/tournament/players/waiting-list.html:107
 msgid "on waiting list"
 msgstr "på venteliste"
 
-#: templates/tournament/players/waiting-list.html:65
+#: templates/tournament/players/waiting-list.html:122
 msgid "Division"
 msgstr "Klasse"
 
-#: templates/tournament/players/waiting-list.html:113
+#: templates/tournament/players/waiting-list.html:181
 msgid "Accept into tournament"
 msgstr "Aksepter til turneringen"
