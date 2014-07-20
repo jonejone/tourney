@@ -206,7 +206,7 @@ class RegistrationForm(PlayerForm):
             del self.fields['pdga_number']
 
             # Change labels
-            self.fields['name'].label = _('Name player 1 /  player 2')
+            self.fields['name'].label = _('Name player 1 / player 2')
             self.fields['club'].label = _('Club player 1 / player 2')
 
         if self.tournament.registration_stages:
