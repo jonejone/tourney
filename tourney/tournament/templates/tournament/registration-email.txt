@@ -16,8 +16,8 @@ Entry for class {{ player_class.name }}: {{ price }}{% for option in tournament_
 {{ option.name }}: {{ option.get_price }}{% endfor %}
 Total amount: {{ total_amount }} 
 
-{% if tournament.payment_information %}Please perform payment to:
-{{ tournament.payment_information }}{% endif %}
+{% if tournament.enable_payments %}Payment has been made using PayPal.{% endif %}{% if tournament.payment_information %}{% if not tournament.enable_payments %}Please perform payment to:
+{{ tournament.payment_information }}{% endif %}{% endif %}
 
 ----
 Thanks and regards,
