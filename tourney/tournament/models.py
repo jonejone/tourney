@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.loader import get_template
 from django.core.urlresolvers import reverse
 from django.template import Context
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django_countries import CountryField
 from django.utils.timezone import utc
 from django.utils import simplejson
@@ -129,6 +129,12 @@ class Tournament(models.Model):
         _('Wildcard spots'),
         default=0)
 
+    registration_info = models.TextField(
+        _('Registration info'), blank=True, null=True)
+
+    is_couples_tourney = models.BooleanField(
+        _('Couples tourney'), blank=True, default=False)
+
     enable_payments = models.BooleanField(
         _('Enable payments'),
         default=0)
@@ -153,6 +159,7 @@ class Tournament(models.Model):
         max_length=10,
         choices=PAYPAL_MODE_CHOICES,
         blank=True, null=True, default='live')
+
 
     @property
     def language_code(self):
@@ -305,6 +312,12 @@ class Player(models.Model):
     country = CountryField(
         _('Country'))
 
+    club = models.CharField(
+        _('Club'),
+        max_length=100,
+        blank=True,
+        null=True,)
+
     def __unicode__(self):
         return self.name
 
@@ -368,7 +381,8 @@ class TournamentPlayer(models.Model):
 
         self.is_waiting_list = False
         self.save()
-        self.send_registration_email()
+        self.send_accepted_email()
+        #self.send_registration_email()
 
     def get_options_price(self):
         price = 0
@@ -387,6 +401,32 @@ class TournamentPlayer(models.Model):
             player_class=self.player_class)
 
         return p.price
+
+    def send_accepted_email(self):
+        subject = _('Player accepted into %s' % self.tournament.name)
+        email_template = get_template(
+            'tournament/accepted-email.txt')
+
+        context = Context({
+            'tournament': self.tournament,
+            'player': self.player,
+            'player_class': self.player_class,
+            'tournament_player': self,
+        })
+
+        email_body = email_template.render(context)
+        from_email = self.tournament.tournament_admin_email
+
+        message = EmailMessage(
+            subject,
+            email_body,
+            from_email,
+            [self.player.email, from_email],
+            headers = {'Reply-To': from_email})
+
+        message.send()
+
+
 
     def send_registration_email(self):
         if not self.player.email:
@@ -423,12 +463,16 @@ class TournamentPlayer(models.Model):
         })
 
         email_body = email_template.render(context)
+        from_email = self.tournament.tournament_admin_email
 
-        send_mail(
+        message = EmailMessage(
             subject,
             email_body,
-            self.tournament.tournament_admin_email,
-            [self.player.email, self.tournament.tournament_admin_email])
+            from_email,
+            [self.player.email, from_email],
+            headers = {'Reply-To': from_email})
+
+        message.send()
 
 
     def get_paypal_return_url(self):

@@ -1,0 +1,10 @@
+{% load i18n %}{% blocktrans with name=player.name tournament_name=tournament.name tournament_url=tournament.get_url %}Hello {{ player }},
+
+We are happy to inform you that you have been moved from the waiting list to the players list in {{ tournament_name }}.
+
+See full players list on the tournament website: {{ tournament_url }}
+
+----
+Thanks and regards,
+{{ tournament_name }}
+{% endblocktrans %}

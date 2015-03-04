@@ -515,7 +515,24 @@ class WaitingListEmailTest(WaitingListTestCase):
             outbox_length_before + 1)
 
 
+"""
+class ExportCommandTest(TournamentTestCase):
+    @attr('include')
+    def test_working(self):
+
+        # Call the management command
+        args = ['some-tournament', ]
+        #opts = {'updatemissing': True}
+        opts = {}
+
+        with patch('sys.stdout', new_callable=StringIO) as stdout_mock:
+            call_command('export', *args, **opts)
+            import pdb
+            pdb.set_trace()
+"""
+
 class PDGARankUtilTest(TestCase):
+    @attr('include')
     @patch('tourney.tournament.utils.pdga.urlopen')
     def test_working(self, urlopen_mock):
 
@@ -526,8 +543,8 @@ class PDGARankUtilTest(TestCase):
         pdga = PDGARanking(pdga_number)
 
         # Assure correct values based on our mock
-        self.assertEqual(pdga.rating, 1027)
-        self.assertEqual(pdga.name, 'Karl Johan Hoj Nybo')
+        self.assertEqual(pdga.rating, 932)
+        self.assertEqual(pdga.name, 'Jone Eide')
 
 
 class PDGARankCommandTest(TournamentTestCase):
@@ -729,44 +746,226 @@ class PdgaTestCase(TestCase):
         # in our mocked response from PDGA
         self.assertEqual(rank.rating, 1027)
 
+pdga_response = """<!DOCTYPE html PUBLIC "-//W3C//DTD HTML+RDFa 1.1//EN">
+<html lang="en" dir="ltr" version="HTML+RDFa 1.1"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/"
+  xmlns:dc="http://purl.org/dc/terms/"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:og="http://ogp.me/ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:sioc="http://rdfs.org/sioc/ns#"
+  xmlns:sioct="http://rdfs.org/sioc/types#"
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+<head profile="http://www.w3.org/1999/xhtml/vocab">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+<meta name="Generator" content="Drupal 7 (http://drupal.org)" />
+<link rel="shortcut icon" href="http://www.pdga.com/sites/all/themes/pdga/favicon.ico" type="image/vnd.microsoft.icon" />
+  <title>Jone    Eide #50956 | Professional Disc Golf Association</title>  
+  <link type="text/css" rel="stylesheet" href="http://www.pdga.com/files/css/css_pbm0lsQQJ7A7WCCIMgxLho6mI_kBNgznNUWmTWcnfoE.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://www.pdga.com/files/css/css_twsUmtGgd4KPiyXf3eCy-pJNJqHBm-KWgSwLdEsyhGk.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://www.pdga.com/files/css/css_KpHsFsHL5G3x9EUJr5pMqQKsGs4fdCXEGrY6HhOgLHA.css" media="screen" />
+<link type="text/css" rel="stylesheet" href="http://www.pdga.com/files/css/css_vlWeR1jayHYsF4bwVy6XOGHDD-9HxTQkR9NDLu5hHK8.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://www.pdga.com/files/css/css_twoGX0mhaBBU5QnTPp91BKcz-Z8BXjS7sgTSjfdIfvc.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://www.pdga.com/files/css/css_grhClt5P5zcB8oCgivElr3vCJfm1c86FZvugV2FxSi4.css" media="all" />
 
+<!--[if (lt IE 9)&(!IEMobile)]>
+<link type="text/css" rel="stylesheet" href="http://www.pdga.com/files/css/css_tqbOcWaj91wBE0-qFIjutB6piWPT71SZjJccs-NZjjk.css" media="all" />
+<![endif]-->
 
-pdga_response = """<!DOCTYPE html>
-<html lang="en-US">
-
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>Karl Johan Hoj Nybo #28903 | Professional Disc Golf Association</title>
-  <meta name="keywords" content="PDGA,Professional Disc Golf Association,disc golf,frisbee golf,frolf,courses,tournaments,schedule,results,membership" />
-<meta name="robots" content="index,follow" />
-<link rel="shortcut icon" href="/sites/all/themes/platform/favicon.ico?s=18f3acbca4490cbf2eae40637cd5b9f0" type="image/x-icon" />
-  <style type="text/css" media="all">@import "/files/css/712a9ded37f0698597879b8e409498af.css";</style>
-  <script type="text/javascript" src="/files/js/4a08e96aeeaafdd051fa38fe334f8034.js?s=18f3acbca4490cbf2eae40637cd5b9f0"></script>
-<script type="text/javascript">Drupal.extend({ settings: { "fivestar": { "titleUser": "Your rating: ", "titleAverage": "Average: ", "feedbackSavingVote": "Saving your vote...", "feedbackVoteSaved": "Your vote has been saved.", "feedbackDeletingVote": "Deleting your vote...", "feedbackVoteDeleted": "Your vote has been deleted." }, "extlink": { "extTarget": "_blank", "extClass": 0, "extSubdomains": 1, "extExclude": "", "extInclude": "", "extAlert": 0, "extAlertText": "This link will take you to an external web site. We are not responsible for their content.", "mailtoClass": 0 }, "googleanalytics": { "trackOutgoing": 1, "trackMailto": 1, "trackDownload": 1, "trackDownloadExtensions": "7z|aac|avi|csv|doc|exe|flv|gif|gz|jpe?g|js|mp(3|4|e?g)|mov|pdf|phps|png|ppt|rar|sit|tar|torrent|txt|wma|wmv|xls|xml|zip", "LegacyVersion": 0 } } });</script>
-<script type="text/javascript">$("document").ready( function() { $(".results").tablesorter();})</script>  <!-- begin script to create random number for ads -->
-  <script type="text/javascript">
-  <!--
-  sgi_ord=Math.random()*10000000000000000;
-  sgi_tile=1;
-  //-->
-  </script>
-  <!-- End random number script -->
+<!--[if gte IE 9]><!-->
+<link type="text/css" rel="stylesheet" href="http://www.pdga.com/files/css/css_yTtjahB6rTRl1UjrfWk1neYmLu0ZHJgLU_tlng1GOe0.css" media="all" />
+<!--<![endif]-->
+  <script type="text/javascript" src="http://www.pdga.com/files/js/js_0gj6QcpfRH2jzTbCQqf7kEkm4MXY0UA_sRhwPc8jC1o.js"></script>
+<script type="text/javascript" src="http://www.pdga.com/files/js/js_1__UdgBELOPPsa1U3_nt8ttzzJ_5X3cfBGgpvnJMNXA.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var _gaq = _gaq || [];_gaq.push(["_setAccount", "UA-6108714-1"]);_gaq.push(["_trackPageview"]);(function() {var ga = document.createElement("script");ga.type = "text/javascript";ga.async = true;ga.src = "http://www.pdga.com/files/googleanalytics/ga.js?n1m05c";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(ga, s);})();
+//--><!]]>
+</script>
+<script type="text/javascript" src="http://www.pdga.com/files/js/js_ym7yBGpyoDQX0fTtvOxLMbqaotEHNddAfwWUJYRLVEw.js"></script>
+<script type="text/javascript" src="http://www.pdga.com/files/js/js_43n5FBy8pZxQHxPXkf-sQF7ZiacVZke14b0VlvSA554.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, {"basePath":"\/","pathPrefix":"","ajaxPageState":{"theme":"pdga","theme_token":"ygYAIpzO0YS9QxrrBdhoXj1bf4Z9b1ou8c99Oa2bfmE","js":{"sites\/all\/modules\/contrib\/jquery_update\/replace\/jquery\/1.7\/jquery.min.js":1,"misc\/jquery.once.js":1,"misc\/drupal.js":1,"sites\/all\/libraries\/colorbox\/colorbox\/jquery.colorbox-min.js":1,"sites\/all\/modules\/contrib\/colorbox\/js\/colorbox.js":1,"sites\/all\/modules\/contrib\/colorbox\/styles\/default\/colorbox_default_style.js":1,"sites\/all\/modules\/contrib\/nice_menus\/superfish\/js\/superfish.js":1,"sites\/all\/modules\/contrib\/nice_menus\/superfish\/js\/jquery.bgiframe.min.js":1,"sites\/all\/modules\/contrib\/nice_menus\/superfish\/js\/jquery.hoverIntent.minified.js":1,"sites\/all\/modules\/contrib\/nice_menus\/nice_menus.js":1,"sites\/all\/modules\/contrib\/panels\/js\/panels.js":1,"sites\/all\/modules\/contrib\/views_slideshow\/js\/views_slideshow.js":1,"sites\/all\/modules\/contrib\/extlink\/extlink.js":1,"sites\/all\/libraries\/tablesorter\/jquery.tablesorter.js":1,"misc\/tableheader.js":1,"sites\/all\/modules\/custom\/tablesorter\/tablesorter.js":1,"sites\/all\/modules\/contrib\/google_analytics\/googleanalytics.js":1,"0":1,"sites\/all\/themes\/pdga\/js\/script.js":1,"sites\/all\/themes\/pdga\/js\/supposition.js":1,"sites\/all\/themes\/omega\/omega\/js\/jquery.formalize.js":1,"sites\/all\/themes\/omega\/omega\/js\/omega-mediaqueries.js":1},"css":{"modules\/system\/system.base.css":1,"modules\/system\/system.menus.css":1,"modules\/system\/system.messages.css":1,"modules\/system\/system.theme.css":1,"modules\/book\/book.css":1,"modules\/comment\/comment.css":1,"sites\/all\/modules\/contrib\/date\/date_api\/date.css":1,"sites\/all\/modules\/contrib\/date\/date_popup\/themes\/datepicker.1.7.css":1,"modules\/field\/theme\/field.css":1,"sites\/all\/modules\/contrib\/flexslider\/assets\/css\/flexslider_img.css":1,"modules\/node\/node.css":1,"modules\/user\/user.css":1,"sites\/all\/modules\/contrib\/views\/css\/views.css":1,"sites\/all\/modules\/contrib\/ckeditor\/ckeditor.css":1,"sites\/all\/modules\/contrib\/colorbox\/styles\/default\/colorbox_default_style.css":1,"sites\/all\/modules\/contrib\/ctools\/css\/ctools.css":1,"sites\/all\/modules\/contrib\/nice_menus\/nice_menus.css":1,"sites\/all\/modules\/contrib\/nice_menus\/nice_menus_default.css":1,"sites\/all\/modules\/contrib\/panels\/css\/panels.css":1,"sites\/all\/modules\/contrib\/views_slideshow\/views_slideshow.css":1,"sites\/all\/modules\/contrib\/extlink\/extlink.css":1,"sites\/all\/modules\/contrib\/panels\/plugins\/layouts\/onecol\/onecol.css":1,"sites\/all\/themes\/omega\/alpha\/css\/alpha-mobile.css":1,"sites\/all\/themes\/omega\/alpha\/css\/alpha-alpha.css":1,"sites\/all\/themes\/pdga\/css\/omega-visuals.css":1,"sites\/all\/themes\/pdga\/css\/normalize.css":1,"sites\/all\/themes\/omega\/omega\/css\/formalize.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-text.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-branding.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-menu.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-forms.css":1,"sites\/all\/themes\/pdga\/css\/global.css":1,"ie::normal::sites\/all\/themes\/pdga\/css\/pdga-alpha-default.css":1,"ie::normal::sites\/all\/themes\/pdga\/css\/pdga-alpha-default-normal.css":1,"ie::normal::sites\/all\/themes\/omega\/alpha\/css\/grid\/alpha_default\/normal\/alpha-default-normal-16.css":1,"ie::normal::sites\/all\/themes\/omega\/alpha\/css\/grid\/alpha_default\/normal\/alpha-default-normal-12.css":1,"narrow::sites\/all\/themes\/pdga\/css\/pdga-alpha-default.css":1,"narrow::sites\/all\/themes\/pdga\/css\/pdga-alpha-default-narrow.css":1,"sites\/all\/themes\/omega\/alpha\/css\/grid\/alpha_default\/narrow\/alpha-default-narrow-16.css":1,"sites\/all\/themes\/omega\/alpha\/css\/grid\/alpha_default\/narrow\/alpha-default-narrow-12.css":1,"normal::sites\/all\/themes\/pdga\/css\/pdga-alpha-default.css":1,"normal::sites\/all\/themes\/pdga\/css\/pdga-alpha-default-normal.css":1,"sites\/all\/themes\/omega\/alpha\/css\/grid\/alpha_default\/normal\/alpha-default-normal-16.css":1,"sites\/all\/themes\/omega\/alpha\/css\/grid\/alpha_default\/normal\/alpha-default-normal-12.css":1}},"colorbox":{"opacity":"0.85","current":"{current} of {total}","previous":"\u00ab Prev","next":"Next \u00bb","close":"Close","maxWidth":"100%","maxHeight":"100%","fixed":true,"__drupal_alter_by_ref":["default"]},"nice_menus_options":{"delay":"800","speed":"fast"},"extlink":{"extTarget":"_blank","extClass":"ext","extSubdomains":1,"extExclude":"","extInclude":"","extAlert":0,"extAlertText":"This link will take you to an external web site. We are not responsible for their content.","mailtoClass":"mailto"},"tablesorter":{"selectors":["#player-results-mpo"]},"googleanalytics":{"trackOutbound":1,"trackMailto":1,"trackDownload":1,"trackDownloadExtensions":"7z|aac|arc|arj|asf|asx|avi|bin|csv|doc|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls|xml|z|zip"},"omega":{"layouts":{"primary":"normal","order":["narrow","normal"],"queries":{"narrow":"all and (min-width: 740px) and (min-device-width: 740px), (max-device-width: 800px) and (min-width: 740px) and (orientation:landscape)","normal":"all and (min-width: 980px) and (min-device-width: 980px), all and (max-device-width: 1024px) and (min-width: 1024px) and (orientation:landscape)"}}}});
+//--><!]]>
+</script>
+  <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
+<body class="html not-front not-logged-in page-player page-player- page-player-50956 panel-custom-title context-player">
+  <div id="skip-link">
+    <a href="#main-content" class="element-invisible element-focusable">Skip to main content</a>
+  </div>
+  <div class="region region-page-top" id="region-page-top">
+  <div class="region-inner region-page-top-inner">
+      </div>
+</div>  <div class="page clearfix" id="page">
+      <header id="section-header" class="section section-header">
+  <div id="zone-branding-wrapper" class="zone-wrapper zone-branding-wrapper clearfix">  
+  <div id="zone-branding" class="zone zone-branding clearfix container-16">
+    <div class="grid-11 region region-branding" id="region-branding">
+  <div class="region-inner region-branding-inner">
+        <div class="branding-data clearfix">
+            <div class="logo-img">
+        <a href="/" rel="home" title=""><img src="http://www.pdga.com/sites/all/themes/pdga/logo.png" alt="" id="logo" /></a>      </div>
+                </div>
+          </div>
+</div><div class="grid-5 region region-user-bar" id="region-user-bar">
+  <div class="region-inner region-user-bar-inner">
+    <div class="block block-panels-mini block-header-user-bar block-panels-mini-header-user-bar odd block-without-title" id="block-panels-mini-header-user-bar">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div class="panel-display panel-1col clearfix" id="mini-panel-header_user_bar">
+  <div class="panel-panel panel-col">
+    <div><div class="panel-pane pane-custom pane-1 pane-social-links inline clearfix" >
+  
+      
+  
+  <div class="pane-content">
+    <ul class="menu social-links"><li><a target="_blank" class="rss" href="/frontpage/feed" title="Subscribe to the PDGA RSS Feed">RSS Feed</a></li>
+<li><a target="_blank" class="twitter" href="http://twitter.com/pdga" title="PDGA on Twitter">Twitter</a></li>
+<li><a target="_blank" class="facebook" href="http://www.facebook.com/pdga" title="PDGA on Facebook">Facebook</a></li>
+<li><a target="_blank" class="flickr" href="http://www.flickr.com/photos/pdga/collections/" title="PDGA on Flickr">Flickr</a></li>
+<li><a target="_blank" class="youtube" href="http://www.youtube.com/pdgamedia" title="PDGA on YouTube">YouTube</a></li>
+</ul>  </div>
 
-<body class="not-front not-logged-in sidebar-right">
-
-<!-- wrapper -->
-
-<div id="wrapper">
-
-	<div id="above-content">
-		<div class="adblock-728x90 top-adspace"><div class="block block-block " id="block-block-40">
-  <div class="block-inner">
-
+  
+  </div>
+<div class="panel-separator"></div><div class="panel-pane pane-pdga-search-searchapi-block pane-search-form" >
+  
+        <h2 class="pane-title">Search</h2>
     
-    <div class="block-content">
-      <script type='text/javascript'><!--//<![CDATA[
-   var m3_u = (location.protocol=='https:'?'https://www.pdga.com/openx/www/delivery/ajs.php':'http://www.pdga.com/openx/www/delivery/ajs.php');
+  
+  <div class="pane-content">
+    
+<div class="container-inline">
+  <form class="search-form" action="/search" method="get" id="search-form" accept-charset="UTF-8">
+    <div>
+      <div class="form-item form-type-textfield form-item-keywords">
+        <input type="text" name="keywords" value="" size="15" maxlength="128" class="form-text">
+      </div>
+    </div>
+    <div class="form-actions">
+      <input type="submit" value="Search" class="form-submit">
+    </div>
+  </form>
+</div>
+  </div>
+
+  
+  </div>
+<div class="panel-separator"></div><div class="panel-pane pane-block pane-system-user-menu inline" >
+  
+      
+  
+  <div class="pane-content">
+    <ul class="menu"><li class="first leaf"><a href="/user/login?destination=player/50956" title="">Login</a></li>
+<li class="leaf"><a href="/join-pdga-today" title="">Join &amp; Renew</a></li>
+<li class="last leaf"><a href="/contact" title="">Contact</a></li>
+</ul>  </div>
+
+  
+  </div>
+</div>
+  </div>
+</div>
+    </div>
+  </div>
+</div>  </div>
+</div>  </div>
+</div><div id="zone-menu-wrapper" class="zone-wrapper zone-menu-wrapper clearfix">  
+  <div id="zone-menu" class="zone zone-menu clearfix container-12">
+    <div class="grid-12 region region-menu" id="region-menu">
+  <div class="region-inner region-menu-inner">
+        <section class="block block-nice-menus block-1 block-nice-menus-1 odd" id="block-nice-menus-1">
+  <div class="block-inner clearfix">
+              <h2 class="block-title">Main Menu</h2>
+            
+    <div class="content clearfix">
+      <ul class="nice-menu nice-menu-down" id="nice-menu-1"><li class="menu-5628 menu-path-front  first   odd  "><a href="/">Home</a></li>
+<li class="menu-5629 menuparent  menu-path-nolink   even  "><div title="" class="nolink">About</div><ul><li class="menu-5637 menu-path-node-21340  first   odd  "><a href="/introduction">What is Disc Golf?</a></li>
+<li class="menu-7824 menu-path-node-200525   even  "><a href="/news">News Archive</a></li>
+<li class="menu-5638 menu-path-node-21339   odd  "><a href="/history">History</a></li>
+<li class="menu-5639 menu-path-faq   even   last "><a href="/faq">FAQs</a></li>
+</ul></li>
+<li class="menu-5630 menuparent  menu-path-nolink   odd  "><div title="" class="nolink">Membership</div><ul><li class="menu-5640 menu-path-node-21322  first   odd  "><a href="/join-pdga-today">Join &amp; Renew</a></li>
+<li class="menu-5641 menu-path-players   even  "><a href="/players">Player Search</a></li>
+<li class="menu-5642 menu-path-players-stats   odd  "><a href="/players/stats">Player Statistics</a></li>
+<li class="menu-5643 menuparent  menu-path-node-21404   even  "><a href="/players/rankings">Player Rankings</a><ul><li class="menu-5669 menu-path-node-21313  first   odd  "><a href="/pdga-world-rankings">World Rankings</a></li>
+<li class="menu-5670 menu-path-node-21382   even   last "><a href="/pdga-continental-rankings">Continental Rankings</a></li>
+</ul></li>
+<li class="menu-5676 menu-path-node-28442   odd  "><a href="/pdga-player-classifications-divisions">Player Classifications &amp; Divisions</a></li>
+<li class="menu-5677 menu-path-node-21365   even  "><a href="/pdga-player-rookie-year">Player &amp; Rookie of the Year</a></li>
+<li class="menu-5646 menu-path-node-21372   odd  "><a href="/seniors">Seniors</a></li>
+<li class="menu-5644 menuparent  menu-path-node-21364   even   last "><a href="/women">Women</a><ul><li class="menu-9149 menu-path-node-21398  first   odd   last "><a href="/women/global-event">Women&#039;s Global Event</a></li>
+</ul></li>
+</ul></li>
+<li class="menu-5631 menuparent  menu-path-nolink   even  "><div title="" class="nolink">Events</div><ul><li class="menu-5647 menu-path-tour-events  first   odd  "><a href="/tour/events">Event Schedule &amp; Results</a></li>
+<li class="menu-5648 menu-path-tour-search   even  "><a href="/tour/search">Event Search</a></li>
+<li class="menu-7045 menu-path-node-21343   odd  "><a href="/national-tour">National Tour</a></li>
+<li class="menu-5649 menuparent  menu-path-node-21370   even  "><a href="/major-disc-golf-events">Major Disc Golf Events</a><ul><li class="menu-7851 menu-path-node-200112  first   odd   last "><a href="/2014usmasters">2014 US Masters</a></li>
+</ul></li>
+<li class="menu-5650 menuparent  menu-path-node-21355   odd  "><a href="/world-championships">World Championships</a><ul><li class="menu-7850 menu-path-node-200552  first   odd   last "><a href="/2014proworlds">2014 Pro Worlds</a></li>
+</ul></li>
+<li class="menu-5651 menuparent  menu-path-node-21391   even  "><a href="/leagues">PDGA Leagues</a><ul><li class="menu-9165 menu-path-leagues-events  first   odd   last "><a href="/leagues/events" title="">League Schedule</a></li>
+</ul></li>
+<li class="menu-5652 menuparent  menu-path-node-21342   odd   last "><a href="/td">Tournament Directors</a><ul><li class="menu-7811 menu-path-node-28432  first   odd  "><a href="/pdga-event-sanctioning-agreement">Event Sanctioning</a></li>
+<li class="menu-7812 menu-path-node-30232   even   last "><a href="/event-payments">Event Payments</a></li>
+</ul></li>
+</ul></li>
+<li class="menu-5632 menuparent  menu-path-nolink   odd  "><div title="" class="nolink">Courses</div><ul><li class="menu-7059 menu-path-course-directory-advanced  first   odd  "><a href="/course-directory/advanced" title="">Course Search</a></li>
+<li class="menu-5655 menu-path-course-directory   even  "><a href="/course-directory">Course Directory Map</a></li>
+<li class="menu-5656 menu-path-node-21324   odd   last "><a href="/course-development">Course Development</a></li>
+</ul></li>
+<li class="menu-5668 menuparent  menu-path-nolink   even  "><div title="" class="nolink">Rules</div><ul><li class="menu-9157 menu-path-node-8371  first   odd  "><a href="/rules" title="">Overview</a></li>
+<li class="menu-5657 menu-path-node-24567   even  "><a href="/rules/official-rules-disc-golf">Official Rules of Disc Golf</a></li>
+<li class="menu-6102 menu-path-node-8397   odd  "><a href="/rules/competition-manual-disc-golf-events">Competition Manual for Disc Golf Events</a></li>
+<li class="menu-6103 menu-path-node-23201   even  "><a href="/documents/divisions-ratings-points-factors">Divisions, Ratings and Points Factors</a></li>
+<li class="menu-5721 menu-path-node-21335   odd  "><a href="/rules/technical-standards">Technical Standards</a></li>
+<li class="menu-5658 menu-path-node-21312   even   last "><a href="/rules/becoming-a-pdga-official">Certified Official&#039;s Exam</a></li>
+</ul></li>
+<li class="menu-5634 menuparent  menu-path-nolink   odd  "><div title="" class="nolink">Media</div><ul><li class="menu-5659 menu-path-node-21353  first   odd  "><a href="/discgolfer-magazine">DiscGolfer Magazine</a></li>
+<li class="menu-5661 menu-path-videos   even  "><a href="/videos">Videos</a></li>
+<li class="menu-5660 menu-path-flickrcom-photos-pdga   odd  "><a href="http://www.flickr.com/photos/pdga">Flickr</a></li>
+<li class="menu-5662 menu-path-facebookcom-pdga   even  "><a href="http://www.facebook.com/pdga">Facebook</a></li>
+<li class="menu-5663 menu-path-twittercom-pdga   odd   last "><a href="http://twitter.com/pdga">Twitter</a></li>
+</ul></li>
+<li class="menu-5635 menu-path-node-21338   even  "><a href="/international">International</a></li>
+<li class="menu-5636 menuparent  menu-path-nolink   odd   last "><div title="" class="nolink">More</div><ul><li class="menu-5664 menu-path-node-21368  first   odd  "><a href="/advertising">Advertising</a></li>
+<li class="menu-5715 menu-path-node-21325   even  "><a href="/affiliate_club">Affiliate Club Program</a></li>
+<li class="menu-5714 menu-path-node-30231   odd  "><a href="/board-of-directors">Board of Directors</a></li>
+<li class="menu-5716 menu-path-contact   even  "><a href="/contact" title="">Contact</a></li>
+<li class="menu-5717 menu-path-node-21352   odd  "><a href="/pdga-and-disc-golf-demographics">Demographics</a></li>
+<li class="menu-5718 menu-path-node-21354   even  "><a href="/pdga-disciplinary-process">Disciplinary Process</a></li>
+<li class="menu-7849 menu-path-discussionpdgacom   odd  "><a href="http://discussion.pdga.com" title="">Discussion Board</a></li>
+<li class="menu-5666 menu-path-node-21357   even  "><a href="/elections">Elections</a></li>
+<li class="menu-5665 menu-path-node-30227   odd  "><a href="/IDGC">International Disc Golf Center</a></li>
+<li class="menu-5719 menu-path-node-21344   even  "><a href="/pdga-organization-documents">Organization Documents</a></li>
+<li class="menu-5720 menu-path-node-28438   odd  "><a href="/points">Points</a></li>
+<li class="menu-7799 menu-path-pdgastorecom   even  "><a href="http://www.pdgastore.com" title="">Pro Shop</a></li>
+<li class="menu-5667 menu-path-node-21356   odd  "><a href="/pdga-player-course-rating-system">Ratings</a></li>
+<li class="menu-7795 menu-path-taxonomy-term-743   even   last "><a href="/pdga-documents" title="">Recently Updated Documents</a></li>
+</ul></li>
+</ul>
+    </div>
+  </div>
+</section>  </div>
+</div>
+  </div>
+</div><div id="zone-header-wrapper" class="zone-wrapper zone-header-wrapper clearfix">  
+  <div id="zone-header" class="zone zone-header clearfix container-12">
+    <div class="grid-12 region region-header top-banner" id="region-header">
+  <div class="region-inner region-header-inner">
+    <div class="block block-block block-7 block-block-7 odd block-without-title" id="block-block-7">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <script type="text/javascript">
+<!--//--><![CDATA[// ><!--
+<!--//<![CDATA[
+   var m3_u = (location.protocol=='https:'?'https://ads.pdga.com/openx/www/delivery/ajs.php':'http://ads.pdga.com/openx/www/delivery/ajs.php');
    var m3_r = Math.floor(Math.random()*99999999999);
    if (!document.MAX_used) document.MAX_used = ',';
    document.write ("<scr"+"ipt type='text/javascript' src='"+m3_u);
@@ -779,296 +978,171 @@ pdga_response = """<!DOCTYPE html>
    if (document.context) document.write ("&context=" + escape(document.context));
    if (document.mmm_fo) document.write ("&amp;mmm_fo=1");
    document.write ("'><\/scr"+"ipt>");
-//]]>--></script>    </div>
-    
+//]]]]><![CDATA[>-->
+//--><!]]>
+</script>    </div>
   </div>
-</div>
- </div>	    <div id="rightOf-728"><div class="block block-search " id="block-search-0">
-  <div class="block-inner">
+</div>  </div>
+</div>  </div>
+</div></header>    
+      <section id="section-content" class="section section-content">
+  <div id="zone-content-wrapper" class="zone-wrapper zone-content-wrapper clearfix">  
+  <div id="zone-content" class="zone zone-content clearfix container-16">    
+        
+        <div class="grid-16 region region-content" id="region-content">
+  <div class="region-inner region-content-inner">
+    <a id="main-content"></a>
+                <h1 class="title" id="page-title">Jone   Eide #50956</h1>
+                        <div class="block block-system block-main block-system-main odd block-without-title" id="block-system-main">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div class="panel-display omega-grid pdga-one-col clearfix" >
 
-    <p class="block-title"> Search </p>
-    <div class="block-content">
-      <form action="/player_stats/44378/2012?s=18f3acbca4490cbf2eae40637cd5b9f0"  accept-charset="UTF-8" method="post" id="search-block-form">
-<div><div class="container-inline"><div class="form-item" id="edit-search-block-form-keys-wrapper">
- <input type="text" maxlength="128" name="search_block_form_keys" id="edit-search-block-form-keys"  size="15" value="" title="Enter the terms you wish to search for." class="form-text" />
-</div>
-<input type="submit" name="op" id="edit-submit" value="Search"  class="form-submit" />
-<input type="hidden" name="form_id" id="edit-search-block-form" value="search_block_form"  />
-</div>
-</div></form>
-    </div>
-    
-  </div>
-</div>
-<div class="block block-menu block-&lt;none&gt; " id="block-menu-369">
-  <div class="block-inner">
-
-    
-    <div class="block-content">
+  <div class="panel-panel grid-16">
+    <div class="inside"><div class="panel-pane pane-page-title" >
+  
       
-<ul class="menu">
-<li class="leaf"><a href="/user?s=18f3acbca4490cbf2eae40637cd5b9f0">Login</a></li>
-<li class="leaf"><a href="/contact?s=18f3acbca4490cbf2eae40637cd5b9f0">Contact</a></li>
+  
+  <div class="pane-content">
+    <h1>Jone     Eide #50956</h1>
+  </div>
 
-</ul>
-    </div>
+  
+  </div>
+<div class="panel-separator"></div><div class="panel-pane pane-horizontal-rule" >
+  
+      
+  
+  <div class="pane-content">
+    <hr />  </div>
+
+  
+  </div>
+<div class="panel-separator"></div><div class="panel-pane pane-player-player-info" >
+  
+        <h2 class="pane-title">Player Info</h2>
     
+  
+  <div class="pane-content">
+    <ul class="player-info info-list"><li class="location"><strong>Location:</strong> Haugesund, Norway</li><li class="classification"><strong>Classification: </strong> Professional</li><li class="membership-status"><strong>Membership Status: </strong> Current <small class="membership-expiration-date">(until 31-Dec-2016)</small></li><li class="current-rating"><strong>Current Rating:</strong> 932 <small class="rating-date">(as of 18-Feb-2014)</small></li></ul>  </div>
+
+  
+  </div>
+<div class="panel-separator"></div><div class="panel-pane pane-player-player-stats" >
+  
+        <h2 class="pane-title">Player Statistics</h2>
+    
+  
+  <div class="pane-content">
+    <div class="item-list"><ul class="tabs primary"><li class="first"><a href="/player/50956" class="active">Player Statistics</a></li><li><a href="/player/50956/details">Ratings Detail</a></li><li class="last"><a href="/player/50956/history">Ratings History</a></li></ul></div><div class="year-link"><div class="item-list"><ul class="tabs secondary"><li class="first"><a href="/player/50956" class="active active">2013</a></li><li class="last"><a href="/player/50956/stats/2012">2012</a></li></ul></div></div><h3>2013 Season Totals</h3><table class="sticky-enabled">
+ <thead><tr><th>Classification</th><th class="tournament-count">Tournaments Played</th><th class="points">Points</th><th class="prize">Prize</th> </tr></thead>
+<tbody>
+ <tr class="odd"><td>Professional</td><td class="tournament-count">5</td><td class="points">960</td><td class="prize">$112.63</td> </tr>
+</tbody>
+</table>
+<h3>Tournament Results</h3><h4>Open</h4><table id="player-results-mpo" class="sticky-enabled">
+ <thead><tr><th class="place">Place</th><th class="points">Points</th><th class="tournament">Tournament</th><th class="dates">Dates</th><th class="total">Total</th><th class="prize">Prize</th> </tr></thead>
+<tbody>
+ <tr class="odd"><td class="place">24</td><td class="points">173</td><td class="tournament"><a href="/tour/event/15384">Bergen Open</a></td><td class="dates">20-Apr to 21-Apr-2013</td><td class="total">190</td><td class="prize"></td> </tr>
+ <tr class="even"><td class="place">9</td><td class="points">353</td><td class="tournament"><a href="/tour/event/15385">Stovnerputten 2013</a></td><td class="dates">22-Jun-2013</td><td class="total">174</td><td class="prize">$112</td> </tr>
+ <tr class="odd"><td class="place">37</td><td class="points">215</td><td class="tournament"><a href="/tour/event/16028">Norwegian Championship</a></td><td class="dates">02-Aug-2013</td><td class="total">261</td><td class="prize"></td> </tr>
+ <tr class="even"><td class="place">27</td><td class="points">150</td><td class="tournament"><a href="/tour/event/15963">Skien Open</a></td><td class="dates">16-Aug to 18-Aug-2013</td><td class="total">262</td><td class="prize"></td> </tr>
+ <tr class="odd"><td class="place">5</td><td class="points">70</td><td class="tournament"><a href="/tour/event/15961">Haugaland Open</a></td><td class="dates">07-Sep-2013</td><td class="total">128</td><td class="prize"></td> </tr>
+</tbody>
+</table>
+  </div>
+
+  
   </div>
 </div>
- </div>	    <div class="clear"></div>
-	</div>
+  </div>
 
-    <!-- top -->
-    <div id="top">
+</div>
+    </div>
+  </div>
+</div>      </div>
+</div>  </div>
+</div></section>    
+  
+      <footer id="section-footer" class="section section-footer">
+  <div id="zone-footer-wrapper" class="zone-wrapper zone-footer-wrapper clearfix">  
+  <div id="zone-footer" class="zone zone-footer clearfix container-12">
+    <div class="grid-12 region region-footer-first" id="region-footer-first">
+  <div class="region-inner region-footer-first-inner">
+    <div class="block block-panels-mini block-footer-menu block-panels-mini-footer-menu odd block-without-title" id="block-panels-mini-footer-menu">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div class="panel-display panel-1col clearfix" id="mini-panel-footer_menu">
+  <div class="panel-panel panel-col">
+    <div><div class="panel-pane pane-block pane-menu-menu-footer clearfix" >
+  
+      
+  
+  <div class="pane-content">
+    <ul class="menu"><li class="first expanded"><div class="nolink">Disc Golf</div><ul class="menu"><li class="first leaf"><a href="/introduction" title="">What is Disc Golf</a></li>
+<li class="leaf"><a href="/rules">Official Rules of Disc Golf</a></li>
+<li class="last leaf"><a href="/course-directory">Course Directory</a></li>
+</ul></li>
+<li class="expanded"><div class="nolink">Membership</div><ul class="menu"><li class="first leaf"><a href="/membership" title="">Join &amp; Renew</a></li>
+<li class="leaf"><a href="/members/benefits">Benefits</a></li>
+<li class="last leaf"><a href="/players" title="">Member Search</a></li>
+</ul></li>
+<li class="expanded"><div class="nolink">Tour</div><ul class="menu"><li class="first leaf"><a href="/tour/events" title="">Schedule &amp; Results</a></li>
+<li class="leaf"><a href="/national-tour" title="">National Tour</a></li>
+<li class="leaf"><a href="/major-disc-golf-events" title="">PDGA Major Events</a></li>
+<li class="leaf"><a href="/world-championships">World Championships</a></li>
+<li class="last leaf"><a href="/td" title="">Tournament Directors</a></li>
+</ul></li>
+<li class="expanded"><div class="nolink">Media</div><ul class="menu"><li class="first leaf"><a href="/discgolfer-magazine" title="">DiscGolfer Magazine</a></li>
+<li class="leaf"><a href="http://www.flickr.com/photos/pdga" title="">Photos</a></li>
+<li class="leaf"><a href="/videos" title="">Videos</a></li>
+<li class="leaf"><a href="https://twitter.com/pdga" title="">Twitter</a></li>
+<li class="last leaf"><a href="https://www.facebook.com/pdga" title="">Facebook</a></li>
+</ul></li>
+<li class="last expanded"><div class="nolink">More</div><ul class="menu"><li class="first leaf"><a href="/contact" title="">Contact</a></li>
+<li class="leaf"><a href="/international">International</a></li>
+<li class="leaf"><a href="http://www.pdgastore.com" title="">Pro Shop</a></li>
+<li class="last leaf"><a href="/tos">Terms of Use</a></li>
+</ul></li>
+</ul>  </div>
 
-        
-        <div id="header">
-
-			            <h1 class="logo">
-                <a href="/?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Home">
-                <img src="/files/platform_logo.jpg" alt="Professional Disc Golf Association" align="middle" />
-                </a>
-            </h1>
-            
-
-            <div id="header_graphic">
-			<div class="block block-headerimage " id="block-headerimage-1">
-  <div class="block-inner">
-
-    
-    <div class="block-content">
-      <div class="field field-type-image field-field-header-image"><div class="field-items"><div class="field-item odd"><img src="http://www.pdga.com/files/headers/header_chains.jpg" alt="header_chains.jpg" title="header_chains.jpg" width="630" height="110" class="imagefield imagefield-field_header_image" /></div></div></div>    </div>
-    
+  
   </div>
 </div>
-			</div>
-        </div>
-
-    </div>
-    <!-- /top -->
-
-    <!-- nav -->
-    <div id="nav">
-    	<div class="block block-nice_menus block-&lt;none&gt; " id="block-nice_menus-1">
-  <div class="block-inner">
-
-    
-    <div class="block-content">
-      <ul class="nice-menu nice-menu-down" id="nice-menu-1"><li id="menu-93" class="menu-path-www.pdga.com"><a href="http://www.pdga.com">Home</a></li>
-<li id="menu-334" class="menuparent menu-path-none"><a title="About">About</a><ul><li id="menu-397" class="menu-path-node-232"><a href="/introduction?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Introduction to Disc Golf">What is Disc Golf</a></li>
-<li id="menu-508" class="menu-path-node-228"><a href="/history?s=18f3acbca4490cbf2eae40637cd5b9f0" title="History of disc golf">History</a></li>
-<li id="menu-279" class="menu-path-faq"><a href="/faq?s=18f3acbca4490cbf2eae40637cd5b9f0">FAQ</a></li>
-</ul>
-</li>
-<li id="menu-276" class="menuparent menu-path-none"><a title="Membership">Membership</a><ul><li id="menu-479" class="menu-path-node-178"><a href="/join?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Information on joining the PDGA">Join &amp; Renew</a></li>
-<li id="menu-481" class="menu-path-member_search"><a href="/members?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Player Search">Player Search</a></li>
-<li id="menu-476" class="menu-path-player_stats_ratings_search"><a href="/player_stats_ratings_search?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Player Statistics">Player Statistics</a></li>
-<li id="menu-602" class="menu-path-node-464"><a href="/player-ratings-search?s=18f3acbca4490cbf2eae40637cd5b9f0">Player Ratings</a></li>
-<li id="menu-403" class="menu-path-node-152"><a href="/world-rankings?s=18f3acbca4490cbf2eae40637cd5b9f0" title="World Rankings">Player Rankings</a></li>
-<li id="menu-499" class="menu-path-node-4899"><a href="/player-rookie-of-the-year-awards?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Information and current standings on the Player and Rooke of the Year contest.">Player &amp; Rookie of the Year</a></li>
-<li id="menu-529" class="menu-path-node-5612"><a href="/seniors?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Info page dedicated to senior disc golfers ">Seniors</a></li>
-<li id="menu-514" class="menu-path-node-4806"><a href="/women?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Info page dedicated to women disc golfers">Women</a></li>
-</ul>
-</li>
-<li id="menu-277" class="menuparent menu-path-none"><a title="PDGA Tour">PDGA Tour</a><ul><li id="menu-475" class="menu-path-tour_schedule"><a href="/tour_schedule?s=18f3acbca4490cbf2eae40637cd5b9f0" title="List of PDGA sanctioned events and results">Event Schedule &amp; Results</a></li>
-<li id="menu-430" class="menu-path-node-354"><a href="/national-tour?s=18f3acbca4490cbf2eae40637cd5b9f0" title="PDGA National Tour and Drive for the Championship Standings">National Tour</a></li>
-<li id="menu-523" class="menu-path-node-5210"><a href="/pdga-major-events?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Information on PDGA Major Events">Major Disc Golf Events</a></li>
-<li id="menu-478" class="menu-path-node-727"><a href="/world-championships?s=18f3acbca4490cbf2eae40637cd5b9f0" title="World Championships Info Page">World Championships</a></li>
-<li id="menu-588" class="menu-path-node-83431"><a href="/leagues?s=18f3acbca4490cbf2eae40637cd5b9f0">PDGA Leagues</a></li>
-<li id="menu-477" class="menu-path-node-326"><a href="/tdinfo?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Resources for Tournament Directors">Tournament Directors</a></li>
-</ul>
-</li>
-<li id="menu-278" class="menuparent menu-path-none"><a title="Courses">Courses</a><ul><li id="menu-404" class="menu-path-node-1429"><a href="/course_directory?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Course Directory">Course Directory</a></li>
-<li id="menu-367" class="menu-path-node-187"><a href="/course-development?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Resources for developing a new course">Course Development</a></li>
-</ul>
-</li>
-<li id="menu-509" class="menuparent menu-path-none"><a title="Rules">Rules</a><ul><li id="menu-603" class="menu-path-node-100021"><a href="/rules?s=18f3acbca4490cbf2eae40637cd5b9f0">Official Rules and Regulations of Disc Golf</a></li>
-<li id="menu-474" class="menu-path-certified_officials"><a href="/certified_officials?s=18f3acbca4490cbf2eae40637cd5b9f0" title="List of certified officials">Certified Officials</a></li>
-<li id="menu-555" class="menu-path-www.pdgastore.com-store-officials-exam.html"><a href="http://www.pdgastore.com/store/officials-exam.html" title="Take the Certified Official&#039;s Exam">Official&#039;s Exam</a></li>
-</ul>
-</li>
-<li id="menu-280" class="menuparent menu-path-none"><a title="Media">Media</a><ul><li id="menu-507" class="menu-path-node-722"><a href="/discgolfer-magazine?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Information about the official publication of the PDGA">DiscGolfer Magazine</a></li>
-<li id="menu-411" class="menu-path-www.flickr.com-photos-pdga"><a href="http://www.flickr.com/photos/pdga" title="PDGA Media Photos">Photos</a></li>
-<li id="menu-405" class="menu-path-videos"><a href="/videos?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Videos">Videos</a></li>
-<li id="menu-655" class="menu-path-www.facebook.com-pdga"><a href="http://www.facebook.com/pdga">Facebook</a></li>
-<li id="menu-656" class="menu-path-twitter.com-pdga"><a href="http://twitter.com/pdga">Twitter</a></li>
-</ul>
-</li>
-<li id="menu-422" class="menuparent menu-path-none"><a title="Pro Shop">Pro Shop</a><ul><li id="menu-559" class="menu-path-www.pdgastore.com"><a href="http://www.pdgastore.com" title="Shop at the PDGA online store">PDGA Store</a></li>
-<li id="menu-560" class="menu-path-www.pdgamerchandise.com"><a href="http://www.pdgamerchandise.com" title="Shop for customized PDGA merchandise">PDGA Merchandise</a></li>
-</ul>
-</li>
-<li id="menu-494" class="menu-path-node-224"><a href="/international?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Information on the PDGA International Program">International</a></li>
-<li id="menu-282" class="menu-path-www.pdga.com-discussion"><a href="http://www.pdga.com/discussion?s=18f3acbca4490cbf2eae40637cd5b9f0">Discussion</a></li>
-<li id="menu-281" class="menuparent menu-path-none"><a title="More">More</a><ul><li id="menu-513" class="menu-path-node-5138"><a href="/advertising?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Information about advertising with the PDGA">Advertising</a></li>
-<li id="menu-488" class="menu-path-node-191"><a href="/affiliate_club?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Information on the PDGA Affilicate Club">Affiliate Club Program</a></li>
-<li id="menu-489" class="menu-path-contact"><a href="/contact?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Contact the PDGA">Contact</a></li>
-<li id="menu-490" class="menu-path-node-702"><a href="/demographics?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Demographics">Demographics</a></li>
-<li id="menu-491" class="menu-path-node-724"><a href="/discipline?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Information on the PDGA Disciplinary Process">Disciplinary Process</a></li>
-<li id="menu-440" class="menu-path-documents"><a href="/documents?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Complete list of documents currently available at pdga.com">Documents</a></li>
-<li id="menu-528" class="menu-path-node-808"><a href="/elections?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Information on the PDGA Elections">Elections</a></li>
-<li id="menu-492" class="menu-path-node-154"><a href="/IDGC?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Information on the International Disc Golf Center">International Disc Golf Center</a></li>
-<li id="menu-493" class="menu-path-node-381"><a href="/organizational-documents?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Organizational Documents">Organizational Documents</a></li>
-<li id="menu-683" class="menu-path-node-100340"><a href="/points?s=18f3acbca4490cbf2eae40637cd5b9f0">Points</a></li>
-<li id="menu-444" class="menu-path-node-739"><a href="/ratings?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Information about PDGA Player Ratings">Ratings</a></li>
-<li id="menu-497" class="menu-path-node-208"><a href="/tech-standards?s=18f3acbca4490cbf2eae40637cd5b9f0" title="Technical Standards">Technical Standards</a></li>
-</ul>
-</li>
-</ul>
-    </div>
-    
   </div>
 </div>
     </div>
-    <!-- /nav -->
+  </div>
+</div>  </div>
+</div><div class="grid-12 region region-footer-second" id="region-footer-second">
+  <div class="region-inner region-footer-second-inner">
+    <div class="block block-panels-mini block-footer-secondary block-panels-mini-footer-secondary odd block-without-title" id="block-panels-mini-footer-secondary">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div class="panel-display panel-1col clearfix" id="mini-panel-footer_secondary">
+  <div class="panel-panel panel-col">
+    <div><div class="panel-pane pane-pdga-architecture-footer" >
+  
+      
+  
+  <div class="pane-content">
+    <p>Copyright © 1998-2014. Professional Disc Golf Association. All Rights Reserved.</p>
+<p>IDGC - Wildwood Park, 3828 Dogwood Lane, Appling, GA 30802-3012 PH: 706-261-6342</p>
+  </div>
 
-    <!-- top fullwidth -->
-        <!-- /top fullwidth -->
-
-    <!-- content -->
-    <div id="content">
-        <!-- content-left -->
-        <div id="content-left">
-
-        	        	<div class="clear"></div>
-                        <!-- content-main -->
-            <div id="content-main">
-
-				
-                <!-- main -->
-                <div id="main" class="column">
-
-                    <h1 class="page-title">Karl Johan Hoj Nybo #28903</h1>                                                                                <div class="player_stats-content">
-						<div class="profile-header"><h2>Player Info</h2><p class="location"><strong>Location:</strong> Kã¸Benhavn K, Denmark</p><p class="classification"><strong>Classification: </strong> Professional</p><p class="current-rating"><strong>Current Rating:</strong> 1027 <small class="rating-date">(as of 29-Jan-2013)</small></p><p><strong>Upcoming Events:</strong> <a title="Fountain Hills & Scottsdale, AZ&#013;27-Feb to 02-Mar-2013" href="/tournament_results/99307?s=18f3acbca4490cbf2eae40637cd5b9f0">Memorial Championship presented by Discraft</a></div><p class="nav-link mini-controls"><strong>Player Statistics</strong> | <strong><a href="/player_ratings_detail/44378/2012?s=18f3acbca4490cbf2eae40637cd5b9f0">Ratings Detail</a></strong> | <strong><a href="/player_ratings_history/44378/2012?s=18f3acbca4490cbf2eae40637cd5b9f0">Ratings History</a></strong> </p><h2>2012 Player Statistics</h2><p class="year-link">2012&nbsp;&nbsp;|&nbsp; <strong><a href="/player_stats/44378/2011?s=18f3acbca4490cbf2eae40637cd5b9f0">2011</a></strong> &nbsp;|&nbsp; <strong><a href="/player_stats/44378/2010?s=18f3acbca4490cbf2eae40637cd5b9f0">2010</a></strong> &nbsp;|&nbsp; <strong><a href="/player_stats/44378/2009?s=18f3acbca4490cbf2eae40637cd5b9f0">2009</a></strong> &nbsp;|&nbsp; <strong><a href="/player_stats/44378/2008?s=18f3acbca4490cbf2eae40637cd5b9f0">2008</a></strong> &nbsp;|&nbsp; <strong><a href="/player_stats/44378/2007?s=18f3acbca4490cbf2eae40637cd5b9f0">2007</a></strong> &nbsp;|&nbsp; <strong><a href="/player_stats/44378/2006?s=18f3acbca4490cbf2eae40637cd5b9f0">2006</a></strong></p><h3>Season Totals</h3><table class="summary season-stats"><thead><tr><th class="classification">Class</th><th class="tournament-count">Tournaments Played</th><th class="points">Points</th><th class="prize">Prize</th></tr></thead><tbody><tr><td class="classification">Professional</td><td class="tournament-count">7</td><td class="points">5363</td><td class="prize">$3346.00</td></tr></tbody></table><h3>Tournament Results</h3><h4>Open</h4><table class="results"><thead><tr><th class="place">Place</th><th class="points">Points</th><th class="tournament">Tournament</th><th class="dates">Dates</th><th class="total">Total</th><th class="prize">Prize</th></tr></thead><tbody><tr><td class="place">29</td><td class="points">650</td><td class="tournament"><a href="/tournament_results/76135?s=18f3acbca4490cbf2eae40637cd5b9f0">Memorial Championship - Pro</a></td><td class="dates"><span style="display:none">2012-02-29</span>29-Feb to 03-Mar-2012</td><td class="total">222</td><td class="prize"><span style="display: none">250</span>$250</td></tr><tr><td class="place">2</td><td class="points">810</td><td class="tournament"><a href="/tournament_results/78406?s=18f3acbca4490cbf2eae40637cd5b9f0">Copenhagen Open</a></td><td class="dates"><span style="display:none">2012-04-14</span>14-Apr to 15-Apr-2012</td><td class="total">198</td><td class="prize"><span style="display: none">746</span>$746</td></tr><tr><td class="place">2</td><td class="points">278</td><td class="tournament"><a href="/tournament_results/85412?s=18f3acbca4490cbf2eae40637cd5b9f0">DDGU DT 2012 #2</a></td><td class="dates"><span style="display:none">2012-04-21</span>21-Apr to 22-Apr-2012</td><td class="total">205</td><td class="prize"><span style="display: none">123</span>$123</td></tr><tr><td class="place">2</td><td class="points">345</td><td class="tournament"><a href="/tournament_results/78412?s=18f3acbca4490cbf2eae40637cd5b9f0">Sula Open</a></td><td class="dates"><span style="display:none">2012-06-07</span>07-Jun to 10-Jun-2012</td><td class="total">214</td><td class="prize"><span style="display: none">731</span>$731</td></tr><tr><td class="place">10</td><td class="points">2265</td><td class="tournament"><a href="/tournament_results/77432?s=18f3acbca4490cbf2eae40637cd5b9f0">Stockholm Open</a></td><td class="dates"><span style="display:none">2012-06-28</span>28-Jun to 01-Jul-2012</td><td class="total">242</td><td class="prize"><span style="display: none">809</span>$809</td></tr><tr><td class="place">2</td><td class="points">890</td><td class="tournament"><a href="/tournament_results/77435?s=18f3acbca4490cbf2eae40637cd5b9f0">European Championships</a></td><td class="dates"><span style="display:none">2012-08-15</span>15-Aug to 18-Aug-2012</td><td class="total">235</td><td class="prize"><span style="display: none">429</span>$429</td></tr><tr><td class="place">1</td><td class="points">125</td><td class="tournament"><a href="/tournament_results/96667?s=18f3acbca4490cbf2eae40637cd5b9f0">Danish Championships</a></td><td class="dates"><span style="display:none">2012-09-15</span>15-Sep to 16-Sep-2012</td><td class="total">190</td><td class="prize"><span style="display: none">255</span>$255</td></tr></tbody></table><div class="meta"> 
-	    	<div class="action-links">
-
-    		<ul class="links inline">
-    			<li class="first addthis">
-    				
-    <div class="addthis"><a href="http://www.addthis.com/bookmark.php"
-      onmouseover="return addthis_open(this, '', '[URL]', '[TITLE]')"
-      onmouseout="addthis_close()"
-      onclick="return addthis_sendto()"><img src="http://s9.addthis.com/button1-share.gif" width="125" height="16" alt="" /></a></div>
-    <script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
-        			</li>
-    		</ul>
-    	
-    	</div> 
-		</div>                                            </div>
-
-                </div>
-                <!-- /main -->
-
-            </div>
-            <!-- /content-main -->
-
-        </div>
-        <!-- /content-left -->
-
-		        <!-- sidebar-right -->
-        <div id="sidebar-right" class="column sidebar">
-        	<div class="sidebar-right-content">
-        		<div class="block block-block " id="block-block-42">
-  <div class="block-inner">
-
-    
-    <div class="block-content">
-      <script type='text/javascript'><!--//<![CDATA[
-   var m3_u = (location.protocol=='https:'?'https://www.pdga.com/openx/www/delivery/ajs.php':'http://www.pdga.com/openx/www/delivery/ajs.php');
-   var m3_r = Math.floor(Math.random()*99999999999);
-   if (!document.MAX_used) document.MAX_used = ',';
-   document.write ("<scr"+"ipt type='text/javascript' src='"+m3_u);
-   document.write ("?zoneid=29");
-   document.write ('&amp;cb=' + m3_r);
-   if (document.MAX_used != ',') document.write ("&amp;exclude=" + document.MAX_used);
-   document.write (document.charset ? '&amp;charset='+document.charset : (document.characterSet ? '&amp;charset='+document.characterSet : ''));
-   document.write ("&amp;loc=" + escape(window.location));
-   if (document.referrer) document.write ("&amp;referer=" + escape(document.referrer));
-   if (document.context) document.write ("&context=" + escape(document.context));
-   if (document.mmm_fo) document.write ("&amp;mmm_fo=1");
-   document.write ("'><\/scr"+"ipt>");
-//]]>--></script>
-    </div>
-    
+  
   </div>
 </div>
-            </div>
-        </div>
-        <!-- /sidebar-right -->
-        
-        <div class="clear"></div>
-
-    </div>
-    <!-- #content -->
-
-    <!-- bottom -->
-    <div id="bottom">
-
-    	<!-- footer adspace -->
-    	        <!-- /footer adspace -->
-
-    	<!-- footer 3 column -->
-    	    	    	    	<!-- /footer 3 column -->
-
-        <!-- footer -->
-        <div id="footer">
-            <p>Copyright &copy; 2008-2013. Professional Disc Golf Association. All Rights Reserved. </p>
-<p><a href="http://www.pdga.com/tos">Terms of Use and Privacy Policy</a></p>
-<div class="block block-block " id="block-block-58">
-  <div class="block-inner">
-
-    
-    <div class="block-content">
-      <p><a href="http://www.facebook.com/pdga" target="_blank" title="facebook"><img src="/files/images/icons/social_facebook.png" alt="facebook" class="social-icon" width="42" height="42"></a><a href="http://www.flickr.com/photos/pdga/collections/" target="_blank" title="flickr"><img src="/files/images/icons/social_flickr.png" alt="flickr" class="social-icon" width="42" height="42"></a><a href="http://twitter.com/pdga" target="_blank" title="twitter"><img src="/files/images/icons/social_twitter.png" alt="twitter" class="social-icon" width="42" height="42"></a><a href="http://www.youtube.com/pdgamedia" target="_blank" title="youtube"><img src="/files/images/icons/social_youtube.png" alt="youtube" class="social-icon" width="42" height="42"></a><a href="/frontpage/feed?s=18f3acbca4490cbf2eae40637cd5b9f0" target="_blank" title="rss feed"><img src="/files/images/icons/social_rss.png" alt="rss" class="social-icon" width="42" height="42"></a></p>
-    </div>
-    
   </div>
 </div>
-            <div class="clear"></div>
-        </div>
-        <!-- /footer -->
-
     </div>
-    <!-- #bottom -->
+  </div>
+</div>  </div>
+</div>  </div>
+</div></footer>  </div>  </body>
+</html>
 
-</div>
-<!-- /wrapper -->
-
-<img src="http://www.pdga.com/discussion/cron.php?s=18f3acbca4490cbf2eae40637cd5b9f0&amp;rand=1361528728" alt="" width="1" height="1" border="0" /><script type="text/javascript" src="/sites/all/modules/google_analytics/googleanalytics.js?s=18f3acbca4490cbf2eae40637cd5b9f0"></script>
-<script type="text/javascript">var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));</script>
-<script type="text/javascript">try{var pageTracker = _gat._getTracker("UA-6108714-1");pageTracker._trackPageview();} catch(err) {}</script>
-<!-- Begin comScore Tag -->
-<script>
-var _comscore = _comscore || [];
-_comscore.push({ c1: "2", c2: "14910110" });
-(function() {
-var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
-s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
-el.parentNode.insertBefore(s, el);
-})();
-</script>
-<noscript>
-<img src="http://b.scorecardresearch.com/p?c1=2&amp;c2=14910110&amp;cv=2.0&amp;cj=1" />
-</noscript>
-<!-- End comScore Tag -->
-<!-- Start Quantcast tag -->
-<script type="text/javascript" src="//edge.quantserve.com/quant.js?s=18f3acbca4490cbf2ea* Closing connection #0
-e40637cd5b9f0"></script>
-<script type="text/javascript">_qoptions = { tags:"outdoor enthusiast" }; _qacct="p-31QupbWRoAvms";quantserve();</script>
-<noscript>
-  <a href="//www.quantcast.com/p-31QupbWRoAvms?s=18f3acbca4490cbf2eae40637cd5b9f0" target="_blank"><img src="http://pixel.quantserve.com/pixel/p-31QupbWRoAvms.gif?tags=outdoor%20enthusiast" height="1" width="1" alt="Quantcast"/></a>
-</noscript>
-<!-- End Quantcast tag -->
-<!-- Compete XL Code for pdga.com -->
-<script type="text/javascript">
-__compete_code = 'b5046334d003e973e98854e2e9963b5a';
-/* Set control variables below this line. */ 
-</script>
-<script type="text/javascript" src="//c.compete.com/bootstrap/s/b5046334d003e973e98854e2e9963b5a/pdga-com/bootstrap.js?s=18f3acbca4490cbf2eae40637cd5b9f0"></script>
-<noscript>
-  <img width="1" height="1" src="https://ssl-pdga-com-b50463.c-col.com" alt="Compete XL"/>
-</noscript>
-<!-- End Compete tag -->
-<script src="/sites/all/themes/platform/js/common.js?s=18f3acbca4490cbf2eae40637cd5b9f0" type="text/javascript"></script>
-</body>
-</html>"""
+"""

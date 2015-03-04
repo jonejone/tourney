@@ -120,6 +120,9 @@ if os.environ.get('SENDGRID_USERNAME'):
 CRISPY_TEMPLATE_PACK = 'bootstrap'
 
 ALLOWED_HOSTS = (
+    '.osloopen.net',
+    '.bergenopen.no',
+    '.pargolfnm.lillehammerfrisbee.no',
     '.sulaopen.com',
     '.disctourney.com',
     '.haugalandopen.com')

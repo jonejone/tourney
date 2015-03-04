@@ -4,6 +4,8 @@
 {% block title %}{% trans "Waiting list" %} - {{ tournament.name }}{% endblock %}
 
 {% block endbody %}
+
+{% if is_tournament_admin %}
 <script src="{{ STATIC_URL }}tournament/js/status_bar.js"></script>
 <script src="{{ STATIC_URL }}tournament/js/playeractions.js"></script>
 <script>
@@ -23,7 +25,62 @@ $(function() {
     var module = TOURNEY.module('playeractions');
     window.playeractions = new module.ActionsManager(config);
 });
+
+$(function() {
+    var set_paid_url = '{% url "tournament-ajax-update-player-paid" %}';
+    var csrf_token = '{{ csrf.csrf_token }}';
+    var cells = $('.player-table td.is_paid');
+
+    cells.addClass('is_paid_admin');
+
+    cells.bind('click', function(e) {
+        e.preventDefault();
+
+        var row = $(e.target).parents('tr');
+        var id = row.data('tournamentPlayerId');
+        var already_paid = $(e.target).data('isPaid');
+        var new_paid_value = 1;
+
+        if(already_paid) {
+            new_paid_value = 0;
+        }
+
+        var data = {
+            'tp_id': id,
+            'is_paid': new_paid_value,
+            'csrfmiddlewaretoken': csrf_token,
+        };
+
+        var xhr = $.ajax({
+            url: set_paid_url,
+            data: data,
+            type: 'POST',
+            dataType: 'json',
+        });
+
+        xhr.done(function(data, textStatus) {
+            if (data.success) {
+                if (new_paid_value > 0) {
+                    var cell_content = '{% trans "Yes" %}';
+                } else {
+                    var cell_content = '{% trans "No" %}';
+                }
+
+                $(e.target).html(cell_content);
+                $(e.target).data('isPaid', new_paid_value);
+            } else {
+                alert('{% trans "Unable to update payment information." %}');
+            }
+        });
+
+        xhr.fail(function(ajax, textStatus, error) {
+            alert('{% trans "Unable to update payment information." %}');
+        });
+    });
+});
+
 </script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -65,6 +122,8 @@ $(function() {
             <th>{% trans "Division" %}</th>
             <th>{% trans "PDGA" %}</th>
             <th>{% trans "Rating" %}</th>
+            <th>{% trans "Paid" %}</th>
+
             {% if is_tournament_admin %}
             <th>{% trans "Actions" %}</th>
             {% endif %}
@@ -93,6 +152,15 @@ $(function() {
                 <td>
                     {% if tp.player.pdga_rating %}{{ tp.player.pdga_rating }}{% endif %}
                 </td>
+
+                <td class="is_paid" data-is-paid="{% if tp.is_paid %}1{% else %}0{% endif %}">
+                    {% if tp.is_paid %}
+                        {% trans "Yes" %}
+                    {% else %}
+                        {% trans "No" %}
+                    {% endif %}
+                </td>
+
                 {% if is_tournament_admin %}
                 <td>
                     <div class="btn-group">

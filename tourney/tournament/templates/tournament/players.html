@@ -8,11 +8,23 @@
 <h1>{% trans "Players" %}</h1>
 
 <dl>
-    <dt>{% trans "Players signed up" %}</dt>
+    <dt>
+        {% if tournament.is_couples_tourney %}
+            {% trans "Couples signed up" %}
+        {% else %}
+            {% trans "Players signed up" %}
+        {% endif %}
+    </dt>
     <dd>
         {{ tournament.get_player_list_count }}
     </dd>
-    <dt>{% trans "Max player count" %}</dt>
+    <dt>
+        {% if tournament.is_couples_tourney %}
+            {% trans "Max couples count" %}
+        {% else %}
+            {% trans "Max player count" %}
+        {% endif %}
+    </dt>
     <dd>
         {{ tournament.max_players }}
         {% if tournament.wildcard_spots %}(-{{ tournament.wildcard_spots }} wildcard spots){% endif %}
@@ -38,36 +50,45 @@
 
 {% regroup tournament.get_player_list by player_class as player_list %}
 
-<table class="table table-dotted table-striped player-table">
-    <thead>
-        <tr>
-            <th>{% trans "Name" %}</th>
-            <th>{% trans "Country" %}</th>
-            <th>{% trans "Division" %}</th>
-            <th>{% trans "PDGA" %}</th>
-            <th>{% trans "Rating" %}</th>
-            <th>{% trans "Paid" %}</th>
-            {% if is_tournament_admin %}
-            <th>{% trans "Actions" %}</th>
-            {% endif %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for class in player_list %}
-            {% if not forloop.first %}
+    {% for class in player_list %}
+
+    <h3>{{ class.grouper }} ({{ class.list|length }})</h3>
+    <table class="table table-dotted table-striped player-table">
+        <thead>
             <tr>
-                <td colspan="6">&nbsp;</td>
+                <th>&nbsp;</th>
+                <th width="35%">{% if tournament.is_couples_tourney %}{% trans "Name player 1 / player 2" %}{% else %}{% trans "Name" %}{% endif %}</th>
+                <th width="35%">{% if tournament.is_couples_tourney %}{% trans "Club player 1 / player 2" %}{% else %}{% trans "Club" %}{% endif %}</th>
+
+                {% if not tournament.is_couples_tourney %}
+                <th width="10%">{% trans "PDGA" %}</th>
+                <th width="10%">{% trans "Rating" %}</th>
+                 {% endif %}
+
+               <th width="10%">{% trans "Paid" %}</th>
+                {% if is_tournament_admin %}
+                <th>{% trans "Actions" %}</th>
+                {% endif %}
             </tr>
-            {% endif %}
-            {% for tp in class.list %}
+        </thead>
+        <tbody>
+            {% for tp in class.list|dictsortreversed:"player.pdga_rating" %}
             <tr data-tournament-player-id="{{ tp.id }}" class="{% if tp.is_waiting_list %}waiting-list{% endif %}">
-                <td>
-                    {{ tp.player.name }}
-                </td>
                 <td>
                     <img src="{{ tp.player.country.flag }}" />
                 </td>
-                <td>{{ tp.player_class.name }}</td>
+                <td>
+                    {{ tp.player.name|truncatechars:50 }}
+                </td>
+                <td>
+                    {% if tp.player.club %}
+                        {{ tp.player.club|truncatechars:50 }}
+                    {% else %}
+                        {% trans "N/A" %}
+                    {% endif %}
+                </td>
+
+                {% if not tournament.is_couples_tourney %}
                 <td>
                     {% if tp.player.pdga_number %}
                     <a href="http://www.pdga.com/player-stats?PDGANum={{ tp.player.pdga_number }}">
@@ -78,7 +99,9 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if tp.player.pdga_rating %}{{ tp.player.pdga_rating }}{% endif %}</td>
+                    {% if tp.player.pdga_rating %}{{ tp.player.pdga_rating }}{% endif %}
+                </td>
+                {% endif %}
                 <td class="is_paid" data-is-paid="{% if tp.is_paid %}1{% else %}0{% endif %}">
                     {% if tp.is_paid %}
                         {% trans "Yes" %}
@@ -110,9 +133,9 @@
                 {% endif %}
             </tr>
             {% endfor %}
-        {% endfor %}
     </tbody>
 </table>
+{% endfor %}
 
 {% if tournament.is_registration_open and not is_embedded %}
 <p><a href="{% url "tournament-registration" %}" class="btn btn-info">{% blocktrans with name=tournament.name %}Register for {{ name }}{% endblocktrans %}</a></p>

@@ -33,9 +33,6 @@ class PDGARanking:
             location = soup.find('li', attrs={'class':
                                  'location'}).contents[1]
 
-
-
-
         except HTMLParseError, e:
             raise Exception(e)
             self.rating = None

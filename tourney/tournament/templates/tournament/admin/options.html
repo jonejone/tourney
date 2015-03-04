@@ -1,0 +1,20 @@
+{% extends "tournament/tournament_base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "Tournament options" %}</h1>
+
+<dl>
+{% for class in tournament.tournamentoption_set.all %}
+    <dt>{{ class.name }} ({{ class.tournamentplayer_set.count }})</dt>
+    <dd>
+        <ul>
+            {% for player in class.tournamentplayer_set.all %}
+            <li>{{ player.player.name }}</li>
+            {% endfor %}
+        </ul>
+    </dd>
+{% endfor %}
+</dl>
+
+{% endblock %}

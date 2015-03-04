@@ -139,7 +139,7 @@ class PlayerForm(forms.ModelForm):
     class Meta:
         model = Player
         fields = (
-            'pdga_number', 'name', 'email',
+            'pdga_number', 'name', 'club', 'email',
             'phonenumber')
 
 
@@ -160,7 +160,7 @@ class RegistrationForm(PlayerForm):
     class Meta:
         model = Player
         fields = ('player_class', 'pdga_number', 'pdga_terms',
-                  'name', 'country', 'email', 'phonenumber', 'options')
+                  'name', 'club', 'country', 'email', 'phonenumber', 'options')
 
     def __init__(self, *kargs, **kwargs):
 
@@ -169,6 +169,10 @@ class RegistrationForm(PlayerForm):
             del kwargs['tournament']
 
         super(RegistrationForm, self).__init__(*kargs, **kwargs)
+
+        # Set default country to Norway since all tourneys
+        # so far have been in Norway.
+        self.fields['country'].initial = 'NO'
 
         # If there actually are no choices for the "options" field
         # for this tournament, we just remove the field from the form
@@ -195,6 +199,15 @@ class RegistrationForm(PlayerForm):
 
         # Take care of choices for player class
         self.fields['player_class'].choices = (('', '--'), )
+
+        # Make some changes for couples tourneys
+        if self.tournament.is_couples_tourney:
+            # Remove PDGA field if couples tourney
+            del self.fields['pdga_number']
+
+            # Change labels
+            self.fields['name'].label = _('Name player 1 / player 2')
+            self.fields['club'].label = _('Club player 1 / player 2')
 
         if self.tournament.registration_stages:
             stage = self.tournament.get_registration_stage()
