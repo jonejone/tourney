@@ -26,6 +26,7 @@ $(function() {
 {% block content %}
 <h1>{% trans "Registration" %}</h1>
 
+
 {% if tournament.registration_stages %}
 <table class="table table-dotted registration-stages-table">
     <thead>
@@ -79,6 +80,11 @@ $(function() {
 {% endif %}
 
 {% if tournament.is_registration_open %}
+
+{% if tournament.enable_payments %}
+<p class="alert">{% trans "Payment is required upon registration. You will be forwarded to PayPal after registering and you can pay using your PayPal account or a regular creditcard." %}</p>
+{% endif %}
+
 <form method="post" action="{% if is_embedded %}{% url "tournament-registration-embed" %}{% else %}{% url "tournament-registration" %}{% endif %}">{% csrf_token %}
     {% include "tournament/bootstrap_form.html" %}
 </form>

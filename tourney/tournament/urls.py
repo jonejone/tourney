@@ -42,6 +42,8 @@ if settings.DEBUG:
 urlpatterns += patterns(
     'tourney.tournament.views',
     url(r'^$', 'index', name='tournament-index'),
+    url(r'^paypal/return/$', 'paypal_return', name='tournament-paypal-return'),
+    url(r'^paypal/cancel/$', 'paypal_cancel', name='tournament-paypal-cancel'),
     url(
         r'^registration/embed/$',
         'registration',

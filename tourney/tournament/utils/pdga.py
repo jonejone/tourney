@@ -20,22 +20,21 @@ class PDGARanking:
             soup = BeautifulSoup(self.response)
 
             # Get current rating
-            p = soup.find('', attrs={'class': 'current-rating'})
+            p = soup.find('li', attrs={'class': 'current-rating'})
             rating = p.contents[1].strip()
-            print rating
+
 
             # Get the name also
-            h1 = soup.find('h1')
+            h1 = soup.find('h1', attrs={'id': 'page-title'})
             name = h1.contents[0].split('#')[0].strip()
-            name = name.replace('   ',' ');
             name = name.replace('\t', '')
 
             # And location
             location = soup.find('li', attrs={'class':
                                  'location'}).contents[1]
 
-
-        except HTMLParseError:
+        except HTMLParseError, e:
+            raise Exception(e)
             self.rating = None
             self.name = None
         except AttributeError:
