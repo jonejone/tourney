@@ -229,11 +229,6 @@ class RegistrationForm(PlayerForm):
             'registered': now(),
         }
 
-        was_full = self.tournament.is_registration_full()
-
-        if was_full:
-            tp_kwargs.update({'is_waiting_list': True})
-
         # Create TournamentPlayer
         tp = TournamentPlayer.objects.create(**tp_kwargs)
 
@@ -251,9 +246,8 @@ class RegistrationForm(PlayerForm):
 
             tp.options = options
 
-        if not was_full:
-            tp.send_registration_email()
-
         if tp.player.pdga_number:
             # Run management command to update rank
             management.call_command('pdgarank', tp.player.id)
+
+        return tp

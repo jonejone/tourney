@@ -349,7 +349,24 @@ def registration(request, embed=False):
             request.POST,
             tournament=tournament)
         if form.is_valid():
-            form.save()
+
+            was_full = tournament.is_registration_full()
+
+            tp = form.save()
+
+            # Redirect to Paypal if payments is turned on
+            if tournament.enable_payments:
+                tp.is_pending_payment = True
+                tp.save()
+                url = tp.get_paypal_redirect_url()
+                return HttpResponseRedirect(url)
+
+            if was_full:
+                tp.is_waiting_list = True
+                tp.save()
+            else:
+                tp.send_registration_email()
+
             if embed:
                 return HttpResponseRedirect(reverse(
                     'tournament-registration-complete-embed'))
@@ -380,6 +397,43 @@ def registration(request, embed=False):
 
     return response
 
+
+def paypal_return(request):
+    import paypalrestsdk
+    tournament = request.tournament
+    payment_id = request.GET.get('paymentId')
+    payer_id = request.GET.get('PayerID')
+    tp = tournament.tournamentplayer_set.get(
+        paypal_payment_id=payment_id)
+
+    tp.paypal_payer_id = payer_id
+    tp.save()
+
+    paypal_api = tp.get_paypal_api()
+
+    payment = paypalrestsdk.Payment.find(payment_id, api=paypal_api)
+    is_full = tournament.is_registration_full()
+
+    if payment.execute({'payer_id': payer_id}):
+        tp.is_pending_payment = False
+        tp.is_paid = True
+
+        if is_full:
+            tp.is_waiting_list = True
+        else:
+            tp.send_registration_email()
+
+        tp.save()
+
+        return HttpResponseRedirect(reverse(
+            'tournament-registration-complete'))
+    else:
+        return HttpResponse('Unable to execute payment')
+
+
+
+def paypal_cancel(request):
+    pass
 
 
 def index(request):
