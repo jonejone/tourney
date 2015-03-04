@@ -37,6 +37,9 @@ class RegistrationStage(models.Model):
     tournament = models.ForeignKey('Tournament')
     opens = models.DateTimeField()
 
+    class Meta:
+        ordering = ['opens',]
+
     def __unicode__(self):
         return u'Stage opens %s for tournament %s' % (
             self.opens, self.tournament.name)
@@ -491,6 +494,7 @@ class TournamentPlayer(models.Model):
         }, api=paypal_api)
 
         payment.create()
+
 
         self.paypal_payment_id = payment.id
         self.save()
