@@ -1,7 +1,9 @@
+import paypalrestsdk
 from datetime import datetime, date
 
 from django.utils.translation import ugettext_lazy as _
 from django.template.loader import get_template
+from django.core.urlresolvers import reverse
 from django.template import Context
 from django.core.mail import send_mail
 from django_countries import CountryField
@@ -124,6 +126,31 @@ class Tournament(models.Model):
         _('Wildcard spots'),
         default=0)
 
+    enable_payments = models.BooleanField(
+        _('Enable payments'),
+        default=0)
+
+    paypal_client_id = models.CharField(
+        _('PayPal Client ID'),
+        max_length=200,
+        blank=True, null=True, default='')
+
+    paypal_secret = models.CharField(
+        _('PayPal Secret'),
+        max_length=200,
+        blank=True, null=True, default='')
+
+    PAYPAL_MODE_CHOICES = (
+        ('live', _('Live')),
+        ('sandbox', _('Sandbox')),
+    )
+
+    paypal_mode = models.CharField(
+        _('PayPal mode'),
+        max_length=10,
+        choices=PAYPAL_MODE_CHOICES,
+        blank=True, null=True, default='live')
+
     @property
     def language_code(self):
         if self.id == 1:
@@ -133,12 +160,14 @@ class Tournament(models.Model):
 
     def get_available_spots(self):
         players = self.tournamentplayer_set.filter(
-            is_waiting_list=False).count()
+            is_waiting_list=False).filter(
+                is_pending_payment=False).count()
+
         return self.max_players - self.wildcard_spots - players
 
     def get_player_list(self):
         return self.tournamentplayer_set.filter(
-            is_waiting_list=False)
+            is_waiting_list=False, is_pending_payment=False)
 
     def get_player_list_email_count(self):
         return self.get_player_list().filter(
@@ -166,7 +195,7 @@ class Tournament(models.Model):
         except IndexError:
             return None
 
-        return 'http://%s/' % ts.site.domain
+        return 'http://%s' % ts.site.domain
 
     def get_stages_json(self):
         current = self.get_registration_stage()
@@ -314,6 +343,9 @@ class TournamentPlayer(models.Model):
     options = models.ManyToManyField(
         TournamentOption, blank=True)
     is_waiting_list = models.BooleanField(default=0)
+    paypal_payment_id = models.CharField(max_length=200, blank=True, null=True)
+    paypal_payer_id = models.CharField(max_length=200, blank=True, null=True)
+    is_pending_payment = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['player_class', '-player__pdga_rating', ]
@@ -394,6 +426,81 @@ class TournamentPlayer(models.Model):
             email_body,
             self.tournament.tournament_admin_email,
             [self.player.email, self.tournament.tournament_admin_email])
+
+
+    def get_paypal_return_url(self):
+        return '%s%s' % (self.tournament.get_url(), reverse('tournament-paypal-return'))
+
+
+    def get_paypal_cancel_url(self):
+        return '%s%s' % (self.tournament.get_url(), reverse('tournament-paypal-cancel'))
+
+
+    def get_paypal_api(self):
+        paypal_api = paypalrestsdk.Api({
+            'mode': self.tournament.paypal_mode,
+            'client_id': self.tournament.paypal_client_id,
+            'client_secret': self.tournament.paypal_secret,
+        })
+
+        return paypal_api
+
+
+    def get_paypal_redirect_url(self):
+        paypal_api = self.get_paypal_api()
+
+        items = [
+            {
+                "name": "Registration for %s" % self.tournament.name,
+                "sku": "registrationfee",
+                "price": str(self.get_class_price()),
+                "currency": self.tournament.currency,
+                "quantity": 1
+            },
+        ]
+
+        for option in self.options.all():
+            items.append({
+                "name": option.name,
+                "sku": "option-%i" % option.id,
+                "price": str(option.price),
+                "currency": self.tournament.currency,
+                "quantity": 1
+            })
+
+        payment = paypalrestsdk.Payment({
+            "intent": "order",
+            "payer": {
+                "payment_method": "paypal"
+            },
+            "redirect_urls": {
+                "return_url": self.get_paypal_return_url(),
+                "cancel_url": self.get_paypal_cancel_url(),
+            },
+            "transactions": [{
+                "item_list": {
+                    "items": items
+                },
+                "amount": {
+                    "currency": self.tournament.currency,
+                    "total": str(self.get_player_price())
+                },
+                "description": "Registration fee for %s" % self.tournament.name,
+            }]
+
+        }, api=paypal_api)
+
+        payment.create()
+
+        self.paypal_payment_id = payment.id
+        self.save()
+
+        # Find redirect URL
+        for link in payment.links:
+            if link.method == 'REDIRECT':
+                return link.href
+
+        raise Exception('Unable to find Paypal redirect URL')
 
 
 class TournamentPage(models.Model):
