@@ -358,6 +358,7 @@ def registration(request, embed=False):
             if tournament.enable_payments:
                 tp.is_pending_payment = True
                 tp.save()
+                request.session['last_tournamentplayer_id'] = tp.id
                 url = tp.get_paypal_redirect_url()
                 return HttpResponseRedirect(url)
 
@@ -433,6 +434,19 @@ def paypal_return(request):
 
 
 def paypal_cancel(request):
+
+    tp_id = request.session.get('last_tournamentplayer_id', False)
+
+    if tp_id:
+        tp = request.tournament.tournamentplayer_set.get(id=tp_id)
+        tp.delete()
+        del request.session['last_tournamentplayer_id']
+
+    return render(
+        request, 'tournament/paypal_cancel.html')
+
+
+    raise Exception(request.session['last_tournamentplayer_id'])
     pass
 
 
