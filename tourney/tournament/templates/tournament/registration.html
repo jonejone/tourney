@@ -41,7 +41,7 @@ $(function() {
         {% for stage in tournament.registrationstage_set.all %}
         <tr{% ifequal stage current_stage %} class="info"{% endifequal %}>
             <td>
-                {% blocktrans with counter=forloop.counter opens=stage.opens %}Stage {{ counter }}, opens {{ opens }}{% endblocktrans %}</td>
+                {% blocktrans with counter=forloop.counter opens=stage.opens|date:"d/h/Y H:i" %}Stage {{ counter }}, opens {{ opens }}{% endblocktrans %}</td>
             {% for stage_class in stage.registrationstageclass_set.all %}
             <td>
                 {% ifequal 0 stage_class.rating_required %}
