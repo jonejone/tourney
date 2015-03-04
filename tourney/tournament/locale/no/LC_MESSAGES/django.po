@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-04 20:02+0000\n"
+"POT-Creation-Date: 2015-03-04 20:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -208,6 +208,18 @@ msgstr "Tilbake til artikkel"
 msgid "Edit page \"%(title)s\""
 msgstr "Rediger side \"%(title)s\""
 
+#: templates/tournament/paypal_cancel.html:5
+msgid "PayPal payment cancelled"
+msgstr "PayPal betaling kansellert"
+
+#: templates/tournament/paypal_cancel.html:7
+msgid ""
+"You cancelled the payment on PayPal so your registration has been deleted. "
+"Please try again if you want to take part in the tournament."
+msgstr ""
+"Du har kansellert betaling hos PayPal og derfor er din påmelding slettet. Prøv igjen "
+"hvis du ønsker å delta i turneringen."
+
 #: templates/tournament/players.html:4
 #, python-format
 msgid "Player list - %(name)s"
@@ -378,8 +390,8 @@ msgid ""
 "registering and you can pay using your PayPal account or a regular "
 "creditcard."
 msgstr ""
-"Betaling er påkrevd ved påmelding. Du vil bli videresendt til Paypal når "
-"du registrerer deg og kan betale med din PayPal konto eller et kredittkort."
+"Betaling er påkrevd ved påmelding. Du vil bli videresendt til Paypal når du "
+"registrerer deg og kan betale med din PayPal konto eller et kredittkort."
 
 #: templates/tournament/registration.html:87
 msgid "No stage is open curently."
