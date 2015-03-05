@@ -516,7 +516,7 @@ class TournamentPlayer(models.Model):
             })
 
         payment = paypalrestsdk.Payment({
-            "intent": "order",
+            "intent": "sale",
             "payer": {
                 "payment_method": "paypal"
             },
