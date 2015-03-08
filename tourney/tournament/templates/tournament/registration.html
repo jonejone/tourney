@@ -73,7 +73,7 @@ $(function() {
 
 {% if tournament.registration_info %}
 <div class="alert">
-    {{ tournament.registration_info }}
+    {{ tournament.registration_info|safe }}
 </div>
 {% endif %}
 
