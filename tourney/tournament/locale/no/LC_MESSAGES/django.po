@@ -36,7 +36,7 @@ msgstr "Reservert spiller"
 
 #: forms.py:162
 msgid "I am granted a reserved spot based on last years results."
-msgstr "Jeg har reservert plass basert på resultater i fjorårets Norgecup. <a href='/reserverte-spillere/'>Se reserverte spillere</a>"
+msgstr "Jeg har reservert plass basert på resultater i fjorårets Norgecup."
 
 #: forms.py:213 templates/tournament/players.html:60
 msgid "Name player 1 / player 2"

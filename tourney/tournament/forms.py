@@ -159,7 +159,8 @@ class RegistrationForm(PlayerForm):
 
     is_reserved_player = forms.BooleanField(
         label=_('Reserved player'),
-        help_text=_('I am granted a reserved spot based on last years results.'))
+        help_text=_('I am granted a reserved spot based on last years results.'),
+        required=False)
 
     class Meta:
         model = Player
