@@ -24,6 +24,15 @@
 
     RegistrationPdga.prototype = {
         prepare: function() {
+
+            if(this.config.allow_reserved) {
+                this.reserved_checkbox = $('#id_is_reserved_player');
+
+                this.reserved_checkbox.bind('click', function(e) {
+                    this.validateRating();
+                }.bind(this));
+            }
+
             this.button = $('.btn-primary');
 
             /* Create a status bar */
@@ -108,8 +117,20 @@
             return return_class;
         },
 
+        isReservedChecked: function() {
+            return this.reserved_checkbox.is(':checked');
+        },
+
         validateRating: function() {
+
+            this.disableButton();
+
             if (!this.config.stages) {
+                this.enableButton();
+                return;
+            }
+
+            if (this.config.allow_reserved && this.isReservedChecked()) {
                 this.enableButton();
                 return;
             }
