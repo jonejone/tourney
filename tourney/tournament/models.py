@@ -160,6 +160,10 @@ class Tournament(models.Model):
         choices=PAYPAL_MODE_CHOICES,
         blank=True, null=True, default='live')
 
+    allow_reserved_players = models.BooleanField(
+        _('Allow reserved players'),
+        default=False)
+
 
     @property
     def language_code(self):

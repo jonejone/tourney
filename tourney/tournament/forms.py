@@ -157,9 +157,13 @@ class RegistrationForm(PlayerForm):
         help_text=_('You must approve the PDGA terms' +
                   'to register for this tournament.'))
 
+    is_reserved_player = forms.BooleanField(
+        label=_('Reserved player'),
+        help_text=_('I am granted a reserved spot based on last years results.'))
+
     class Meta:
         model = Player
-        fields = ('player_class', 'pdga_number', 'pdga_terms',
+        fields = ('player_class', 'is_reserved_player', 'pdga_number', 'pdga_terms',
                   'name', 'club', 'country', 'email', 'phonenumber', 'options')
 
     def __init__(self, *kargs, **kwargs):
@@ -213,11 +217,10 @@ class RegistrationForm(PlayerForm):
             stage = self.tournament.get_registration_stage()
 
             if stage:
-                rating = '%s - requires %s rating - %s'
+                rating = '%s - %s'
                 self.fields['player_class'].choices += [
                     (c.player_class.id, rating % (
                         c.player_class.name,
-                        c.rating_required,
                         c.get_class_price())
                     )
                 for c in stage.registrationstageclass_set.all()]
