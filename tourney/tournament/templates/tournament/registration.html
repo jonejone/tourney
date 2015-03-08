@@ -1,5 +1,6 @@
 {% extends extends_tmpl %}
 {% load i18n %}
+{% load stages %}
 
 {% block endbody %}
 <script src="{{ STATIC_URL }}tournament/js/registration.js"></script>
@@ -42,15 +43,13 @@ $(function() {
         <tr{% ifequal stage current_stage %} class="info"{% endifequal %}>
             <td>
                 {% blocktrans with counter=forloop.counter opens=stage.opens|date:"d/m/Y H:i" %}Stage {{ counter }}, opens {{ opens }}{% endblocktrans %}</td>
-            {% for stage_class in stage.registrationstageclass_set.all %}
+
+            {% for class in tournament.classes.all %}
             <td>
-                {% ifequal 0 stage_class.rating_required %}
-                    <i>{% trans "All" %}</i>
-                {% else %}
-                    {{ stage_class.rating_required }}
-                {% endifequal %}
+                {% get_stage_requirement stage class %}
             </td>
             {% endfor %}
+
         </tr>
         {% endfor %}
     </tbody>
