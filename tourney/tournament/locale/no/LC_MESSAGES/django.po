@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-04 21:09+0000\n"
+"POT-Creation-Date: 2015-03-08 18:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,15 +30,23 @@ msgstr "Godkjenn PDGA reglement"
 msgid "You must approve the PDGA terms"
 msgstr "Du må godkjenne PDGA reglementet"
 
-#: forms.py:209 templates/tournament/players.html:60
+#: forms.py:161
+msgid "Reserved player"
+msgstr "Reservert spiller"
+
+#: forms.py:162
+msgid "I am granted a reserved spot based on last years results."
+msgstr "Jeg har reservert plass basert på resultater i fjorårets Norgecup. <a href='/reserverte-spillere/'>Se reserverte spillere</a>"
+
+#: forms.py:213 templates/tournament/players.html:60
 msgid "Name player 1 / player 2"
 msgstr "Navn spiller 1 / spiller 2"
 
-#: forms.py:210 templates/tournament/players.html:61
+#: forms.py:214 templates/tournament/players.html:61
 msgid "Club player 1 / player 2"
 msgstr "Klubb spiller 1 / spiller 2"
 
-#: models.py:67 models.py:289 templates/tournament/players.html:60
+#: models.py:67 models.py:293 templates/tournament/players.html:60
 #: templates/tournament/players/waiting-list.html:120
 msgid "Name"
 msgstr "Navn"
@@ -135,31 +143,35 @@ msgstr ""
 msgid "PayPal mode"
 msgstr ""
 
-#: models.py:293
+#: models.py:164
+msgid "Allow reserved players"
+msgstr ""
+
+#: models.py:297
 msgid "Email"
 msgstr "Epost"
 
-#: models.py:297
+#: models.py:301
 msgid "PDGA Number"
 msgstr "PDGA-nummer"
 
-#: models.py:305
+#: models.py:309
 msgid "Phonenumber"
 msgstr "Telefon"
 
-#: models.py:309
+#: models.py:313
 msgid "PDGA Rating"
 msgstr ""
 
-#: models.py:313 templates/tournament/players/waiting-list.html:121
+#: models.py:317 templates/tournament/players/waiting-list.html:121
 msgid "Country"
 msgstr "Land"
 
-#: models.py:316 templates/tournament/players.html:61
+#: models.py:320 templates/tournament/players.html:61
 msgid "Club"
 msgstr "Klubb"
 
-#: models.py:406
+#: models.py:410
 #, fuzzy, python-format
 msgid "Player accepted into %s"
 msgstr "Spilleren har blitt akseptert til turneringen"
@@ -284,7 +296,7 @@ msgid "Max player count"
 msgstr "Maks antall spillere"
 
 #: templates/tournament/players.html:32
-#: templates/tournament/registration.html:61
+#: templates/tournament/registration.html:60
 #: templates/tournament/players/waiting-list.html:102
 msgid "Available spots"
 msgstr "Ledige plasser"
@@ -399,30 +411,26 @@ msgstr "Registrering for %(name)s ferdig"
 msgid "Thanks for registering!"
 msgstr "Takk for at du registrerte deg!"
 
-#: templates/tournament/registration.html:27
+#: templates/tournament/registration.html:28
 #: templates/tournament/tournament_base.html:57
 msgid "Registration"
 msgstr "Registrering"
 
-#: templates/tournament/registration.html:34
+#: templates/tournament/registration.html:35
 msgid "Stage"
 msgstr "Fase"
 
-#: templates/tournament/registration.html:44
+#: templates/tournament/registration.html:45
 #, python-format
 msgid "Stage %(counter)s, opens %(opens)s"
 msgstr "Fase %(counter)s, åpner %(opens)s"
 
-#: templates/tournament/registration.html:48
-msgid "All"
-msgstr "Alle"
-
-#: templates/tournament/registration.html:65
+#: templates/tournament/registration.html:64
 #, python-format
 msgid "(%(count)s on waiting list)"
 msgstr "(%(count)s på venteliste)"
 
-#: templates/tournament/registration.html:78
+#: templates/tournament/registration.html:77
 msgid ""
 "This tournament has reached its max player capacity, and new registrations "
 "will be put on a waiting list."
@@ -430,7 +438,7 @@ msgstr ""
 "Denne turneringen har nådd sin maks antall spillere, og nye påmeldinger vil "
 "havne på venteliste."
 
-#: templates/tournament/registration.html:85
+#: templates/tournament/registration.html:84
 msgid ""
 "Payment is required upon registration. You will be forwarded to PayPal after "
 "registering and you can pay using your PayPal account or a regular "
@@ -439,20 +447,20 @@ msgstr ""
 "Betaling er påkrevd ved påmelding. Du vil bli videresendt til Paypal når du "
 "registrerer deg og kan betale med din PayPal konto eller et kredittkort."
 
-#: templates/tournament/registration.html:93
+#: templates/tournament/registration.html:92
 msgid "No stage is open curently."
 msgstr "Ingen faser er åpne nå."
 
-#: templates/tournament/registration.html:97
+#: templates/tournament/registration.html:96
 #, python-format
 msgid "Registration for this tournament closed %(ends)s"
 msgstr "Registrering for %(ends)s er stengt"
 
-#: templates/tournament/registration.html:101
+#: templates/tournament/registration.html:100
 msgid "Registration for this tournament has not opened yet."
 msgstr "Registreringen for denne turneringen har ikke startet enda."
 
-#: templates/tournament/registration.html:102
+#: templates/tournament/registration.html:101
 #, python-format
 msgid "Registration opens on <strong>%(opens)s</strong>"
 msgstr "Registreringen åpner <strong>%(opens)s</strong>"
@@ -525,3 +533,7 @@ msgstr "Klasse"
 #: templates/tournament/players/waiting-list.html:181
 msgid "Accept into tournament"
 msgstr "Aksepter til turneringen"
+
+#: templatetags/stages.py:31
+msgid "All"
+msgstr "Alle"
