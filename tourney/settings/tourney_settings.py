@@ -124,5 +124,6 @@ ALLOWED_HOSTS = (
     '.bergenopen.no',
     '.pargolfnm.lillehammerfrisbee.no',
     '.sulaopen.com',
+    '.trondheimfrisbeeklubb.no',
     '.disctourney.com',
     '.haugalandopen.com')
