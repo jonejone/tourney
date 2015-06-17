@@ -125,5 +125,7 @@ ALLOWED_HOSTS = (
     '.pargolfnm.lillehammerfrisbee.no',
     '.sulaopen.com',
     '.trondheimfrisbeeklubb.no',
+    '.kristiansandopen.no',
+    '.herokuapp.com',
     '.disctourney.com',
     '.haugalandopen.com')
